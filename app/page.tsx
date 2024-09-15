@@ -1,8 +1,8 @@
 import React from "react";
 import {Nerko_One} from "next/font/google";
-import DotPattern from "./components/background/dot-pattern";
+import DotPattern from "../components/background/dot-pattern";
 import { cn } from "@/lib/utils";
-import Form from "./components/login + register/form";
+import Form from "../components/login + register/form";
 
 const nerkoOne = Nerko_One({
   subsets: ["latin"],

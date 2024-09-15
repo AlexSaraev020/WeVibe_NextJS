@@ -1,8 +1,8 @@
 import React from 'react'
-import DotPattern from '../../components/background/dot-pattern'
-import Form from '../../components/login + register/form'
+import DotPattern from '../../../components/background/dot-pattern'
+import Form from '../../../components/login + register/form'
 import {Nerko_One} from "next/font/google";
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 
 
 const nerkoOne = Nerko_One({

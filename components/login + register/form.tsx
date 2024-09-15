@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import ShinyButton from '../buttons/shiny-button'
 import FormInput from './formElements/input'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { registerUser } from '@/actions/auth/register'
+import { loginUser } from '@/actions/auth/login'
 interface FormProps {
     register?: boolean
 }
@@ -10,9 +13,17 @@ export default function Form({ register }: FormProps) {
     const [userName, setUserName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [success, setSuccess] = useState<string | undefined>(undefined)
+    const [failure, setFailure] = useState<string | undefined>(undefined)
+    const router = useRouter()
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(userName, email, password)
+        {
+            register ?
+                await registerUser({ userName, email, password, setSuccess, setFailure, router })
+                :
+                await loginUser({ email, password, setSuccess, setFailure, router })
+        }
     }
     return (
         <form
@@ -34,6 +45,8 @@ export default function Form({ register }: FormProps) {
                 </div>
             </div>
             <ShinyButton type='submit' text={register ? 'Register' : 'Login'} />
+            <p className='text-emerald-400 font-bold text-center'>{success}</p>
+            <p className='text-red-400 font-bold text-center max-w-sm'>{failure}</p>
             <div className='flex gap-2'>
                 <p>{register ? 'Already have an account?' : 'Don\'t have an account?'}</p>
                 <Link className='text-emerald-400 font-bold' href={register ? '/' : '/register'}>{register ? ' Login ' : ' Register '}</Link>

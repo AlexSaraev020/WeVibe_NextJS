@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Mingzat } from 'next/font/google'
+import Nav from "@/components/nav/nav";
+
 
 export const metadata: Metadata = {
   title: "WeVibe",
@@ -20,8 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mingzat.className} bg-black text-white antialiased`}
+        className={`${mingzat.className} bg-black text-white antialiased flex`}
       >
+        <Nav />
         {children}
       </body>
     </html>
