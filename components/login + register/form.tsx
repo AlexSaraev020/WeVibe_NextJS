@@ -47,7 +47,7 @@ export default function Form({ register }: FormProps) {
             <ShinyButton type='submit' text={register ? 'Register' : 'Login'} />
             <p className='text-emerald-400 font-bold text-center'>{success}</p>
             <p className='text-red-400 font-bold text-center max-w-sm'>{failure}</p>
-            <div className='flex gap-2'>
+            <div className='flex gap-1'>
                 <p>{register ? 'Already have an account?' : 'Don\'t have an account?'}</p>
                 <Link className='text-emerald-400 font-bold' href={register ? '/' : '/register'}>{register ? ' Login ' : ' Register '}</Link>
             </div>

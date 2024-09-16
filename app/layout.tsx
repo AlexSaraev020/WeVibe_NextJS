@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mingzat.className} bg-black text-white antialiased flex`}
+        className={`${mingzat.className} bg-black text-white antialiased flex flex-col md:flex-row`}
       >
         <Nav />
         {children}
