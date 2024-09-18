@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mingzat.className} bg-black text-white antialiased flex flex-col md:flex-row`}
+        className={`${mingzat.className} bg-black text-white antialiased flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-black scrollbar-track-black`}
       >
         <Nav />
         {children}
