@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Mingzat } from 'next/font/google'
+import { Mingzat } from "next/font/google";
 import Nav from "@/components/nav/nav";
-
 
 export const metadata: Metadata = {
   title: "WeVibe",
@@ -10,9 +9,9 @@ export const metadata: Metadata = {
 };
 
 const mingzat = Mingzat({
-  subsets: ['latin'],
-  weight: "400"
-})
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function RootLayout({
   children,
@@ -20,10 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${mingzat.className} bg-black text-white antialiased flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-black scrollbar-track-black`}
-      >
+    <html
+      lang="en"
+      className="scrollbar-thin overflow-y-scroll scrollbar-thumb-black scrollbar-track-black  bg-black text-white antialiased"
+    >
+      <body className={`${mingzat.className}`}>
         <Nav />
         {children}
       </body>
