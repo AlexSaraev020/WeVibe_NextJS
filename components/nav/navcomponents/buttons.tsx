@@ -1,8 +1,8 @@
 import { IoSearch } from "react-icons/io5";
 import { IoIosCreate } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
-import { CgProfile } from "react-icons/cg";
 import Tooltip from "./tooltip";
+import Image from "next/image";
 
 interface contentProps {
   handleLogOut: () => void;
@@ -10,6 +10,7 @@ interface contentProps {
   handleCreatePost: () => void;
   handleProfile: () => void;
   userName: string;
+  profilePicture: string;
 }
 
 export const content = ({
@@ -18,6 +19,7 @@ export const content = ({
   handleCreatePost,
   handleProfile,
   userName,
+  profilePicture,
 }: contentProps) => [
   {
     id: 1,
@@ -35,8 +37,16 @@ export const content = ({
   },
   {
     id: 3,
-    name: userName ,
-    icon: <CgProfile id="profile" className="w-10 h-10 " />,
+    name: userName,
+    icon: (
+      <Image
+        src={profilePicture}
+        alt="user"
+        width={40}
+        height={40}
+        className="w-9 h-9 rounded-full"
+      />
+    ),
     tooltip: <Tooltip text="Profile" />,
     onClick: handleProfile,
   },

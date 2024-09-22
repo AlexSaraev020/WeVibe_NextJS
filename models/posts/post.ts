@@ -1,19 +1,14 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
+import { Comments } from "./comments";
+import { Likes } from "./likes";
 export interface Post extends Document {
   title: string;
   description: string;
   image: string;
   createdAt: Date;
   createdBy: mongoose.Types.ObjectId;
-  comments: Comment[];
-  likes: number;
-}
-
-interface Comment extends Document {
-  comment: string;
-  post: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
-  createdAt: Date;
+  comments: Comments[];
+  likes: Likes[];
 }
 
 const postSchema = new Schema<Post>({
@@ -34,7 +29,7 @@ const postSchema = new Schema<Post>({
     required: true,
   },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-  likes: { type: Number, default: 0 },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Likes" }],
 });
 
 export const PostModel: Model<Post> =

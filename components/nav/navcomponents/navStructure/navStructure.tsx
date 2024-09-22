@@ -2,17 +2,19 @@
 import React, { useEffect, useState } from "react";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { content } from "../buttons";
 import Logout from "../prompts/logout";
 import CreatePost from "../prompts/createPost";
 import Search from "../search";
 import Link from "next/link";
+import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { getUser } from "@/actions/user/getUser";
 
 export default function Nav({ userID }: { userID: string }) {
   const paths = ["/", "/register"];
   const path = usePathname();
+  const router = useRouter();
   const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -22,7 +24,6 @@ export default function Nav({ userID }: { userID: string }) {
     const fetchUser = async () => {
       const response = await getUser(userID);
       setUserName(response.user.username);
-      console.log("user", response);
     };
 
     fetchUser();
@@ -33,7 +34,6 @@ export default function Nav({ userID }: { userID: string }) {
   }, [showLogoutPrompt]);
   const handleLogOut = () => {
     setShowLogoutPrompt(!showLogoutPrompt);
-    console.log("showLogoutPrompt", showLogoutPrompt);
   };
 
   const handleSearch = () => {
@@ -45,7 +45,7 @@ export default function Nav({ userID }: { userID: string }) {
   };
 
   const handleProfile = () => {
-    setShowSearch(!showSearch);
+    router.push("/profile" + `?user=${userName}`);
   };
 
   const navButtons = content({
@@ -54,12 +54,13 @@ export default function Nav({ userID }: { userID: string }) {
     handleLogOut,
     handleProfile,
     userName: userName,
+    profilePicture: ProfilePlaceholder.src,
   });
 
   return (
     <>
       {showLogoutPrompt && <Logout setShowLogoutPrompt={setShowLogoutPrompt} />}
-      {showCreatePost && <CreatePost />}
+      {showCreatePost && <CreatePost setShowCreatePost={setShowCreatePost} />}
       {showSearch && <Search />}
       {!paths.includes(path) && (
         <>
