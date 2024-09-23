@@ -1,8 +1,13 @@
 import axios from "axios";
 
-export const getUser = async (userId: string) => {
-  const response = await axios.get(`/api/user/get/${userId}`, {
-    params: { userId },
-  });
-  return response.data;
+export const getUser = async () => {
+  try {
+    const response = await axios.get("/api/user/get");
+    return response.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      return error.message;
+    }
+  }
 };

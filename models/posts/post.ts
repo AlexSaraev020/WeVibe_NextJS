@@ -1,13 +1,13 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
-import { Comments } from "./comments";
+import { Document, model, Model, models, Schema, Types } from "mongoose";
+import { Comment } from "./comments";
 import { Likes } from "./likes";
 export interface Post extends Document {
   title: string;
   description: string;
   image: string;
   createdAt: Date;
-  createdBy: mongoose.Types.ObjectId;
-  comments: Comments[];
+  createdBy: Types.ObjectId;
+  comments: Comment[];
   likes: Likes[];
 }
 
@@ -24,13 +24,12 @@ const postSchema = new Schema<Post>({
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Likes" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],
 });
 
-export const PostModel: Model<Post> =
-  mongoose.models.Post || mongoose.model("Post", postSchema);
+export const PostModel: Model<Post> = models.Post || model("Post", postSchema);

@@ -3,15 +3,16 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
+import { createPost } from "@/actions/posts/create";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
 }
 
 export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
-  const [image, setImage] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [description, setDescription] = useState<string | undefined>(undefined);
   const cancelCreatePost = async () => {
     try {
       await axios.delete("api/uploadthing", {
@@ -20,16 +21,27 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
         },
       });
       if (image) {
-        setImage(null);
+        setImage(undefined);
       }
       setShowCreatePost(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await createPost({ title, description, image });
+    if (response) {
+      setShowCreatePost(false);
+    }
+  };
   return (
     <div className="fixed bg-black/60 h-screen w-full z-50 inset-0 flex items-center justify-center">
-      <form className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-gray-800 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-white animate-fadeIn">
+      <form
+        onSubmit={handleCreatePost}
+        className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-gray-800 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-white animate-fadeIn"
+      >
         <h2 className="text-3xl py-1 md:text-5xl font-extrabold bg-gradient-to-r from-white via-gray-400 to-gray-200 text-center text-transparent bg-clip-text neon-text">
           Create Post
         </h2>
@@ -68,6 +80,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               Title
             </label>
             <input
+              minLength={5}
               type="text"
               id="title"
               placeholder="Enter post title"
@@ -79,6 +92,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
           <div className="flex flex-col gap-2">
             <label htmlFor="description">Description</label>
             <textarea
+              minLength={10}
               id="description"
               value={description}
               placeholder="Enter post description"
