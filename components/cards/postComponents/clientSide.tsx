@@ -6,11 +6,27 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
+import { formatDistanceToNow } from "date-fns";
 
-export default function PostBottomSide() {
+interface PostBottomSideProps {
+  comments: [];
+  description: string;
+  date: string;
+}
+
+export default function PostBottomSide({
+  comments,
+  description,
+  date,
+}: PostBottomSideProps) {
   const [like, setLike] = useState<number | undefined>(undefined);
   const [dislike, setDislike] = useState<number | undefined>(undefined);
   const [truncate, setTruncate] = useState<boolean>(true);
+  const handleDate = (date: string) => {
+    const convertedDate = new Date(date);
+    const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
+    return timeAgo;
+  };
   const handleLike = () => {
     if (like === undefined && dislike === undefined) {
       setLike(1);
@@ -65,9 +81,7 @@ export default function PostBottomSide() {
           }`}
         >
           <p className="text-sm md:text-lg">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam
-            voluptates earum atque tenetur veritatis cupiditate nam velit?
-            Explicabo, quia atque.
+            {truncate ? description.slice(0, 200) : description}
           </p>
           <button
             className="text-xs md:text-md text-zinc-300/90"
@@ -77,8 +91,10 @@ export default function PostBottomSide() {
             {truncate ? "Show more" : "Show less"}
           </button>
         </div>
-        <h2 className="text-xs md:text-md text-zinc-300/90">Comments 2.5k</h2>
-        <h2>24/02/2023</h2>
+        <h2 className="text-xs md:text-md text-zinc-300/90">
+          Comments {comments.length}
+        </h2>
+        <h2> {handleDate(date)}</h2>
       </div>
     </>
   );

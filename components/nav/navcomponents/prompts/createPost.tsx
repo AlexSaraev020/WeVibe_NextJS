@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
-import { createPost } from "@/actions/posts/create";
+import { createPost } from "@/actions/posts/createPost";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
@@ -15,6 +15,9 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const [description, setDescription] = useState<string | undefined>(undefined);
   const cancelCreatePost = async () => {
     try {
+      if (!image) {
+        setShowCreatePost(false);
+      }
       await axios.delete("api/uploadthing", {
         data: {
           url: image,
@@ -53,7 +56,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 alt="Preview"
                 width={600}
                 height={400}
-                className="rounded-xl"
+                className="rounded-xl max-h-96 object-cover"
               />
             ) : (
               <UploadDropzone

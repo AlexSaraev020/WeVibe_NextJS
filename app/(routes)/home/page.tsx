@@ -1,19 +1,19 @@
-import React from 'react'
-import Post from '@/components/cards/post'
-export default function Page() {
+import React from "react";
+import Post from "@/components/cards/post";
+import { getPosts } from "@/actions/posts/getPosts";
+import { PostType } from "@/types/post/postType";
+export default async function Page() {
+  const posts = await getPosts();
+  console.log(posts);
   return (
-    <div className='flex-1 md:p-4 flex justify-center'>
-      <ul className='flex flex-col w-full items-center gap-20 py-20'>
-        <li className='w-full flex items-center justify-center h-full'>
-          <Post />
-        </li>
-        <li className='w-full flex items-center justify-center h-full'>
-          <Post />
-        </li>
-        <li className='w-full flex items-center justify-center h-full'>
-          <Post />
-        </li>
+    <div className=" w-full md:p-4 flex justify-center items-center">
+      <ul className="flex flex-col w-6/12 items-center justify-center gap-20 py-20">
+        {posts.map((post: PostType) => (
+          <li key={post._id}>
+            <Post post={post} />
+          </li>
+        ))}
       </ul>
     </div>
-  )
+  );
 }

@@ -17,8 +17,14 @@ export const createPost = async ({
       description,
       image,
     });
-    return response.data;
-  } catch (error) {
-    console.error(error);
+    if (response.status < 300) {
+      return response.data;
+    }
+    return null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error creating post:", error.message);
+      return null;
+    }
   }
 };

@@ -18,18 +18,18 @@ export async function GET(req: Request) {
     if (!token) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 400 }
+        { status: 401 }
       );
     }
     const userId = jwtDecode(token.value) as DecodedToken;
-    await connect();
-    if (!userId) {
+    if (!userId || !userId.userId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 400 }
+        { status: 401 }
       );
     }
 
+    await connect();
     const user = (await UserModel.findOne({ _id: userId.userId })) as User;
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -37,6 +37,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
+    console.error("Error getting user:", error);
     return NextResponse.json(
       { message: "An error occurred", error },
       { status: 500 }
