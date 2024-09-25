@@ -19,6 +19,7 @@ export default function Nav() {
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,6 +29,12 @@ export default function Nav() {
 
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (userName) {
+      setIsLoaded(true);
+    }
+  }, [userName]);
 
   useEffect(() => {
     document.body.style.overflow = showLogoutPrompt ? "hidden" : "auto";
@@ -53,7 +60,7 @@ export default function Nav() {
     handleSearch,
     handleLogOut,
     handleProfile,
-    userName: userName,
+    userName: isLoaded ? userName : "Profile",
     profilePicture: ProfilePlaceholder.src,
   });
 
@@ -63,8 +70,12 @@ export default function Nav() {
       {showCreatePost && <CreatePost setShowCreatePost={setShowCreatePost} />}
       {showSearch && <Search />}
       {!paths.includes(path) && (
-        <>
-          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 shadow-glow-sm shadow-white transition-all duration-500 animate-fadeIn">
+        <nav
+          className={`transition-all duration-500 ${
+            isLoaded ? "animate-fadeIn" : "animate-pulse"
+          }`}
+        >
+          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 shadow-glow-sm shadow-white ">
             <Link href={"/home"}>
               <Image
                 src={Logo}
@@ -76,19 +87,20 @@ export default function Nav() {
             </Link>
             <div className="flex flex-row md:flex-col md:py-10 md:px-2 gap-4 md:gap-8">
               {navButtons.map((item) => (
-                <button
-                  onClick={item.onClick}
-                  key={item.id}
-                  className="flex group relative items-center justify-start gap-2"
-                >
-                  {item.icon}
-                  <h2 className="text-xl hidden md:block">{item.name}</h2>
+                <div className="group relative" key={item.id}>
+                  <button
+                    onClick={item.onClick}
+                    className="flex relative items-center justify-start gap-2"
+                  >
+                    {item.icon}
+                    <h2 className="text-xl hidden md:block">{item.name}</h2>
+                  </button>
                   {item.tooltip}
-                </button>
+                </div>
               ))}
             </div>
           </div>
-        </>
+        </nav>
       )}
     </>
   );

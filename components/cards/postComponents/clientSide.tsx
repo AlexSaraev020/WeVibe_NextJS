@@ -7,7 +7,6 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 import { FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
-
 interface PostBottomSideProps {
   comments: [];
   description: string;
@@ -83,13 +82,15 @@ export default function PostBottomSide({
           <p className="text-sm md:text-lg">
             {truncate ? description.slice(0, 200) : description}
           </p>
-          <button
+          {description.length > 200 && (
+            <button
             className="text-xs md:text-md text-zinc-300/90"
             onClick={handleTruncate}
             type="button"
           >
             {truncate ? "Show more" : "Show less"}
           </button>
+          )}
         </div>
         <h2 className="text-xs md:text-md text-zinc-300/90">
           Comments {comments.length}
