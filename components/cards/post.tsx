@@ -39,5 +39,6 @@ export default async function Post({ post }: { post: PostType }) {
         date={post.createdAt.toString()}
       />
     </div>
+    
   );
 }
