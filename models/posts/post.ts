@@ -12,8 +12,8 @@ export interface Post extends Document {
 }
 
 const postSchema = new Schema<Post>({
-  title: { type: String, required: true, maxlength: 100, minlength: 5 },
-  description: { type: String, required: true, minlength: 10, maxlength: 500 },
+  title: { type: String, required: true, maxlength: 100},
+  description: { type: String,  default: "",  maxlength: 500 },
   image: {
     type: String,
     required: true,

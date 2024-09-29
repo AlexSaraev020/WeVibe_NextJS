@@ -9,10 +9,7 @@ export const getPosts = async () => {
     }
     return [];
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error fetching posts:", error.message);
-      return [];
-    }
+    console.error("Error fetching posts:", error);
     return [];
   }
 };

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Mingzat } from "next/font/google";
 import Nav from "@/components/nav/nav";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 export const metadata: Metadata = {
   title: "WeVibe",
@@ -23,7 +26,8 @@ export default function RootLayout({
       lang="en"
       className="scrollbar-thin overflow-y-scroll scrollbar-thumb-black scrollbar-track-black  bg-black text-white antialiased"
     >
-      <body className={`${mingzat.className}`}>
+      <body suppressHydrationWarning={true} className={`${mingzat.className}`}>
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <Nav />
         {children}
       </body>

@@ -9,9 +9,13 @@ interface LogoutProps {
 export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
   const router = useRouter();
   const handleLogOut = async () => {
-    await axios.get("/api/user/logout");
-    setShowLogoutPrompt(false);
-    router.push("/");
+    try {
+      await axios.get("/api/user/logout");
+      setShowLogoutPrompt(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
   return (
     <div className="fixed bg-black/60 h-screen w-full z-50 inset-0 flex items-center justify-center">

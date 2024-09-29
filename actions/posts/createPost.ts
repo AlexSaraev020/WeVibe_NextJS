@@ -1,9 +1,9 @@
 import axios from "axios";
 
 interface CreatePostProps {
-  title: string | undefined;
-  description: string | undefined;
-  image: string | undefined;
+  title: string
+  description: string
+  image: string
 }
 
 export const createPost = async ({
@@ -22,9 +22,6 @@ export const createPost = async ({
     }
     return null;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Error creating post:", error.message);
-      return null;
-    }
+    console.error("Error creating post:", error);
   }
 };

@@ -51,7 +51,7 @@ export default function PostBottomSide({
   };
   return (
     <>
-      <div className="flex p-2 gap-2">
+      <div className="flex p-2 gap-2 w-full">
         <button onClick={handleLike} className="relative group">
           {like === 1 ? (
             <IoIosCheckmarkCircle className="w-10 h-10" />

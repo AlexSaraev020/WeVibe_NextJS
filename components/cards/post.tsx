@@ -25,20 +25,31 @@ export default async function Post({ post }: { post: PostType }) {
         >
           {user.user.username}
         </Link>
+        <p className="text-sm md:text-lg ml-2 text-gray-400">{post.title}</p>
       </div>
-      <Image
-        src={post.image}
-        alt="Placeholder"
-        className="w-full max-h-[80vh] object-cover"
-        width={1080}
-        height={1080}
-      />
-      <PostBottomSide
-        comments={post.comments}
-        description={post.description}
-        date={post.createdAt.toString()}
-      />
+      <div className="w-full relative p-2 md:p-0">
+        <Image
+          src={post.image}
+          priority
+          alt="Image"
+          className="max-h-[45rem] object-contain z-10 relative"
+          width={1080}
+          height={1080}
+        />
+        <Image
+          src={post.image}
+          priority
+          alt="ImageBackground"
+          className="max-h-[45rem] absolute inset-0 z-0 blur-xl opacity-35"
+          width={1080}
+          height={1080}
+        />
+        <PostBottomSide
+          comments={post.comments}
+          description={post.description}
+          date={post.createdAt.toString()}
+        />
+      </div>
     </div>
-    
   );
 }

@@ -6,10 +6,8 @@ export const getUser = async () => {
     const response = await axios.get("/api/user/get");
     return response.data;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return error.message;
-    }
+    console.error(error);
+    return error;
   }
 };
 
@@ -20,9 +18,18 @@ export const getUserById = async (userId: string) => {
     });
     return response.data;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return error.message;
-    }
+    console.error(error);
+    return error;
   }
+};
+
+export const getUsersByQuery = async (query: string ) => {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+try {
+  const response = await axios.get(`${url}/api/user/search?q=${query}`);
+  return response.data;
+} catch (error: unknown) {
+  console.error("Error fetching users:", error);
+  return error;
+}
 };

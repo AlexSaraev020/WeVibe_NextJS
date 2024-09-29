@@ -26,12 +26,11 @@ export default function Search() {
   const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSearch("");
-  };
-  return (
+  };  return (
     <form
       onSubmit={searchSubmit}
       autoComplete="off"
-      className=" w-8/12 md:w-4/12 fixed z-10 top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      className=" w-8/12 md:w-4/12 fixed top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
     >
       <div className="relative">
         <input

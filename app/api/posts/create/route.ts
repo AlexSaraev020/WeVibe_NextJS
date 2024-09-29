@@ -18,12 +18,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
     const { title, description, image } = body;
-    if (!title || !image) {
+    if (!image || !title) {
       return NextResponse.json(
-        { message: "Please add at least a title or an image to your post!" },
+        { message: "Please fill the required fields" },
         { status: 400 }
       );
     }
+    
     const cookieStore = cookies();
     const token = cookieStore.get("authToken");
     if (!token) {

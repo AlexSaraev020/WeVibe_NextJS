@@ -1,5 +1,5 @@
 import { connect } from "@/db/mongo/db";
-import { User, UserModel } from "@/models/user";
+import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -10,22 +10,18 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    const userId = request.nextUrl.searchParams.get("userId");
-    if (!userId) {
-      return NextResponse.json(
-        { message: "User ID not found" },
-        { status: 404 }
-      );
+    const query = request.nextUrl.searchParams.get("q");
+    if (!query) {
+      return NextResponse.json({ message: "Query not found" }, { status: 404 });
     }
-
     await connect();
-    const user = (await UserModel.findOne({ _id: userId })) as User;
 
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    const users = await UserModel.find({ username: { $regex: query } });
+    if (!users) {
+      return NextResponse.json({ message: "Users not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ user }, { status: 200 });
+    return NextResponse.json({ users }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json(
       { message: "An error occurred", error },

@@ -22,27 +22,48 @@ export default function Nav() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const response = await getUser();
-      setUserName(response.user.username);
+    const fetchUserWithTimeout = async () => {
+      const fetchUser = async () => {
+        const response = await getUser();
+        return response.user.username;
+      };
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout")), 3000)
+      );
+      try {
+        const result = await Promise.race([fetchUser(), timeout]);
+        setUserName(result);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          if (error.message === "Timeout") {
+            console.error("Request timed out, reloading page...");
+            window.location.reload();
+          } else {
+            console.error("Error fetching user:", error);
+          }
+        } else {
+          console.error("Unknown error:", error);
+        }
+      }
     };
 
-    fetchUser();
+    fetchUserWithTimeout();
   }, []);
 
   useEffect(() => {
     if (userName) {
       setIsLoaded(true);
     }
-  }, [userName]);
+  }, [router, userName]);
 
   useEffect(() => {
-    document.body.style.overflow = showLogoutPrompt ? "hidden" : "auto";
-  }, [showLogoutPrompt]);
+    document.documentElement.style.overflow = showLogoutPrompt || showCreatePost
+      ? "hidden"
+      : "auto";
+  }, [showLogoutPrompt,showCreatePost]);
   const handleLogOut = () => {
     setShowLogoutPrompt(!showLogoutPrompt);
   };
-
   const handleSearch = () => {
     setShowSearch(!showSearch);
   };
@@ -80,6 +101,7 @@ export default function Nav() {
               <Image
                 src={Logo}
                 alt="WeVibe Logo"
+                priority
                 className="w-14 h-14 md:w-32 md:h-32"
                 width={100}
                 height={100}
@@ -90,6 +112,7 @@ export default function Nav() {
                 <div className="group relative" key={item.id}>
                   <button
                     onClick={item.onClick}
+                    disabled={isLoaded ? false : true}
                     className="flex relative items-center justify-start gap-2"
                   >
                     {item.icon}

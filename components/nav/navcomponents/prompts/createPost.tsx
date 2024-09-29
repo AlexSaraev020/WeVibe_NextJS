@@ -4,15 +4,18 @@ import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
 import { createPost } from "@/actions/posts/createPost";
+import { useRouter } from "next/navigation";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
 }
 
 export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
-  const [image, setImage] = useState<string | undefined>(undefined);
-  const [title, setTitle] = useState<string | undefined>(undefined);
-  const [description, setDescription] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [progress, setProgress] = useState<number>(0);
+  const router = useRouter();
   const cancelCreatePost = async () => {
     try {
       if (!image) {
@@ -24,7 +27,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
         },
       });
       if (image) {
-        setImage(undefined);
+        setImage("");
       }
       setShowCreatePost(false);
     } catch (error) {
@@ -34,9 +37,14 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
 
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await createPost({ title, description, image });
-    if (response) {
-      setShowCreatePost(false);
+    try {
+      const response = await createPost({ title, description, image });
+      if (response) {
+        setShowCreatePost(false);
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
     }
   };
   return (
@@ -59,23 +67,35 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 className="rounded-xl max-h-96 object-cover"
               />
             ) : (
-              <UploadDropzone
-                config={{
-                  mode: "auto",
-                }}
-                appearance={{
-                  button: {
-                    display: "none",
-                  },
-                }}
-                onClientUploadComplete={(res) => {
-                  setImage(res[0].url);
-                }}
-                onUploadError={(error: Error) => {
-                  alert(`ERROR! ${error.message}`);
-                }}
-                endpoint="imageUploader"
-              />
+              <>
+                <UploadDropzone
+                  config={{
+                    mode: "auto",
+                  }}
+                  appearance={{
+                    button: {
+                      display: "none",
+                    },
+                  }}
+                  onClientUploadComplete={(res) => {
+                    setImage(res[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                  onUploadProgress={(progress) => {
+                    setProgress(progress);
+                  }}
+                  className="h-96 border-none hover:scale-105 transition-all duration-500"
+                  endpoint="imageUploader"
+                />
+                <div className="w-full bg-neutral-700 rounded-full h-2.5 mb-4 ">
+                  <div
+                    className="bg-gray-600 h-2.5 rounded-full dark:bg-gray-300 transition-all duration-500 shadow-glow-sm shadow-white"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              </>
             )}
           </label>
           <div className="flex flex-col gap-2">
@@ -87,6 +107,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               type="text"
               id="title"
               placeholder="Enter post title"
+              required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-xl p-2 bg-black text-white placeholder:text-white/50"
@@ -106,9 +127,13 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
         </div>
         <div className="flex w-full items-center justify-start gap-10">
           <button
-            disabled={image?.length ? false : true}
+            disabled={
+              image?.length || (title?.length && description?.length)
+                ? false
+                : true
+            }
             className={
-              image?.length
+              image?.length || (title?.length && description?.length)
                 ? "bg-white/90 shadow-glow-sm hover:shadow-glow shadow-zinc-400/90 hover:shadow-white hover:bg-white transition-all duration-500 hover:scale-105 text-black text-lg font-extrabold py-2 w-32 rounded-xl "
                 : "bg-white/10 shadow-glow-sm shadow-zinc-400/60 text-white/50 text-lg font-extrabold py-2 w-32 rounded-xl"
             }

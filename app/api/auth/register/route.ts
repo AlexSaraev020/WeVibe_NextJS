@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await UserModel.findOne({ email, username });
     if (existingUser) {
       return NextResponse.json(
         { message: "User already exists" },
