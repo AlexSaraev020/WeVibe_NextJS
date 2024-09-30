@@ -1,6 +1,7 @@
 import React from "react";
 import Placeholder600x400 from "@/public/placeholders/600-400.png";
 import Image from "next/image";
+
 export default function SearchProfileCard() {
   return (
     <div className=" w-10/12 md:w-4/12 bg-neutral-900 border-2 border-zinc-600 shadow-glow shadow-zinc-600 hover:shadow-zinc-400 p-2 rounded-xl transition-all duration-500 animate-fadeIn hover:scale-105">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { getUser } from "@/actions/user/getUser";
 
 export default function Nav() {
-  const paths = ["/", "/register"];
+  const paths = useMemo(() => ["/", "/register"], []);
   const path = usePathname();
   const router = useRouter();
   const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
@@ -22,9 +22,18 @@ export default function Nav() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    if (paths.includes(path)) {
+      setShowCreatePost(false);
+      setShowLogoutPrompt(false);
+      setShowSearch(false);
+      return;
+    }
     const fetchUserWithTimeout = async () => {
       const fetchUser = async () => {
         const response = await getUser();
+        if (response.status > 400) {
+          router.push("/");
+        }
         return response.user.username;
       };
       const timeout = new Promise((_, reject) =>
@@ -48,7 +57,7 @@ export default function Nav() {
     };
 
     fetchUserWithTimeout();
-  }, []);
+  }, [router, path, paths]);
 
   useEffect(() => {
     if (userName) {
@@ -57,10 +66,9 @@ export default function Nav() {
   }, [router, userName]);
 
   useEffect(() => {
-    document.documentElement.style.overflow = showLogoutPrompt || showCreatePost
-      ? "hidden"
-      : "auto";
-  }, [showLogoutPrompt,showCreatePost]);
+    document.documentElement.style.overflow =
+      showLogoutPrompt || showCreatePost ? "hidden" : "auto";
+  }, [showLogoutPrompt, showCreatePost]);
   const handleLogOut = () => {
     setShowLogoutPrompt(!showLogoutPrompt);
   };

@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import { logoutUser } from "@/actions/auth/logout";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -10,9 +10,11 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
   const router = useRouter();
   const handleLogOut = async () => {
     try {
-      await axios.get("/api/user/logout");
-      setShowLogoutPrompt(false);
-      router.push("/");
+      const response = await logoutUser();
+      if (response?.status === 200) {
+        setShowLogoutPrompt(false);
+        router.push("/");
+      }
     } catch (error) {
       console.error("Error logging out:", error);
     }

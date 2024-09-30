@@ -16,7 +16,7 @@ export default function FormInput({ type, name, id, placeholder, required, onCha
                 htmlFor={`${id}`}
                 className='text-xl font-semibold focus:outline-none '
             >
-                {name}
+                {name}*
             </label>
             <input
                 className='bg-black border rounded-md placeholder-zinc-500 p-2 transition-all duration-500 focus:outline-4 focus:scale-x-105 '

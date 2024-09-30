@@ -24,23 +24,19 @@ export const registerUser = async ({
       email,
       password,
     });
-    if (response.status < 300) {
-      setFailure(undefined);
+
+    if (response.status === 200) {
       setSuccess(response.data.message);
+      setFailure(undefined);
       router.push("/");
-    } else {
-      setSuccess(undefined);
-      setFailure(response.data.message);
     }
   } catch (error: unknown) {
-    if (error instanceof Error) {
+    if (axios.isAxiosError(error) && error.response) {
+      setFailure(error.response.data.message);
       setSuccess(undefined);
-      setFailure(`An error occurred while registering. ${error.message}`);
-      console.error("Registration error:", error);
     } else {
-      setSuccess(undefined);
-      setFailure(`An unknown error occurred while registering.`);
-      console.error("Registration error:", error);
+      setFailure("An unexpected error occurred.");
     }
   }
 };
+

@@ -20,12 +20,26 @@ export async function POST(req: Request) {
       );
     }
 
-    const existingUser = await UserModel.findOne({ email, username });
-    if (existingUser) {
+    const existingEmail = await UserModel.findOne({ email });
+    const existingUsername = await UserModel.findOne({ username });
+    if(existingEmail && existingUsername){
       return NextResponse.json(
-        { message: "User already exists" },
+        { message: "Email and Username already in use, please use a different one!" },
         { status: 401 }
       );
+    }else{
+      if(existingEmail){
+        return NextResponse.json(
+          { message: "Email already in use, please use a different one!" },
+          { status: 401 }
+        );
+      }
+      if(existingUsername){
+        return NextResponse.json(
+          { message: "Username already in use, please use a different one!" },
+          { status: 401 }
+        );
+      }
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -46,7 +60,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "User created successfully" },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error creating user:", error);

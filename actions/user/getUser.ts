@@ -23,13 +23,13 @@ export const getUserById = async (userId: string) => {
   }
 };
 
-export const getUsersByQuery = async (query: string ) => {
+export const getUsersByQuery = async (query: string) => {
   const url = process.env.NEXT_PUBLIC_API_URL;
-try {
-  const response = await axios.get(`${url}/api/user/search?q=${query}`);
-  return response.data;
-} catch (error: unknown) {
-  console.error("Error fetching users:", error);
-  return error;
-}
+  try {
+    const response = await axios.get(`${url}/api/user/search?q=${query}`);
+    return response.data;
+  } catch (error: unknown) {
+    console.error("Error fetching users:", error);
+    return error;
+  }
 };

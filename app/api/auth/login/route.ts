@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     };
 
     if (!existingUser) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: "User doesn't exist!" }, { status: 404 });
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     if (!isPasswordCorrect) {
       return NextResponse.json(
-        { message: "Incorrect password" },
+        { message: "Incorrect password!" },
         { status: 402 }
       );
     }
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       sameSite: "strict",
     });
 
-    return NextResponse.json({ message: "Login successful" }, { status: 200 });
+    return NextResponse.json({ message: "Login successful!" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "An error occurred while logging in" },

@@ -16,28 +16,22 @@ export const loginUser = async ({
   router,
 }: loginUserProps) => {
   if (!email || !password) {
-    setFailure("Email și parola sunt necesare.");
+    setFailure("All fields are required.");
+    setSuccess(undefined);
     return;
   }
   try {
     const response = await axios.post("/api/auth/login", { email, password });
-    if (response.status < 300) {
-      setFailure(undefined);
+    if (response.status === 200) {
       setSuccess(response.data.message);
+      setFailure(undefined);
       router.push("/home");
-    } else {
-      setSuccess(undefined);
-      setFailure(response.data.message || "An error occurred while logging in.");
     }
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      setSuccess(undefined);
-      setFailure(`An error occurred while logging in. ${error.message}`);
-      console.error("Login error:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      setFailure(error.response.data.message);
     } else {
-      setSuccess(undefined);
-      setFailure(`An unknown error occurred while logging in.`);
-      console.error("Login error:", error);
+      setFailure("An unexpected error occurred.");
     }
   }
 };
