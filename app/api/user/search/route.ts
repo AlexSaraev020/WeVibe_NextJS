@@ -18,7 +18,10 @@ export async function GET(request: NextRequest) {
 
     const users = await UserModel.find({ username: { $regex: query } });
     if (!users) {
-      return NextResponse.json({ message: "Users not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: `Users with the name ${query} not found` },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({ users }, { status: 200 });

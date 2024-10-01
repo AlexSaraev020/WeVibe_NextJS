@@ -29,6 +29,9 @@ export const getUsersByQuery = async (query: string) => {
     const response = await axios.get(`${url}/api/user/search?q=${query}`);
     return response.data;
   } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    }
     console.error("Error fetching users:", error);
     return error;
   }
