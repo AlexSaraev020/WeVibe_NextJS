@@ -18,12 +18,12 @@ export default async function Page({
         {response.users.length > 0 ? (
           response.users.map((user: UserType) => (
             <li
-              className="border-2 border-zinc-400 shadow-glow shadow-white/30 p-3 flex flex-col w-4/12 rounded-lg transition-all duration-500 hover:scale-105 animate-fadeIn"
+              className="relative p-3 flex flex-col w-4/12 hover:shadow-glow rounded-lg hover:shadow-zinc-400 delay-100 transition-all duration-500 hover:scale-105 animate-fadeIn"
               key={user._id}
             >
               <Link
-                href={`/profile` + `?user=${user.username}`}
-                className="flex items-center gap-1"
+                href={`/profile` + `?user=${user._id}`}
+                className="flex gap-2"
               >
                 <Image
                   src={ProfilePlaceholder}
@@ -31,15 +31,18 @@ export default async function Page({
                   priority
                   width={40}
                   height={40}
-                  className="w-10 h-10 rounded-full"
+                  className="w-14 h-14 rounded-full"
                 />
-                <h2 className="text-xl">{user.username}</h2>
+
+                <div className="flex flex-col w-full pr-10">
+                  <h2 className="text-xl">{user.username}</h2>
+                  <p className="truncate text-zinc-400/70 w-11/12">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Temporibus, sapiente. Alias neque ducimus provident
+                    accusantium aliquam, non voluptatibus officiis repellendus.
+                  </p>
+                </div>
               </Link>
-              <p className="truncate px-2 text-zinc-400/70 w-11/12">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Temporibus, sapiente. Alias neque ducimus provident accusantium
-                aliquam, non voluptatibus officiis repellendus.
-              </p>
             </li>
           ))
         ) : (

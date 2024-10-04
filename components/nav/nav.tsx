@@ -10,15 +10,15 @@ import Search from "./navcomponents/search";
 import Link from "next/link";
 import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { getUser } from "@/actions/user/getUser";
-
 export default function Nav() {
-  const paths = useMemo(() => ["/", "/register"], []);
+  const paths = useMemo(() => ["/", "/register", "/login"], []);
   const path = usePathname();
   const router = useRouter();
   const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,14 +34,16 @@ export default function Nav() {
         if (response.status > 400) {
           router.push("/");
         }
-        return response.user.username;
+        console.log(response);
+        return response;
       };
       const timeout = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Timeout")), 3000)
       );
       try {
         const result = await Promise.race([fetchUser(), timeout]);
-        setUserName(result);
+        setUserName(result.username);
+        setUserId(result._id);
       } catch (error: unknown) {
         if (error instanceof Error) {
           if (error.message === "Timeout") {
@@ -81,7 +83,7 @@ export default function Nav() {
   };
 
   const handleProfile = () => {
-    router.push("/profile" + `?user=${userName}`);
+    router.push("/profile" + `?user=${userId}`);
   };
 
   const navButtons = content({

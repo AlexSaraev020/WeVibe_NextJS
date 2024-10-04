@@ -20,7 +20,7 @@ export default async function Post({ post }: { post: PostType }) {
           height={400}
         />
         <Link
-          href={`/profile` + `?user=${user.user.username}`}
+          href={`/profile` + `?user=${user.user._id}`}
           className="text-sm md:text-lg font-bold"
         >
           {user.user.username}

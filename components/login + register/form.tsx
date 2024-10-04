@@ -8,8 +8,9 @@ import { registerUser } from "@/actions/auth/register";
 import { loginUser } from "@/actions/auth/login";
 interface FormProps {
   register?: boolean;
+  className?: string;
 }
-export default function Form({ register }: FormProps) {
+export default function Form({ register, className }: FormProps) {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -33,7 +34,7 @@ export default function Form({ register }: FormProps) {
   };
   return (
     <form
-      className="w-10/12 md:w-3/6 lg:w-4/12 xl:w-3/12 border flex flex-col items-center justify-center bg-black py-10 z-10 gap-8 rounded-xl shadow-glow-sm shadow-white"
+      className={`${className} w-11/12 md:w-3/6 lg:w-4/12 xl:w-3/12 border flex flex-col items-center justify-center bg-transparent py-5 md:py-10 z-10 gap-8 rounded-xl shadow-glow-sm shadow-white`}
       onSubmit={handleSubmit}
     >
       <h2 className="text-4xl font-bold">{register ? "Register" : "Login"}</h2>
@@ -79,7 +80,7 @@ export default function Form({ register }: FormProps) {
           {register ? "Already have an account?" : "Don't have an account?"}
         </p>
         <Link
-          className="text-emerald-400 font-bold"
+          className="text-sky-500 font-bold"
           href={register ? "/" : "/register"}
         >
           {register ? " Login " : " Register "}
