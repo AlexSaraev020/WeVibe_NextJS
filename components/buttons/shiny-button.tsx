@@ -1,20 +1,28 @@
-import React from 'react'
+import React from "react";
 
 interface ShinyButtonProps {
   text: string;
   onClick?: () => void;
   type?: "button" | "submit";
 }
-export default function ShinyButton({ text, onClick,type }: ShinyButtonProps) {
+export default function ShinyButton({ text, onClick, type }: ShinyButtonProps) {
   return (
-    <button type={type} onClick={onClick} className="relative group w-9/12 inline-flex overflow-hidden rounded-md p-[1px] focus:outline-none focus:ring-1 focus:ring-zinc-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-      <span className="absolute inset-[-1000%] group-hover:animate-[spin_2s_linear_infinite] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#d1d5db_0%,#3f3f46_50%,#d1d5db_100%)]" />
-      <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-md bg-black p-2 text-lg font-bold text-white backdrop-blur-3xl">
-        {text}
-      </span>
-    </button>
-  )
+    <div className="relative group w-9/12">
+      <div className="relative w-full h-14 opacity-90 overflow-hidden rounded-xl bg-black z-10">
+        <div className="absolute z-10 -translate-x-44 group-hover:translate-x-[30rem] ease-in transistion-all duration-700 h-full w-44 bg-gradient-to-r from-sky-700 to-white/10 opacity-30 -skew-x-12"></div>
+
+        <div className="absolute flex items-center justify-center text-white z-[1] opacity-100 rounded-2xl inset-0.5 bg-black">
+          <button
+            onClick={onClick}
+            type={type}
+            name="text"
+            className="input font-semibold text-lg h-full opacity-90 w-full px-16 py-3 rounded-xl bg-black"
+          >
+            {text}
+          </button>
+        </div>
+        <div className="absolute duration-500 transition-all group-hover:animate-spin w-full h-[100px] bg-gradient-to-r from-white via-sky-500 to-sky-500 group-hover:from-sky-500 group-hover:to-sky-500 blur-[30px]"/>
+      </div>
+    </div>
+  );
 }
-
-
-

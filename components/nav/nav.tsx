@@ -102,11 +102,11 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && (
         <nav
-          className={`transition-all duration-500 ${
+          className={`transition-all duration-500 z-30 relative ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
-          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 shadow-glow-sm shadow-white ">
+          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 border-sky-400 shadow-glow shadow-sky-400 ">
             <Link href={"/home"}>
               <Image
                 src={Logo}

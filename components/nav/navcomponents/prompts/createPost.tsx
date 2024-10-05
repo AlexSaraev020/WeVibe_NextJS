@@ -48,7 +48,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     }
   };
   return (
-    <div className="fixed bg-black/60 h-screen w-full z-50 inset-0 flex items-center justify-center">
+    <div className="fixed bg-black/60 h-[100dvh] w-full z-50 inset-0 flex items-center justify-center">
       <form
         onSubmit={handleCreatePost}
         className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-gray-800 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-white animate-fadeIn"
@@ -86,7 +86,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                   onUploadProgress={(progress) => {
                     setProgress(progress);
                   }}
-                  className="h-96 border-none hover:scale-105 transition-all duration-500"
+                  className=" h-40 md:h-96 border-none hover:scale-105 transition-all duration-500"
                   endpoint="imageUploader"
                 />
                 <div className="w-full bg-neutral-700 rounded-full h-2.5 mb-4 ">
