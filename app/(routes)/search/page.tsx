@@ -18,7 +18,7 @@ export default async function Page({
         {response.users.length > 0 ? (
           response.users.map((user: UserType) => (
             <li
-              className="relative p-3 flex flex-col w-4/12 hover:shadow-glow rounded-lg hover:shadow-zinc-400 delay-100 transition-all duration-500 hover:scale-105 animate-fadeIn"
+              className="relative p-3 flex flex-col w-4/12 hover:shadow-glow rounded-lg hover:shadow-sky-500 border-2 border-white/20 hover:border-sky-500 delay-100 transition-all duration-500 hover:scale-105 animate-fadeIn"
               key={user._id}
             >
               <Link

@@ -5,6 +5,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
 import { createPost } from "@/actions/posts/createPost";
 import { useRouter } from "next/navigation";
+import FormInput from "@/components/login + register/formElements/input";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
@@ -51,9 +52,9 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     <div className="fixed bg-black/60 h-[100dvh] w-full z-50 inset-0 flex items-center justify-center">
       <form
         onSubmit={handleCreatePost}
-        className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-gray-800 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-white animate-fadeIn"
+        className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-sky-600 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-sky-500 animate-fadeIn"
       >
-        <h2 className="text-3xl py-1 md:text-5xl font-extrabold bg-gradient-to-r from-white via-gray-400 to-gray-200 text-center text-transparent bg-clip-text neon-text">
+        <h2 className="text-3xl py-1 md:text-5xl font-extrabold bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 text-center text-transparent bg-clip-text neon-text">
           Create Post
         </h2>
         <div className="flex flex-col gap-4">
@@ -89,39 +90,39 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                   className=" h-40 md:h-96 border-none hover:scale-105 transition-all duration-500"
                   endpoint="imageUploader"
                 />
-                <div className="w-full bg-neutral-700 rounded-full h-2.5 mb-4 ">
+                <div className="w-full bg-zinc-700 rounded-full h-2.5 mb-4 ">
                   <div
-                    className="bg-gray-600 h-2.5 rounded-full dark:bg-gray-300 transition-all duration-500 shadow-glow-sm shadow-white"
+                    className="bg-sky-600 h-2.5 rounded-full  transition-all duration-500 shadow-glow-sm shadow-sky-500"
                     style={{ width: `${progress}%` }}
-                  ></div>
+                  />
                 </div>
               </>
             )}
           </label>
           <div className="flex flex-col gap-2">
-            <label className="text-white/80" htmlFor="title">
-              Title
-            </label>
-            <input
-              minLength={5}
+            <FormInput
               type="text"
               id="title"
               placeholder="Enter post title"
               required
-              value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl p-2 bg-black text-white placeholder:text-white/50"
+              name={"Title"}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="description">Description</label>
+            <label
+              className="text-xl focus:outline-none outline-none"
+              htmlFor="description"
+            >
+              Description<span className="text-sky-500">*</span>
+            </label>
             <textarea
               minLength={10}
               id="description"
               value={description}
               placeholder="Enter post description"
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-xl p-2 bg-black text-white placeholder:text-white/50"
+              className="bg-black border focus:border-none rounded-md placeholder-zinc-500 p-2 transition-all duration-500 focus:outline-none focus:outline-sky-400 shadow-none focus:shadow-glow focus:shadow-sky-500"
             />
           </div>
         </div>
@@ -141,6 +142,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
             Create Post
           </button>
           <button
+            type="button"
             onClick={cancelCreatePost}
             className=" border-2 border-white/90 shadow-glow-sm hover:shadow-glow shadow-white/90 hover:shadow-white hover:border-white transition-all duration-500 hover:scale-105 text-lg font-extrabold py-2 w-32 rounded-xl "
           >

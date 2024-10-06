@@ -5,7 +5,6 @@ import PostBottomSide from "./postComponents/clientSide";
 import { PostType } from "@/types/post/postType";
 import { getUserById } from "@/actions/user/getUser";
 import Link from "next/link";
-import PlaceHolderImage from "@/public/placeholders/placeholderImage.jpg";
 
 export default async function Post({ post }: { post: PostType }) {
   const user = await getUserById(post.createdBy);

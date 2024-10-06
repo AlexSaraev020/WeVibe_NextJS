@@ -41,7 +41,7 @@ export default function Search() {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearch(e.target.value)
           }
-          className="w-full h-12 px-4 bg-neutral-900 text-white focus:outline-none rounded-full border-2 border-zinc-600 shadow-glow-sm shadow-zinc-200 focus:shadow-glow focus:shadow-white transition-all duration-500 animate-fadeIn"
+          className="w-full h-12 px-4 bg-transparent text-white focus:outline-none rounded-full border-2 border-sky-600 shadow-glow-sm shadow-sky-500 focus:shadow-glow focus:shadow-sky-500 transition-all duration-500 animate-fadeIn"
         />
         {showClear && (
           <button
@@ -49,14 +49,14 @@ export default function Search() {
             onClick={handleClear}
             className="absolute top-1/2 right-12 transform -translate-y-1/2 transition-all duration-500 animate-fadeIn"
           >
-            <MdClear className="w-5 h-5 fill-white/70" />
+            <MdClear className="w-5 h-5 fill-sky-300/70" />
           </button>
         )}
         <button
           type="submit"
           className="absolute top-1/2 right-4 transform -translate-y-1/2 transition-all duration-500 animate-fadeIn"
         >
-          <CiSearch className="w-7 h-7" />
+          <CiSearch className="w-7 h-7 fill-sky-400" />
         </button>
       </div>
     </form>

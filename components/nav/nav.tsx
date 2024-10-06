@@ -106,13 +106,13 @@ export default function Nav() {
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
-          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 border-sky-400 shadow-glow shadow-sky-400 ">
+          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 border-sky-500 shadow-glow-sm shadow-sky-400 ">
             <Link href={"/home"}>
               <Image
                 src={Logo}
                 alt="WeVibe Logo"
                 priority
-                className="w-14 h-14 md:w-32 md:h-32"
+                className="w-14 h-14 md:w-36 md:h-36"
                 width={100}
                 height={100}
               />
