@@ -5,6 +5,7 @@ import { FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
+import CommentsSection from "./comments";
 
 interface PostBottomSideProps {
   comments: [];
@@ -12,7 +13,7 @@ interface PostBottomSideProps {
   date: string;
 }
 
-export default function PostBottomSide({
+export default function PostClientSide({
   comments,
   description,
   date,
@@ -20,6 +21,7 @@ export default function PostBottomSide({
   const [like, setLike] = useState<number | undefined>(undefined);
   const [dislike, setDislike] = useState<number | undefined>(undefined);
   const [truncate, setTruncate] = useState<boolean>(true);
+  const [showComments, setShowComments] = useState<boolean>(false);
   const handleDate = (date: string) => {
     const convertedDate = new Date(date);
     const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
@@ -40,6 +42,12 @@ export default function PostBottomSide({
   };
   return (
     <>
+      {showComments && (
+        <CommentsSection
+          comments={comments}
+          setShowComments={setShowComments}
+        />
+      )}
       <div className="flex p-2 gap-2 w-full z-10">
         <button onClick={handleLike} className="relative group">
           {like === 1 ? (
@@ -47,9 +55,12 @@ export default function PostBottomSide({
           ) : (
             <GoStar className="w-10 h-10 transition-all duration-500 animate-fadeIn" />
           )}
-          <Tooltip text="Vibe" className="z-10"/>
+          <Tooltip text="Vibe" className="z-10" />
         </button>
-        <button className="relative group">
+        <button
+          onClick={() => setShowComments(!showComments)}
+          className="relative group"
+        >
           <FaRegComment className="w-9 h-10 ml-1" />
           <Tooltip text="Comment" className="z-10" />
         </button>
