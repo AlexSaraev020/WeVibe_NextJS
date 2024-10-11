@@ -29,7 +29,7 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning={true} className={`${mingzat.className} relative`}>
       <Particles
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 min-h-screen"
         quantity={200}
         ease={80}
         color={"#38bdf8"}

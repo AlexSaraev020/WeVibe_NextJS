@@ -36,9 +36,6 @@ export async function PUT(req: Request) {
       { new: true }
     );
 
-    if (!updatedPost) {
-      return NextResponse.json({ message: "Post not found" }, { status: 404 });
-    }
     return NextResponse.json(
       { message: "Comment added successfully", post: updatedPost },
       { status: 200 }

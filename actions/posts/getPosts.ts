@@ -8,7 +8,10 @@ export const getPosts = async () => {
       return response.data.posts;
     }
     return [];
-  } catch (error) {
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    }
     console.error("Error fetching posts:", error);
     return [];
   }

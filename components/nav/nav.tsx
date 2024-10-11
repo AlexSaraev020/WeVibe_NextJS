@@ -8,13 +8,13 @@ import Logout from "./navcomponents/prompts/logout";
 import CreatePost from "./navcomponents/prompts/createPost";
 import Search from "./navcomponents/search";
 import Link from "next/link";
-import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { getUser } from "@/actions/user/getUser";
 export default function Nav() {
   const paths = useMemo(() => ["/", "/register", "/login"], []);
   const path = usePathname();
   const router = useRouter();
   const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
+  const [userImage, setUserImage] = useState<string>("");
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
@@ -31,7 +31,7 @@ export default function Nav() {
     const fetchUserWithTimeout = async () => {
       const fetchUser = async () => {
         const response = await getUser();
-        if (response.status > 400) {
+        if (response >= 400) {
           router.push("/");
         }
         console.log(response);
@@ -44,6 +44,7 @@ export default function Nav() {
         const result = await Promise.race([fetchUser(), timeout]);
         setUserName(result.username);
         setUserId(result._id);
+        setUserImage(result.userImage);
       } catch (error: unknown) {
         if (error instanceof Error) {
           if (error.message === "Timeout") {
@@ -92,7 +93,7 @@ export default function Nav() {
     handleLogOut,
     handleProfile,
     userName: isLoaded ? userName : "Profile",
-    profilePicture: ProfilePlaceholder.src,
+    profilePicture: userImage,
   });
 
   return (

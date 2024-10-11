@@ -1,19 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tooltip from "@/components/nav/navcomponents/tooltip";
 import { FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import CommentsSection from "./comments";
+import { CommentType } from "@/types/post/postType";
 
 interface PostBottomSideProps {
-  comments: [];
+  comments: CommentType[];
   description: string;
   date: string;
+  postId: string;
 }
 
 export default function PostClientSide({
+  postId,
   comments,
   description,
   date,
@@ -40,10 +43,14 @@ export default function PostClientSide({
   const handleTruncate = () => {
     setTruncate(!truncate);
   };
+  useEffect(() => {
+    document.documentElement.style.overflow = showComments ? "hidden" : "auto";
+  }, [showComments]);
   return (
     <>
       {showComments && (
         <CommentsSection
+          postId={postId}
           comments={comments}
           setShowComments={setShowComments}
         />

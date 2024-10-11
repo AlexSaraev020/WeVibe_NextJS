@@ -11,11 +11,15 @@ export interface User extends Document {
 }
 
 const userSchema = new Schema<User>({
-  username: { type: String, required: true , unique: true},
-  email: { type: String, required: true , unique: true},
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   bio: { type: String },
-  image: { type: String },
+  image: {
+    type: String,
+    default:
+      "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
+  },
   createdAt: { type: Date, default: Date.now },
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });

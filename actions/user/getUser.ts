@@ -6,25 +6,15 @@ export const getUser = async () => {
     const response = await axios.get("/api/user/get");
     return response.data;
   } catch (error: unknown) {
-    console.error(error);
-    return error;
-  }
-};
-
-export const getUserById = async (userId: string) => {
-  try {
-    const response = await axios.get(`${url}/api/user/getById`, {
-      params: { userId },
-    });
-    return response.data;
-  } catch (error: unknown) {
-    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.status;
+    }
+    console.error("Error fetching user:", error);
     return error;
   }
 };
 
 export const getUsersByQuery = async (query: string) => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(`${url}/api/user/search?q=${query}`);
     return response.data;

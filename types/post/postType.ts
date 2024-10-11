@@ -3,8 +3,24 @@ export interface PostType {
   title: string;
   description: string;
   image: string;
-  createdAt: Date;
-  createdBy: string;
+  createdAt: string;
+  createdBy: {
+    _id: string;
+    username: string;
+    image: string;
+  };
   likes: [];
-  comments: [];
+  comments: CommentType[];
+}
+
+export interface CommentType {
+  _id: string;
+  comment: string;
+  post: string;
+  user: {
+    _id: string;
+    username: string;
+    image: string;
+  };
+  createdAt: string;
 }

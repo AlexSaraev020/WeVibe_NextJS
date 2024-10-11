@@ -12,7 +12,15 @@ export async function GET(req: Request) {
     }
     await connect();
 
-    const posts = await PostModel.find({}).sort({ createdAt: -1 }).exec();
+    const posts = await PostModel.find({})
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "comments",
+        options: { sort: { createdAt: -1 } },
+        populate: { path: "user", select: "username image" },
+      })
+      .populate("createdBy", "username image")
+      .exec();
     if (!posts) {
       return NextResponse.json({ message: "Posts not found" }, { status: 404 });
     }

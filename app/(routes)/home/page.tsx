@@ -5,9 +5,7 @@ import { PostType } from "@/types/post/postType";
 import Particles from "@/components/background/particles";
 export default async function Page() {
   const posts = await getPosts();
-  if (!posts) {
-    return <div>No posts found</div>;
-  }
+console.log(posts)
   return (
     <div className=" w-full md:p-4 flex justify-center items-center relative">
       <Particles
