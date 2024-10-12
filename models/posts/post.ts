@@ -1,19 +1,17 @@
 import { Document, model, Model, models, Schema, Types } from "mongoose";
-import { Comment } from "./comments";
-import { Likes } from "./likes";
 export interface Post extends Document {
   title: string;
   description: string;
   image: string;
   createdAt: Date;
   createdBy: Types.ObjectId;
-  comments: Comment[];
-  likes: Likes[];
+  comments: Types.ObjectId[] | null;
+  likes: Types.ObjectId[] | null;
 }
 
-const postSchema = new Schema<Post>({
-  title: { type: String, required: true, maxlength: 100},
-  description: { type: String,  default: "",  maxlength: 500 },
+const PostSchema = new Schema<Post>({
+  title: { type: String, required: true, maxlength: 100 },
+  description: { type: String, default: "", maxlength: 500 },
   image: {
     type: String,
     required: true,
@@ -28,8 +26,8 @@ const postSchema = new Schema<Post>({
     ref: "User",
     required: true,
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  likes: [{ type: Schema.Types.ObjectId, ref: "Likes" }],
+  comments: [{ type: Schema.Types.ObjectId, default: null, ref: "Comment" }],
+  likes: [{ type: Schema.Types.ObjectId, default: null, ref: "Likes" }],
 });
 
-export const PostModel: Model<Post> = models.Post || model("Post", postSchema);
+export const PostModel: Model<Post> = models.Post || model("Post", PostSchema);

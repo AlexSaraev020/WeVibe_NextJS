@@ -30,17 +30,25 @@ export async function PUT(req: Request) {
       post: postId,
       user: userId,
     });
-    const updatedPost = await PostModel.findOneAndUpdate(
+    await PostModel.findOneAndUpdate(
       { _id: postId },
       { $push: { comments: newComment._id } },
       { new: true }
     );
 
     return NextResponse.json(
-      { message: "Comment added successfully", post: updatedPost },
+      { message: "Comment added successfully", comment: newComment },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error);
+      return NextResponse.json(
+        { message: "An error occurred", error: error.message },
+        { status: 500 }
+      );
+    }
+    console.error("Unknown error:", error);
     return NextResponse.json(
       { message: "An error occurred", error },
       { status: 500 }

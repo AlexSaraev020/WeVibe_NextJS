@@ -6,11 +6,11 @@ export interface Likes extends Document {
   createdAt: Date;
 }
 
-const likesSchema = new Schema<Likes>({
+const LikesSchema = new Schema<Likes>({
   post: { type: Schema.Types.ObjectId, ref: "Post" },
   user: { type: Schema.Types.ObjectId, ref: "User" },
   createdAt: { type: Date, default: Date.now },
 });
 
 export const LikesModel: Model<Likes> =
-  models.Likes || model("Likes", likesSchema);
+  models.Likes || model("Likes", LikesSchema);

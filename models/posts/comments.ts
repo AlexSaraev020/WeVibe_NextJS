@@ -7,12 +7,12 @@ export interface Comment extends Document {
   createdAt: Date;
 }
 
-const commentsSchema = new Schema<Comment>({
-  comment: { type: String, required: true },
-  post: { type: Schema.Types.ObjectId, ref: "Post" },
+const CommentsSchema = new Schema<Comment>({
   user: { type: Schema.Types.ObjectId, ref: "User" },
+  post: { type: Schema.Types.ObjectId, ref: "Post" },
+  comment: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
 export const CommentsModel: Model<Comment> =
-  models.Comment || model("Comment", commentsSchema);
+  models.Comment || model("Comment", CommentsSchema);

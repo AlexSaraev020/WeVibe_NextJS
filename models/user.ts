@@ -10,7 +10,7 @@ export interface User extends Document {
   posts: ObjectId[];
 }
 
-const userSchema = new Schema<User>({
+const UserSchema = new Schema<User>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -21,7 +21,7 @@ const userSchema = new Schema<User>({
       "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
   },
   createdAt: { type: Date, default: Date.now },
-  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  posts: [{ type: Schema.Types.ObjectId, default: null, ref: "Post" }],
 });
-
-export const UserModel: Model<User> = models.User || model("User", userSchema);
+delete models.User;
+export const UserModel: Model<User> = models.User || model("User", UserSchema);
