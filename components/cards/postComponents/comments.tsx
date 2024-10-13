@@ -2,23 +2,26 @@
 import { GradualSpacing } from "@/components/textAnimation/gradualSpacing";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import Image from "next/image";
 import { FaArrowUp } from "react-icons/fa";
-import { addComment } from "@/actions/posts/addComment";
+import { addComment } from "@/actions/posts/comments/addComment";
 import { CommentType } from "@/types/post/postType";
+import Comment from "./comment";
 
 interface CommentsSectionProps {
   comments: CommentType[];
   postId: string;
   setShowComments: (showComments: boolean) => void;
+  setAddedCommentCounter: (addedCommentCounter: number) => void;
+  addedCommentCounter: number;
 }
 
 export default function CommentsSection({
   postId,
   comments,
   setShowComments,
+  setAddedCommentCounter,
+  addedCommentCounter,
 }: CommentsSectionProps) {
-  const [truncate, setTruncate] = useState<boolean>(true);
   const [comment, setComment] = useState<string>("");
 
   const handleClickOutside = () => {
@@ -33,6 +36,7 @@ export default function CommentsSection({
     const response = await addComment(postId, comment);
     if (response?.status === 200) {
       setComment("");
+      setAddedCommentCounter(addedCommentCounter + 1);
     }
     console.log(response);
   };
@@ -57,44 +61,11 @@ export default function CommentsSection({
         </button>
         <ul className="w-full flex flex-col items-center overflow-y-auto h-full gap-4 scrollbar-thin ">
           {comments.map((commentContent) => (
-            <li
-              key={commentContent._id}
-              className="w-11/12 flex border-2 rounded-xl border-zinc-600 hover:border-sky-500 p-2 gap-2 transition-all duration-500 animate-fadeIn shadow-glow-sm shadow-zinc-600 hover:shadow-glow-sm hover:shadow-sky-500"
-            >
-              <Image
-                src={commentContent.user.image}
-                alt="Profile"
-                className="rounded-full w-8 h-8 md:w-10 md:h-10 object-cover"
-                width={50}
-                height={50}
+            <li className="w-full flex flex-col items-center justify-center" key={commentContent._id}>
+              <Comment
+                key={commentContent._id}
+                commentContent={commentContent}
               />
-              <div className="relative flex flex-col items-start justify-center">
-                <h3 className="text-sm md:text-lg font-bold">
-                  {commentContent.user.username}
-                </h3>
-                <p className="text-sm font-medium text-zinc-300">
-                  {truncate
-                    ? commentContent.comment.slice(0, 200) + "..."
-                    : commentContent.comment}
-                </p>
-                <button>
-                  {truncate ? (
-                    <p
-                      className="text-sm font-medium text-sky-400 hover:scale-105 transition-all duration-500"
-                      onClick={() => setTruncate(false)}
-                    >
-                      Read more
-                    </p>
-                  ) : (
-                    <p
-                      className="text-sm font-medium text-sky-400 hover:scale-105 transition-all duration-500"
-                      onClick={() => setTruncate(true)}
-                    >
-                      Read less
-                    </p>
-                  )}
-                </button>
-              </div>
             </li>
           ))}
         </ul>

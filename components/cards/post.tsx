@@ -43,7 +43,6 @@ export default async function Post({ post }: { post: PostType }) {
         />
         <PostClientSide
           postId={post._id}
-          comments={post.comments}
           description={post.description}
           date={post.createdAt.toString()}
         />

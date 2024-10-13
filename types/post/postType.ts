@@ -10,13 +10,11 @@ export interface PostType {
     image: string;
   };
   likes: [];
-  comments: CommentType[];
 }
 
 export interface CommentType {
   _id: string;
   comment: string;
-  post: string;
   user: {
     _id: string;
     username: string;

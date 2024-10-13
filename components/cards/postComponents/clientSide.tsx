@@ -6,10 +6,10 @@ import { formatDistanceToNow } from "date-fns";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import CommentsSection from "./comments";
+import { getComments } from "@/actions/posts/comments/getComments";
 import { CommentType } from "@/types/post/postType";
 
 interface PostBottomSideProps {
-  comments: CommentType[];
   description: string;
   date: string;
   postId: string;
@@ -17,7 +17,6 @@ interface PostBottomSideProps {
 
 export default function PostClientSide({
   postId,
-  comments,
   description,
   date,
 }: PostBottomSideProps) {
@@ -25,6 +24,8 @@ export default function PostClientSide({
   const [dislike, setDislike] = useState<number | undefined>(undefined);
   const [truncate, setTruncate] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(false);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [addedCommentCounter, setAddedCommentCounter] = useState<number>(0);
   const handleDate = (date: string) => {
     const convertedDate = new Date(date);
     const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
@@ -46,10 +47,26 @@ export default function PostClientSide({
   useEffect(() => {
     document.documentElement.style.overflow = showComments ? "hidden" : "auto";
   }, [showComments]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (showComments) {
+        const comments = await getComments(postId);
+        if (!comments) {
+          setComments([]);
+        }
+        setComments(comments);
+      }
+    };
+    fetchComments();
+  }, [addedCommentCounter, postId, showComments]);
+  console.log(comments);
   return (
     <>
       {showComments && (
         <CommentsSection
+          addedCommentCounter={addedCommentCounter}
+          setAddedCommentCounter={setAddedCommentCounter}
           postId={postId}
           comments={comments}
           setShowComments={setShowComments}
@@ -92,7 +109,7 @@ export default function PostClientSide({
           )}
         </div>
         <h2 className="text-xs md:text-md text-zinc-300/90">
-          Comments {comments.length}
+          Comments {[].length}
         </h2>
         <h2> {handleDate(date)}</h2>
       </div>

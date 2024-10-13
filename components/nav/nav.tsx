@@ -34,7 +34,6 @@ export default function Nav() {
         if (response >= 400) {
           router.push("/");
         }
-        console.log(response);
         return response;
       };
       const timeout = new Promise((_, reject) =>
