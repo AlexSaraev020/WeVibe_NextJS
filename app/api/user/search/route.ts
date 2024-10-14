@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
     await connect();
 
-    const users = await UserModel.find({ username: { $regex: query } });
+    const users = await UserModel.find({ username: { $regex: query , $options: "i" } });
     if (!users) {
       return NextResponse.json(
         { message: `Users with the name ${query} not found` },

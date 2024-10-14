@@ -6,20 +6,24 @@ export interface User extends Document {
   password: string;
   bio: string;
   image: string;
-  createdAt: Date;
+  follows: ObjectId[];
+  followers: ObjectId[];
   posts: ObjectId[];
+  createdAt: Date;
 }
 
 const UserSchema = new Schema<User>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  bio: { type: String },
+  bio: { type: String , default: "" },
   image: {
     type: String,
     default:
       "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
   },
+  follows: [{ type: Schema.Types.ObjectId, default: null, ref: "User" }],
+  followers: [{ type: Schema.Types.ObjectId, default: null, ref: "User" }],
   createdAt: { type: Date, default: Date.now },
   posts: [{ type: Schema.Types.ObjectId, default: null, ref: "Post" }],
 });
