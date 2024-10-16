@@ -2,15 +2,15 @@ import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    if (request.method !== "GET") {
+    if (req.method !== "GET") {
       return NextResponse.json(
         { message: "Method not allowed" },
         { status: 400 }
       );
     }
-    const query = request.nextUrl.searchParams.get("q");
+    const query = req.nextUrl.searchParams.get("q");
     if (!query) {
       return NextResponse.json({ message: "Query not found" }, { status: 404 });
     }

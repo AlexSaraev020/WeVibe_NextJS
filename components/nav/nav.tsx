@@ -43,7 +43,7 @@ export default function Nav() {
         const result = await Promise.race([fetchUser(), timeout]);
         setUserName(result.username);
         setUserId(result._id);
-        setUserImage(result.userImage);
+        setUserImage(result.image);
       } catch (error: unknown) {
         if (error instanceof Error) {
           if (error.message === "Timeout") {

@@ -28,16 +28,17 @@ export default function RootLayout({
       className="scrollbar-thin overflow-y-scroll scrollbar-thumb-black scrollbar-track-black  bg-black text-white antialiased"
     >
       <body suppressHydrationWarning={true} className={`${mingzat.className} relative`}>
-      <Particles
-        className="absolute inset-0 z-0 min-h-screen"
+      
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+        <Nav />
+        {children}
+        <Particles
+        className="absolute inset-0 min-h-screen -z-10"
         quantity={200}
         ease={80}
         color={"#38bdf8"}
         refresh
       />
-        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-        <Nav />
-        {children}
       </body>
     </html>
   );

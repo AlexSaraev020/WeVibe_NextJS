@@ -22,10 +22,10 @@ const UserSchema = new Schema<User>({
     default:
       "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
   },
-  follows: [{ type: Schema.Types.ObjectId, default: null, ref: "User" }],
-  followers: [{ type: Schema.Types.ObjectId, default: null, ref: "User" }],
+  follows: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
+  followers: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   createdAt: { type: Date, default: Date.now },
-  posts: [{ type: Schema.Types.ObjectId, default: null, ref: "Post" }],
+  posts: [{ type: Schema.Types.ObjectId, default: [], ref: "Post" }],
 });
 delete models.User;
 export const UserModel: Model<User> = models.User || model("User", UserSchema);

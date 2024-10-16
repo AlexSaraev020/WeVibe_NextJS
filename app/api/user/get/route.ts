@@ -1,18 +1,18 @@
 import { connect } from "@/db/mongo/db";
-import { User, UserModel } from "@/models/user";
+import {  UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "@/types/userTypes/token/decoded";
 
 export async function GET(req: Request) {
+  if (req.method !== "GET") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 }
+    );
+  }
   try {
-    if (req.method !== "GET") {
-      return NextResponse.json(
-        { message: "Method not allowed" },
-        { status: 400 }
-      );
-    }
     const cookieStore = cookies();
     const token = cookieStore.get("authToken");
     if (!token) {
@@ -30,20 +30,21 @@ export async function GET(req: Request) {
     }
 
     await connect();
-    const user = (await UserModel.findOne({ _id: userId.userId })) as User;
+    const user = await UserModel.findOne({ _id: userId.userId })
+      .select("_id username image")
+      .exec();
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(
-      { _id: user._id, username: user.username, userImage: user.image },
-      { status: 200 }
-    );
+    return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
-    console.error("Error getting user:", error);
-    return NextResponse.json(
-      { message: "An error occurred", error },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "An error occurred", error: error.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

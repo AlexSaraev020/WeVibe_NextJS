@@ -4,6 +4,7 @@ import { PostModel } from "@/models/posts/post";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { DecodedToken } from "@/types/userTypes/token/decoded";
+import { UserModel } from "@/models/user";
 export async function POST(req: Request) {
   try {
     if (req.method !== "POST") {
@@ -42,11 +43,23 @@ export async function POST(req: Request) {
       createdBy: userId.userId,
     });
 
+    if (!newPost) {
+      return NextResponse.json({ message: "Post not created" }, { status: 400 });
+    }
+    
+    await UserModel.findOneAndUpdate(
+      { _id: userId.userId },
+      { $push: { posts: newPost._id } }
+    );
+
     return NextResponse.json({ newPost }, { status: 201 });
   } catch (error: unknown) {
-    return NextResponse.json(
-      { message: "An error occurred", error },
-      { status: 500 }
-    );
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "An error occurred", error: error.message },
+        { status: 500 }
+      );
+    }
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }
