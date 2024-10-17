@@ -1,8 +1,8 @@
 import { connect } from "@/db/mongo/db";
-import {  UserModel } from "@/models/user";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "@/actions/auth/jwtDecode";
 import { DecodedToken } from "@/types/userTypes/token/decoded";
 
 export async function GET(req: Request) {
@@ -21,8 +21,11 @@ export async function GET(req: Request) {
         { status: 401 }
       );
     }
-    const userId = jwtDecode(token.value) as DecodedToken;
-    if (!userId || !userId.userId) {
+
+    const payload = (await jwtDecode(token.value)) as DecodedToken;
+
+    const userId = payload.userId;
+    if (!userId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 }
@@ -30,7 +33,7 @@ export async function GET(req: Request) {
     }
 
     await connect();
-    const user = await UserModel.findOne({ _id: userId.userId })
+    const user = await UserModel.findOne({ _id: userId })
       .select("_id username image")
       .exec();
     if (!user) {

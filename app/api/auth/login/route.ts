@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import { generateToken } from "@/actions/auth/jwt";
+import { generateToken } from "@/actions/auth/jwtCreate";
 import { ObjectId } from "mongoose";
 
 export async function POST(req: Request) {
@@ -33,7 +33,10 @@ export async function POST(req: Request) {
     };
 
     if (!existingUser) {
-      return NextResponse.json({ message: "User doesn't exist!" }, { status: 404 });
+      return NextResponse.json(
+        { message: "User doesn't exist!" },
+        { status: 404 }
+      );
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -47,19 +50,24 @@ export async function POST(req: Request) {
         { status: 402 }
       );
     }
+    const token = await generateToken(existingUser._id.toString());
 
     cookies().set({
       name: "authToken",
-      value: generateToken(existingUser._id.toString()),
-      maxAge: 7 * 24 * 60 * 60,
+      value: token,
+      maxAge: 14 * 24 * 60 * 60,
       httpOnly: true,
       sameSite: "strict",
     });
 
     return NextResponse.json({ message: "Login successful!" }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+
     return NextResponse.json(
-      { message: "An error occurred while logging in" },
+      { message: "An error occurred", error },
       { status: 500 }
     );
   }

@@ -2,7 +2,7 @@ import { connect } from "@/db/mongo/db";
 import { NextResponse } from "next/server";
 import { PostModel } from "@/models/posts/post";
 import { cookies } from "next/headers";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "@/actions/auth/jwtDecode";
 import { DecodedToken } from "@/types/userTypes/token/decoded";
 import { UserModel } from "@/models/user";
 export async function POST(req: Request) {
@@ -35,12 +35,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = jwtDecode(token.value) as DecodedToken;
+    const userId = jwtDecode(token.value);
     const newPost = await PostModel.create({
       title,
       description,
       image,
-      createdBy: userId.userId,
+      createdBy: userId,
     });
 
     if (!newPost) {
