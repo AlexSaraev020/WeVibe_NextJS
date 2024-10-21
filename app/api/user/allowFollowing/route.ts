@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const isFollowing = user.followers.includes(
-      new (Types.ObjectId as any)(userId)
+      new Types.ObjectId(userId)
     );
     if (!isFollowing) {
       return NextResponse.json(

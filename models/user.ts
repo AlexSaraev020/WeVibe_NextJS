@@ -1,4 +1,4 @@
-import { Document, model, Model, models, ObjectId, Schema } from "mongoose";
+import { Document, model, Model, models, Schema, Types } from "mongoose";
 
 export interface User extends Document {
   username: string;
@@ -6,9 +6,9 @@ export interface User extends Document {
   password: string;
   bio: string;
   image: string;
-  follows: ObjectId[];
-  followers: ObjectId[];
-  posts: ObjectId[];
+  follows: Types.ObjectId[];
+  followers: Types.ObjectId[];
+  posts: Types.ObjectId[];
   createdAt: Date;
 }
 
