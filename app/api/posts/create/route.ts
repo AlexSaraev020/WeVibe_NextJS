@@ -1,10 +1,8 @@
 import { connect } from "@/db/mongo/db";
 import { NextResponse } from "next/server";
 import { PostModel } from "@/models/posts/post";
-import { cookies } from "next/headers";
-import { jwtDecode } from "@/actions/auth/jwtDecode";
-import { DecodedToken } from "@/types/userTypes/token/decoded";
 import { UserModel } from "@/models/user";
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 export async function POST(req: Request) {
   try {
     if (req.method !== "POST") {
@@ -26,16 +24,13 @@ export async function POST(req: Request) {
       );
     }
     
-    const cookieStore = cookies();
-    const token = cookieStore.get("authToken");
-    if (!token) {
+    const userId = await checkUserLoggedIn();
+    if (!userId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 400 }
+        { status: 401 }
       );
     }
-
-    const userId = jwtDecode(token.value);
     const newPost = await PostModel.create({
       title,
       description,
@@ -48,7 +43,7 @@ export async function POST(req: Request) {
     }
     
     await UserModel.findOneAndUpdate(
-      { _id: userId.userId },
+      { _id: userId },
       { $push: { posts: newPost._id } }
     );
 

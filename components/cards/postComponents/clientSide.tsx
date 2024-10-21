@@ -13,12 +13,14 @@ interface PostBottomSideProps {
   description: string;
   date: string;
   postId: string;
+  commentsNumber: number;
 }
 
 export default function PostClientSide({
   postId,
   description,
   date,
+  commentsNumber,
 }: PostBottomSideProps) {
   const [like, setLike] = useState<number | undefined>(undefined);
   const [dislike, setDislike] = useState<number | undefined>(undefined);
@@ -109,7 +111,7 @@ export default function PostClientSide({
           )}
         </div>
         <h2 className="text-xs md:text-md text-zinc-300/90">
-          Comments {[].length}
+          Comments {commentsNumber}
         </h2>
         <h2> {handleDate(date)}</h2>
       </div>

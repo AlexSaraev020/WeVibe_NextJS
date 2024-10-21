@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     );
   }
   await connect();
-  console.log("Connected to MongoDB");
+
   try {
     const body = await req.json();
     if (!body) {
@@ -32,29 +32,15 @@ export async function POST(req: Request) {
         select: ["username", "image"],
       })
       .exec();
+      console.log("comments", comments)
     if (!comments.length) {
       return NextResponse.json(
         { message: "Comments not found" },
         { status: 404 }
       );
     }
-    const filteredComments = comments.map((comment) => {
-      return {
-        _id: comment._id,
-        comment: comment.comment,
-        user: comment.user,
-        createdAt: comment.createdAt,
-      };
-    });
 
-    if (!filteredComments.length) {
-      return NextResponse.json(
-        { message: "Comments not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ comments: filteredComments }, { status: 200 });
+    return NextResponse.json({ comments: comments }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error);

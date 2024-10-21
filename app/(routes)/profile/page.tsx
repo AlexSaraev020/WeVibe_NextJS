@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import ProfilePosts from "@/components/cards/profilePosts";
-import { IoIosSettings } from "react-icons/io";
 import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
+import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
 
 export default async function Page({
   searchParams,
@@ -11,7 +11,7 @@ export default async function Page({
   searchParams: { user: string };
 }) {
   const response = await getUserProfile(searchParams.user);
-  console.log(response);
+
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center">
       {response ? (
@@ -30,9 +30,7 @@ export default async function Page({
                 <h1 className=" text-xl md:text-3xl font-semibold">
                   {response.user.username}
                 </h1>
-                <button className="w-32 text-xl md:text-2xl rounded-md border-2 border-sky-500 transition-all duration-500 hover:scale-110 shadow-glow shadow-sky-500 hover:shadow-sky-400 hover:border-sky-400 hover:text-sky-400">
-                  Follow
-                </button>
+                <ProfileActionsButtons />
               </div>
               <div className="flex gap-6 mt-4">
                 <div className="flex items-center justify-center gap-2">
@@ -50,7 +48,9 @@ export default async function Page({
                   <p className="text-md md:text-lg">Followers</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <h2 className="text-lg md:text-xl font-bold">{response.user.follows ? response.user.follows.length : 0}</h2>
+                  <h2 className="text-lg md:text-xl font-bold">
+                    {response.user.follows ? response.user.follows.length : 0}
+                  </h2>
                   <p className="text-md md:text-lg">Follows</p>
                 </div>
               </div>

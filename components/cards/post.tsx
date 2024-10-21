@@ -10,7 +10,7 @@ export default async function Post({ post }: { post: PostType }) {
       <div className="flex items-center p-2 md:p-0">
       <Link
           href={`/profile` + `?user=${post.createdBy._id}`}
-          className="text-sm md:text-lg font-bold flex items-center justify-center z-50"
+          className="text-sm md:text-lg font-bold flex items-center justify-center z-10"
         >
         <Image
           src={post.createdBy.image}
@@ -45,6 +45,7 @@ export default async function Post({ post }: { post: PostType }) {
           postId={post._id}
           description={post.description}
           date={post.createdAt.toString()}
+          commentsNumber={post.comments.length}
         />
       </div>
     </div>

@@ -1,9 +1,7 @@
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { jwtDecode } from "@/actions/auth/jwtDecode";
-import { DecodedToken } from "@/types/userTypes/token/decoded";
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 
 export async function GET(req: Request) {
   if (req.method !== "GET") {
@@ -13,25 +11,10 @@ export async function GET(req: Request) {
     );
   }
   try {
-    const cookieStore = cookies();
-    const token = cookieStore.get("authToken");
-    if (!token) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 }
-      );
+    const userId = await checkUserLoggedIn();
+    if(!userId){
+      return NextResponse.json({ message: "You are not logged in!" }, { status: 401 });
     }
-
-    const payload = (await jwtDecode(token.value)) as DecodedToken;
-
-    const userId = payload.userId;
-    if (!userId) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 }
-      );
-    }
-
     await connect();
     const user = await UserModel.findOne({ _id: userId })
       .select("_id username image")

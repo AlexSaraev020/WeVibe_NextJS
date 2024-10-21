@@ -1,4 +1,7 @@
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
+import { Types } from "mongoose";
 import { connect } from "@/db/mongo/db";
+import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -8,14 +11,67 @@ export async function GET(req: NextRequest) {
       { status: 400 }
     );
   }
-  await connect();
 
   try {
-    const query = req.nextUrl.searchParams.get("q");
+    const query = req.nextUrl.searchParams.get("user");
     if (!query) {
       return NextResponse.json({ message: "Query not found" }, { status: 404 });
     }
-  } catch (error) {
-    
+    const userId = await checkUserLoggedIn();
+    if (!userId) {
+      return NextResponse.json(
+        { message: "You are not logged in!" },
+        { status: 401 }
+      );
+    }
+    await connect();
+    console.log("connected to mongo");
+    if (userId === query) {
+      return NextResponse.json(
+        {
+          message: "You don't follow this user!",
+          allowedActions: {
+            allowFollowing: false,
+            allowUnfollowing: false,
+            allowEditing: true,
+          },
+        },
+        { status: 404 }
+      );
+    }
+    const user = await UserModel.findOne({ _id: query }).exec();
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    const isFollowing = user.followers.includes(
+      new (Types.ObjectId as any)(userId)
+    );
+    if (!isFollowing) {
+      return NextResponse.json(
+        {
+          message: "You don't follow this user!",
+          allowedActions: {
+            allowFollowing: true,
+            allowUnfollowing: false,
+            allowEditing: false,
+          },
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: "You follow this user!",
+      allowedActions: {
+        allowFollowing: false,
+        allowUnfollowing: true,
+        allowEditing: true,
+      },
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

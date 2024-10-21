@@ -38,7 +38,6 @@ export default function CommentsSection({
       setComment("");
       setAddedCommentCounter(addedCommentCounter + 1);
     }
-    console.log(response);
   };
   return (
     <div
@@ -60,14 +59,23 @@ export default function CommentsSection({
           <IoClose className="cursor-pointer w-7 h-7 md:w-10 md:h-10 hover:scale-105 transition-all duration-500 hover:text-sky-400" />
         </button>
         <ul className="w-full flex flex-col items-center overflow-y-auto h-full gap-4 scrollbar-thin ">
-          {comments.map((commentContent) => (
-            <li className="w-full flex flex-col items-center justify-center" key={commentContent._id}>
-              <Comment
+          {comments.length ? (
+            comments.map((commentContent) => (
+              <li
+                className="w-full flex flex-col items-center justify-center"
                 key={commentContent._id}
-                commentContent={commentContent}
-              />
-            </li>
-          ))}
+              >
+                <Comment
+                  key={commentContent._id}
+                  commentContent={commentContent}
+                />
+              </li>
+            ))
+          ) : (
+            <div>
+              <p className="text-zinc-200">No comments yet</p>
+            </div>
+          )}
         </ul>
         <form
           onSubmit={handleSubmitComment}

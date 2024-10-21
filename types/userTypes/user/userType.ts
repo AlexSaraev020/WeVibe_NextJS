@@ -7,5 +7,7 @@ export interface UserType {
     image: string;
     createdAt: Date;
     posts: [];
+    followers: string[];
+    follows: string[];
   }
   

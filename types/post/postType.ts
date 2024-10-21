@@ -10,6 +10,7 @@ export interface PostType {
     image: string;
   };
   likes: [];
+  comments: [];
 }
 
 export interface CommentType {
