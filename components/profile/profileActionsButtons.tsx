@@ -1,28 +1,56 @@
 "use client";
 import { allowFollowing } from "@/actions/profile/allowFollowing";
+import { followUser } from "@/actions/user/userActions/follow";
+import { unfollowUser } from "@/actions/user/userActions/unfollow";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function ProfileActionsButtons() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("user");
-  const [buttonPlaceholder, setButtonPlaceholder] = useState(true);
-  const [allowFollow, setAllowFollow] = useState(false);
-  const [allowUnfollow, setAllowUnfollow] = useState(false);
-  const [allowEdit, setAllowEdit] = useState(false);
+  const [buttonPlaceholder, setButtonPlaceholder] = useState<boolean>(true);
+  const [allowFollow, setAllowFollow] = useState<boolean>(false);
+  const [allowUnfollow, setAllowUnfollow] = useState<boolean>(false);
+  const [allowEdit, setAllowEdit] = useState<boolean>(false);
+
   useEffect(() => {
-    const checkFollowing = async (userId: string) => {
-      const response = await allowFollowing(userId);
-      console.log("response", response.allowedActions);
-      if (response) {
-        setButtonPlaceholder(false);
-        setAllowFollow(response.allowedActions.allowFollowing);
-        setAllowUnfollow(response.allowedActions.allowUnfollowing);
-        setAllowEdit(response.allowedActions.allowEditing);
-      }
-    };
-    if (userId) checkFollowing(userId);
+    if (userId) {
+      (async () => {
+        await allowFollowing({
+          userId,
+          setButtonPlaceholder,
+          setAllowFollow,
+          setAllowUnfollow,
+          setAllowEdit,
+        });
+      })();
+    }
   }, [userId]);
+
+  const handleFollowUser = async () => {
+    if (userId) {
+      const response = await followUser(userId);
+      if (response.staus < 300) {
+        setButtonPlaceholder(false);
+        setAllowFollow(false);
+        setAllowUnfollow(true);
+      }
+      console.log(response);
+    }
+  };
+
+  const handleUnfollowUser = async () => {
+    if (userId) {
+      const response = await unfollowUser(userId);
+      if (response.staus < 300) {
+        setButtonPlaceholder(false);
+        setAllowFollow(true);
+        setAllowUnfollow(false);
+      }
+      console.log(response);
+    }
+  };
+
   return (
     <div>
       {buttonPlaceholder && (
@@ -31,12 +59,18 @@ export default function ProfileActionsButtons() {
         </button>
       )}
       {allowFollow && (
-        <button className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold">
+        <button
+          onClick={handleFollowUser}
+          className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold"
+        >
           Follow
         </button>
       )}
       {allowUnfollow && (
-        <button className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold">
+        <button
+          onClick={handleUnfollowUser}
+          className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold"
+        >
           Unfollow
         </button>
       )}

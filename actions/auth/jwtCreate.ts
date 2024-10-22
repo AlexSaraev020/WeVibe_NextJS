@@ -1,3 +1,4 @@
+"use server";
 import { CompactEncrypt } from "jose";
 import { createHash } from "crypto";
 

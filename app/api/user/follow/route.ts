@@ -1,0 +1,64 @@
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
+import { connect } from "@/db/mongo/db";
+import { UserModel } from "@/models/user";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(req: NextRequest) {
+  if (req.method !== "GET") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 }
+    );
+  }
+  const queryString = req.nextUrl.searchParams.get("user");
+  if (!queryString) {
+    return NextResponse.json({ message: "Query not found" }, { status: 400 });
+  }
+  try {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
+      return NextResponse.json(
+        { message: "You are not logged in!" },
+        { status: 401 }
+      );
+    }
+
+    const userId = new Types.ObjectId(isLoggedIn);
+    const query = new Types.ObjectId(queryString);
+    if (!userId) {
+      return NextResponse.json(
+        { message: "UserId not found" },
+        { status: 400 }
+      );
+    }
+    await connect();
+    const queriedUser = await UserModel.findOne({ _id: query }).exec();
+    const loggedUser = await UserModel.findOne({ _id: userId }).exec();
+    if (!queriedUser || !loggedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    if (queriedUser.followers.includes(userId)) {
+      return NextResponse.json(
+        { message: "You already follow this user" },
+        { status: 400 }
+      );
+    }
+    if (loggedUser.follows.includes(query)) {
+      return NextResponse.json(
+        { message: "You already follow this user" },
+        { status: 400 }
+      );
+    }
+    await loggedUser.updateOne({ $push: { follows: query } });
+    await queriedUser.updateOne({ $push: { followers: userId } });
+    return NextResponse.json({ message: "User followed" }, { status: 200 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
+  }
+}

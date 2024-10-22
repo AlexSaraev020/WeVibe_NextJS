@@ -26,7 +26,6 @@ export default function Nav() {
       setShowCreatePost(false);
       setShowLogoutPrompt(false);
       setShowSearch(false);
-      return;
     }
     const fetchUserWithTimeout = async () => {
       const fetchUser = async () => {
