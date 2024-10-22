@@ -31,9 +31,15 @@ export default function ProfileActionsButtons() {
     if (userId) {
       const response = await followUser(userId);
       if (response.staus < 300) {
-        setButtonPlaceholder(false);
-        setAllowFollow(false);
-        setAllowUnfollow(true);
+        (async () => {
+          await allowFollowing({
+            userId,
+            setButtonPlaceholder,
+            setAllowFollow,
+            setAllowUnfollow,
+            setAllowEdit,
+          });
+        })();
       }
       console.log(response);
     }
@@ -43,9 +49,15 @@ export default function ProfileActionsButtons() {
     if (userId) {
       const response = await unfollowUser(userId);
       if (response.staus < 300) {
-        setButtonPlaceholder(false);
-        setAllowFollow(true);
-        setAllowUnfollow(false);
+        (async () => {
+          await allowFollowing({
+            userId,
+            setButtonPlaceholder,
+            setAllowFollow,
+            setAllowUnfollow,
+            setAllowEdit,
+          });
+        })();
       }
       console.log(response);
     }
