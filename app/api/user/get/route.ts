@@ -12,8 +12,11 @@ export async function GET(req: Request) {
   }
   try {
     const userId = await checkUserLoggedIn();
-    if(!userId){
-      return NextResponse.json({ message: "You are not logged in!" }, { status: 401 });
+    if (!userId) {
+      return NextResponse.json(
+        { message: "You are not logged in!" },
+        { status: 401 }
+      );
     }
     await connect();
     const user = await UserModel.findOne({ _id: userId })

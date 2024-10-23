@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
     }
     const userId = new Types.ObjectId(isLoggedIn);
     const query = new Types.ObjectId(queryString);
-    if (!userId) {
+    if (!userId || !query) {
       return NextResponse.json(
-        { message: "UserId not found" },
+        { message: "UserId or query not found" },
         { status: 400 }
       );
     }
@@ -35,7 +35,10 @@ export async function GET(req: NextRequest) {
     const queriedUser = await UserModel.findOne({ _id: query }).exec();
     const loggedUser = await UserModel.findOne({ _id: userId }).exec();
     if (!queriedUser || !loggedUser) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "You are not logged in or user not found!" },
+        { status: 404 }
+      );
     }
 
     if (!queriedUser.followers.includes(userId)) {
@@ -45,8 +48,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    await loggedUser.updateOne({ $pull: { following: query } });
-    await queriedUser.updateOne({ $pull: { followers: userId } });
+    if (!loggedUser.following.includes(query)) {
+      return NextResponse.json(
+        { message: "You don't follow this user!" },
+        { status: 400 }
+      );
+    }
+
+    await Promise.all([
+      loggedUser.updateOne({ $pull: { following: query } }),
+      queriedUser.updateOne({ $pull: { followers: userId } }),
+    ]);
     return NextResponse.json(
       { message: "Unfollowed successfully" },
       { status: 200 }

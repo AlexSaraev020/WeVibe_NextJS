@@ -11,14 +11,15 @@ export default async function Page({
   searchParams: { user: string };
 }) {
   const response = await getUserProfile(searchParams.user);
+  console.log(response);
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center">
-      {response ? (
+      {response.status === 200 ? (
         <div className="flex flex-col w-full h-full items-center justify-center gap-10 pb-4">
           <div className="w-full flex items-center justify-center p-4 gap-4">
             <Image
-              src={response.user.image}
+              src={response.data.user.image}
               width={400}
               height={400}
               priority
@@ -28,33 +29,33 @@ export default async function Page({
             <div className="flex flex-col">
               <div className="flex gap-8">
                 <h1 className=" text-xl md:text-3xl font-semibold">
-                  {response.user.username}
+                  {response.data.user.username}
                 </h1>
                 <ProfileActionsButtons />
               </div>
               <div className="flex gap-6 mt-4">
                 <div className="flex items-center justify-center gap-2">
                   <h2 className="text-lg md:text-xl font-bold">
-                    {response.user.posts ? response.user.posts.length : 0}
+                    {response.data.user.posts ? response.data.user.posts.length : 0}
                   </h2>
                   <p className="text-md md:text-lg">Posts</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <h2 className="text-lg md:text-xl font-bold">
-                    {response.user.followers
-                      ? response.user.followers.length
+                    {response.data.user.followers
+                      ? response.data.user.followers.length
                       : 0}
                   </h2>
                   <p className="text-md md:text-lg">Followers</p>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <h2 className="text-lg md:text-xl font-bold">
-                    {response.user.follows ? response.user.follows.length : 0}
+                    {response.data.user.following ? response.data.user.following.length : 0}
                   </h2>
-                  <p className="text-md md:text-lg">Follows</p>
+                  <p className="text-md md:text-lg">Following</p>
                 </div>
               </div>
-              <p className="text-sm text-white/70">{response.user.bio}</p>
+              <p className="text-sm text-white/70">{response.data.user.bio}</p>
             </div>
           </div>
           <div>
@@ -64,7 +65,7 @@ export default async function Page({
             </div>
           </div>
           <div className="w-full flex-grow flex items-center justify-center overflow-y-auto scrollbar-track-transparent scrollbar-thumb-transparent scrollbar-thin">
-            <ProfilePosts posts={response.user.posts} />
+            <ProfilePosts posts={response.data.user.posts} />
           </div>
         </div>
       ) : (

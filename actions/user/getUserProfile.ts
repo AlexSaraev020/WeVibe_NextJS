@@ -7,7 +7,7 @@ export const getUserProfile = async (userId: string) => {
       `${url}/api/user/getUserProfile?user=${userId}`
     );
 
-    return response.data;
+    return response;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

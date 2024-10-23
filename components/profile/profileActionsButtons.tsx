@@ -15,31 +15,27 @@ export default function ProfileActionsButtons() {
 
   useEffect(() => {
     if (userId) {
-      (async () => {
-        await allowFollowing({
-          userId,
-          setButtonPlaceholder,
-          setAllowFollow,
-          setAllowUnfollow,
-          setAllowEdit,
-        });
-      })();
+      allowFollowing({
+        userId,
+        setButtonPlaceholder,
+        setAllowFollow,
+        setAllowUnfollow,
+        setAllowEdit,
+      });
     }
   }, [userId]);
 
   const handleFollowUser = async () => {
     if (userId) {
       const response = await followUser(userId);
-      if (response.staus < 300) {
-        (async () => {
-          await allowFollowing({
-            userId,
-            setButtonPlaceholder,
-            setAllowFollow,
-            setAllowUnfollow,
-            setAllowEdit,
-          });
-        })();
+      if (response.status < 300) {
+        allowFollowing({
+          userId,
+          setButtonPlaceholder,
+          setAllowFollow,
+          setAllowUnfollow,
+          setAllowEdit,
+        });
       }
       console.log(response);
     }
@@ -48,16 +44,14 @@ export default function ProfileActionsButtons() {
   const handleUnfollowUser = async () => {
     if (userId) {
       const response = await unfollowUser(userId);
-      if (response.staus < 300) {
-        (async () => {
-          await allowFollowing({
-            userId,
-            setButtonPlaceholder,
-            setAllowFollow,
-            setAllowUnfollow,
-            setAllowEdit,
-          });
-        })();
+      if (response.status < 300) {
+        allowFollowing({
+          userId,
+          setButtonPlaceholder,
+          setAllowFollow,
+          setAllowUnfollow,
+          setAllowEdit,
+        });
       }
       console.log(response);
     }

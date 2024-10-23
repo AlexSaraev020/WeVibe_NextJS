@@ -30,10 +30,11 @@ export default function Nav() {
     const fetchUserWithTimeout = async () => {
       const fetchUser = async () => {
         const response = await getUser();
-        if (response >= 400) {
+        if (response.status >= 400 && !paths.includes(path)) {
           router.push("/");
+          return null;
         }
-        return response;
+        return response.user;
       };
       const timeout = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("Timeout")), 3000)

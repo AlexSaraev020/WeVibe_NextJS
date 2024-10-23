@@ -6,7 +6,7 @@ export interface User extends Document {
   password: string;
   bio: string;
   image: string;
-  follows: Types.ObjectId[];
+  following: Types.ObjectId[];
   followers: Types.ObjectId[];
   posts: Types.ObjectId[];
   createdAt: Date;
@@ -22,7 +22,7 @@ const UserSchema = new Schema<User>({
     default:
       "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
   },
-  follows: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
+  following: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   followers: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   createdAt: { type: Date, default: Date.now },
   posts: [{ type: Schema.Types.ObjectId, default: [], ref: "Post" }],
