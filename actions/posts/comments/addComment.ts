@@ -3,7 +3,8 @@ import { getUser } from "../../user/getUser";
 
 export const addComment = async (postId: string, comment: string) => {
   try {
-    const userId = await getUser();
+    const userResponse = await getUser();
+    const userId = userResponse.user._id;
     const url = process.env.NEXT_PUBLIC_API_URL;
     const response = await axios.put(`${url}/api/posts/comments/create`, {
       postId,

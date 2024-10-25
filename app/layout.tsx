@@ -33,7 +33,7 @@ export default function RootLayout({
         <Nav />
         {children}
         <Particles
-        className="absolute inset-0 min-h-screen -z-10"
+        className="absolute inset-0 min-h-screen -z-50"
         quantity={200}
         ease={80}
         color={"#38bdf8"}

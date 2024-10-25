@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     if (req.method !== "POST") {
       return NextResponse.json(
         { message: "Method not allowed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     await connect();
@@ -20,15 +20,15 @@ export async function POST(req: Request) {
     if (!image || !title) {
       return NextResponse.json(
         { message: "Please fill the required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    
+
     const userId = await checkUserLoggedIn();
     if (!userId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const newPost = await PostModel.create({
@@ -39,12 +39,15 @@ export async function POST(req: Request) {
     });
 
     if (!newPost) {
-      return NextResponse.json({ message: "Post not created" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Post not created" },
+        { status: 400 },
+      );
     }
-    
+
     await UserModel.findOneAndUpdate(
       { _id: userId },
-      { $push: { posts: newPost._id } }
+      { $push: { posts: newPost._id } },
     );
 
     return NextResponse.json({ newPost }, { status: 201 });
@@ -52,7 +55,7 @@ export async function POST(req: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "An error occurred", error: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });

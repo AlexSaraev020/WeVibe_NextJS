@@ -8,7 +8,13 @@ import Logout from "./navcomponents/prompts/logout";
 import CreatePost from "./navcomponents/prompts/createPost";
 import Search from "./navcomponents/search";
 import Link from "next/link";
-import { getUser } from "@/actions/user/getUser";
+import { fetchUserWithTimeout } from "@/actions/componentActions/nav/fetchUserData";
+import {
+  handleCreatePost,
+  handleLogOut,
+  handleProfile,
+  handleSearch,
+} from "@/actions/componentActions/nav/toggleFunctions";
 export default function Nav() {
   const paths = useMemo(() => ["/", "/register", "/login"], []);
   const path = usePathname();
@@ -27,38 +33,14 @@ export default function Nav() {
       setShowLogoutPrompt(false);
       setShowSearch(false);
     }
-    const fetchUserWithTimeout = async () => {
-      const fetchUser = async () => {
-        const response = await getUser();
-        if (response.status >= 400 && !paths.includes(path)) {
-          router.push("/");
-          return null;
-        }
-        return response.user;
-      };
-      const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), 3000)
-      );
-      try {
-        const result = await Promise.race([fetchUser(), timeout]);
-        setUserName(result.username);
-        setUserId(result._id);
-        setUserImage(result.image);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          if (error.message === "Timeout") {
-            console.error("Request timed out, reloading page...");
-            window.location.reload();
-          } else {
-            console.error("Error fetching user:", error);
-          }
-        } else {
-          console.error("Unknown error:", error);
-        }
-      }
-    };
-
-    fetchUserWithTimeout();
+    fetchUserWithTimeout({
+      setUserName,
+      setUserId,
+      setUserImage,
+      paths,
+      path,
+      router,
+    });
   }, [router, path, paths]);
 
   useEffect(() => {
@@ -71,26 +53,12 @@ export default function Nav() {
     document.documentElement.style.overflow =
       showLogoutPrompt || showCreatePost ? "hidden" : "auto";
   }, [showLogoutPrompt, showCreatePost]);
-  const handleLogOut = () => {
-    setShowLogoutPrompt(!showLogoutPrompt);
-  };
-  const handleSearch = () => {
-    setShowSearch(!showSearch);
-  };
-
-  const handleCreatePost = () => {
-    setShowCreatePost(!showCreatePost);
-  };
-
-  const handleProfile = () => {
-    router.push("/profile" + `?user=${userId}`);
-  };
 
   const navButtons = content({
-    handleCreatePost,
-    handleSearch,
-    handleLogOut,
-    handleProfile,
+    handleCreatePost: handleCreatePost,
+    handleSearch: handleSearch,
+    handleLogOut: handleLogOut,
+    handleProfile: handleProfile,
     userName: isLoaded ? userName : "Profile",
     profilePicture: userImage,
   });
@@ -102,36 +70,46 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && (
         <nav
-          className={`transition-all duration-500 z-30 relative ${
+          className={`group fixed bottom-0 z-10 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 border-sky-500 bg-black p-1 shadow-glow-sm shadow-sky-400 transition-all duration-1000 group-hover:delay-0 delay-1000 md:order-1 md:h-screen md:w-fit md:flex-col md:items-start md:justify-start md:gap-0 md:border-r-2 md:border-t-0 md:p-4 ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
-          <div className="flex flex-row items-center gap-4 z-10 bg-black md:gap-0 justify-center md:justify-start md:items-start md:flex-col p-1 md:p-4 w-full h-fit order-2 md:order-1 fixed md:w-fit bottom-0 md:h-screen border-t-2 md:border-t-0 md:border-r-2 border-sky-500 shadow-glow-sm shadow-sky-400 ">
-            <Link href={"/home"}>
-              <Image
-                src={Logo}
-                alt="WeVibe Logo"
-                priority
-                className="w-14 h-14 md:w-36 md:h-36"
-                width={100}
-                height={100}
-              />
-            </Link>
-            <div className="flex flex-row md:flex-col md:py-10 md:px-2 gap-4 md:gap-8">
-              {navButtons.map((item) => (
-                <div className="group relative" key={item.id}>
-                  <button
-                    onClick={item.onClick}
-                    disabled={isLoaded ? false : true}
-                    className="flex relative items-center justify-start gap-2"
-                  >
-                    {item.icon}
-                    <h2 className="text-xl hidden md:block">{item.name}</h2>
-                  </button>
-                  {item.tooltip}
-                </div>
-              ))}
-            </div>
+          <Link href={"/home"}>
+            <Image
+              src={Logo}
+              alt="WeVibe Logo"
+              priority
+              className="md:w-18 md:h-18 h-14 w-14 transition-all duration-1000 group-hover:delay-0 delay-1000 group-hover:h-28 group-hover:w-28"
+              width={100}
+              height={100}
+            />
+          </Link>
+          <div className="flex flex-row gap-4 md:flex-col md:gap-8 md:px-2 md:py-10">
+            {navButtons.map((item) => (
+              <div className="group relative" key={item.id}>
+                <button
+                  onClick={() =>
+                    item.onClick({
+                      setShowLogoutPrompt,
+                      setShowCreatePost,
+                      setShowSearch,
+                      router,
+                      userId,
+                      showLogoutPrompt,
+                      showSearch,
+                      showCreatePost,
+                    })
+                  }
+                  disabled={isLoaded ? false : true}
+                  className="relative flex items-center justify-start gap-2"
+                >
+                  {item.icon}
+                  <h2 className="text-md max-w-0 overflow-hidden font-semibold opacity-0 transition-all duration-1000 group-hover:delay-0 delay-1000 group-hover:max-w-xs group-hover:opacity-100">
+                    {item.name}
+                  </h2>
+                </button>
+              </div>
+            ))}
           </div>
         </nav>
       )}
