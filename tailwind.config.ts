@@ -18,7 +18,7 @@ const config: Config = {
       },
       animation: {
         shimmer: "shimmer 2s linear infinite",
-        fadeIn: "fadeIn 0.5s ease-in-out",
+        fadeIn: "fadeIn 0.8s ease-out forwards",
       },
       keyframes: {
         shimmer: {
@@ -30,10 +30,10 @@ const config: Config = {
           },
         },
         fadeIn: {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "shine-pulse": {
+        shinePulse: {
           "0%": {
             "background-position": "0% 0%",
           },

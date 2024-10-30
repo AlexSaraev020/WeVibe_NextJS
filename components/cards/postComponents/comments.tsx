@@ -1,5 +1,4 @@
 "use client";
-import { GradualSpacing } from "@/components/textAnimation/gradualSpacing";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaArrowUp } from "react-icons/fa";
@@ -48,10 +47,11 @@ export default function CommentsSection({
         onClick={handleClickInside}
         className="relative bg-black/90 w-11/12 h-5/6 md:w-5/12 border-2 border-sky-500 transition-all duration-500 flex flex-col items-center justify-center gap-6 p-6 rounded-xl shadow-glow shadow-sky-500 animate-fadeIn"
       >
-        <GradualSpacing
-          text="Comments"
-          className="text-zinc-200 z-10 text-lg md:text-2xl font-bold"
-        />
+        <h2>
+          <span className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 text-center text-transparent bg-clip-text neon-text">
+            Comments
+          </span>
+        </h2>
         <button
           className="absolute top-2 right-2"
           onClick={() => setShowComments(false)}

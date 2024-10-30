@@ -6,6 +6,9 @@ export const logoutUser = async () => {
     const response = await axios.get(`${url}/api/user/logout`);
     return response;
   } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    }
     console.error("Error logging out:", error);
   }
 };

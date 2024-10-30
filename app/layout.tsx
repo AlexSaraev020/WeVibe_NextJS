@@ -5,7 +5,6 @@ import Nav from "@/components/nav/nav";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
-import Particles from "@/components/background/particles";
 
 export const metadata: Metadata = {
   title: "WeVibe",
@@ -25,20 +24,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="scrollbar-thin overflow-y-scroll scrollbar-thumb-black scrollbar-track-black  bg-black text-white antialiased"
+      className="overflow-y-scroll bg-black text-white antialiased scrollbar-thin scrollbar-track-black scrollbar-thumb-black"
     >
-      <body suppressHydrationWarning={true} className={`${mingzat.className} relative`}>
-      
+      <body
+        suppressHydrationWarning={true}
+        className={`${mingzat.className} relative`}
+      >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <Nav />
         {children}
-        <Particles
-        className="absolute inset-0 min-h-screen -z-50"
-        quantity={200}
-        ease={80}
-        color={"#38bdf8"}
-        refresh
-      />
+        <div className="absolute transition-all duration-500 animate-fadeIn top-0 z-[-2] min-h-screen w-screen bg-[radial-gradient(ellipse_60%_60%_at_50%_-20%,rgba(14,165,233,0.3),rgba(255,255,255,0))]"/>
       </body>
     </html>
   );

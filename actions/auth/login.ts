@@ -4,27 +4,24 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 interface loginUserProps {
   email: string;
   password: string;
-  setSuccess: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setFailure: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setFailure: (failure: string | undefined) => void;
   router: AppRouterInstance;
 }
 export const loginUser = async ({
   email,
   password,
-  setSuccess,
   setFailure,
   router,
 }: loginUserProps) => {
   if (!email || !password) {
     setFailure("All fields are required.");
-    setSuccess(undefined);
     return;
   }
   try {
     const response = await axios.post("/api/auth/login", { email, password });
     if (response.status === 200) {
-      setSuccess(response.data.message);
       setFailure(undefined);
+      sessionStorage.setItem("isLoggedIn", "Logged In!");
       router.push("/home");
     }
   } catch (error: unknown) {

@@ -70,7 +70,7 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && (
         <nav
-          className={`group fixed bottom-0 z-10 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 border-sky-500 bg-black p-1 shadow-glow-sm shadow-sky-400 transition-all duration-1000 group-hover:delay-0 delay-1000 md:order-1 md:h-screen md:w-fit md:flex-col md:items-start md:justify-start md:gap-0 md:border-r-2 md:border-t-0 md:p-4 ${
+          className={`group fixed bottom-0 z-10 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 border-sky-500 bg-black p-1 shadow-glow-sm shadow-sky-400 transition-all delay-1000 duration-1000 group-hover:delay-0 md:order-1 md:h-screen md:w-fit md:flex-col md:items-start md:justify-start md:gap-0 md:border-r-2 md:border-t-0 md:p-4 ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
@@ -79,7 +79,7 @@ export default function Nav() {
               src={Logo}
               alt="WeVibe Logo"
               priority
-              className="md:w-18 md:h-18 h-14 w-14 transition-all duration-1000 group-hover:delay-0 delay-1000 group-hover:h-28 group-hover:w-28"
+              className="md:w-18 md:h-18 h-14 w-14 transition-all delay-1000 duration-1000 group-hover:h-28 group-hover:w-28 group-hover:delay-0"
               width={100}
               height={100}
             />
@@ -104,7 +104,7 @@ export default function Nav() {
                   className="relative flex items-center justify-start gap-2"
                 >
                   {item.icon}
-                  <h2 className="text-md max-w-0 overflow-hidden font-semibold opacity-0 transition-all duration-1000 group-hover:delay-0 delay-1000 group-hover:max-w-xs group-hover:opacity-100">
+                  <h2 className="text-md max-w-0 overflow-hidden font-semibold opacity-0 transition-all delay-1000 duration-1000 group-hover:max-w-xs group-hover:opacity-100 group-hover:delay-0">
                     {item.name}
                   </h2>
                 </button>

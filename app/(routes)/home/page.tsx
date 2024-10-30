@@ -2,11 +2,14 @@ import React from "react";
 import Post from "@/components/cards/post";
 import { getPosts } from "@/actions/posts/getPosts";
 import { PostType } from "@/types/post/postType";
+import IsUserLoggedin from "@/components/popups/isUserLoggedin";
+
+export const revalidate = 60;
 export default async function Page() {
   const posts = await getPosts();
   return (
-    <div className=" w-full md:p-4 flex justify-center items-center relative">
-      <ul className="flex flex-col md:w-6/12 items-center justify-center gap-20 py-20">
+    <div className="relative flex w-full h-[100dvh] items-center justify-center md:p-4">
+      <ul className="flex h-full flex-col items-start justify-start gap-20 py-5 md:w-6/12">
         {posts.length ? (
           posts.map((post: PostType) => (
             <li key={post._id}>
@@ -17,6 +20,7 @@ export default async function Page() {
           <p>No posts yet</p>
         )}
       </ul>
+      <IsUserLoggedin />
     </div>
   );
 }

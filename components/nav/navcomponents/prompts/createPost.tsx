@@ -5,7 +5,7 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
 import { createPost } from "@/actions/posts/createPost";
 import { useRouter } from "next/navigation";
-import FormInput from "@/components/login + register/formElements/input";
+import FormInput from "@/components/authForm/formElements/input";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;

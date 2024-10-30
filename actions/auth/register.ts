@@ -5,8 +5,7 @@ interface RegisterProps {
   userName: string;
   email: string;
   password: string;
-  setSuccess: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setFailure: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setFailure: (failure: string | undefined) => void;
   router: AppRouterInstance;
 }
 
@@ -14,7 +13,6 @@ export const registerUser = async ({
   userName,
   email,
   password,
-  setSuccess,
   setFailure,
   router,
 }: RegisterProps) => {
@@ -26,14 +24,12 @@ export const registerUser = async ({
     });
 
     if (response.status === 200) {
-      setSuccess(response.data.message);
       setFailure(undefined);
       router.push("/");
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       setFailure(error.response.data.message);
-      setSuccess(undefined);
     } else {
       setFailure("An unexpected error occurred.");
     }

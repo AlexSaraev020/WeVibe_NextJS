@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ShinyButton from "../buttons/shiny-button";
 import FormInput from "./formElements/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/actions/auth/register";
 import { loginUser } from "@/actions/auth/login";
 import { AiOutlineLoading } from "react-icons/ai";
+import ShinyButton from "../buttons/shinyButton";
+import Alert from "../popups/alert";
 
 interface FormProps {
   register?: boolean;
@@ -16,9 +17,9 @@ export default function Form({ register, className }: FormProps) {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [success, setSuccess] = useState<string | undefined>(undefined);
   const [failure, setFailure] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,27 +30,49 @@ export default function Form({ register, className }: FormProps) {
             userName,
             email,
             password,
-            setSuccess,
             setFailure,
             router,
           })
-        : await loginUser({ email, password, setSuccess, setFailure, router });
+        : await loginUser({ email, password, setFailure, router });
     }
   };
   useEffect(() => {
     setLoading(false);
-  }, [success, failure]);
+  }, [failure]);
+
+  useEffect(() => {
+    if (failure) {
+      setProgress(0);
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 100 / 30;
+        });
+      }, 100);
+      const timeout = setTimeout(() => {
+        setFailure(undefined);
+        setProgress(0);
+      }, 3000);
+      return () => {
+        clearTimeout(timeout);
+        clearInterval(interval);
+      };
+    }
+  }, [failure]);
   return (
     <form
-      className={`${className} w-11/12 md:w-3/6 lg:w-4/12 xl:w-3/12 border border-sky-400 flex flex-col items-center justify-center bg-transparent py-5 md:py-10 z-10 gap-8 rounded-xl shadow-glow shadow-sky-400`}
+      className={`${className} z-10 flex w-10/12 flex-col items-center justify-center gap-8 rounded-xl border border-sky-500 bg-transparent py-5 shadow-glow shadow-sky-500 md:w-3/6 md:py-10 lg:w-4/12 xl:w-3/12`}
       onSubmit={handleSubmit}
     >
-      <h2 className="text-4xl font-bold font-sans text-sky-400">
+      <h2 className="font-sans text-2xl font-bold text-sky-400 md:text-4xl">
         {register ? "Register" : "Login"}
       </h2>
-      <div className="w-full flex flex-col justify-center items-center gap-3">
+      <div className="flex w-full flex-col items-center justify-center gap-3">
         {register && (
-          <div className="w-9/12 flex flex-col gap-3">
+          <div className="flex w-9/12 flex-col gap-2 md:gap-3">
             <FormInput
               onChange={(e) => setUserName(e.target.value)}
               type="text"
@@ -60,7 +83,7 @@ export default function Form({ register, className }: FormProps) {
             />
           </div>
         )}
-        <div className="w-9/12 flex flex-col gap-3">
+        <div className="flex w-9/12 flex-col gap-2 md:gap-3">
           <FormInput
             onChange={(e) => setEmail(e.target.value)}
             type="email"
@@ -79,41 +102,34 @@ export default function Form({ register, className }: FormProps) {
           />
         </div>
       </div>
-      <ShinyButton type="submit" text={register ? "Register" : "Login"} />
+      <ShinyButton
+        onClick={() => setFailure(undefined)}
+        className="w-32 font-semibold"
+        textStyle="py-2"
+        type="submit"
+        text={register ? "Register" : "Login"}
+      />
       {loading && (
-        <AiOutlineLoading className="text-sky-500 animate-spin w-8 h-8" />
-      )}
-      {success && (
-        <div className="flex items-center justify-center bg-black">
-          <span className="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-emerald-500 via-teal-500 to-green-500 bg-clip-text text-xl box-content font-extrabold text-transparent text-center select-none">
-            {success}
-          </span>
-          <h1 className="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-emerald-500 via-teal-500 to-green-500 bg-clip-text text-xl font-extrabold text-transparent text-center select-auto">
-            {success}
-          </h1>
-        </div>
-      )}
-      {failure && (
-        <div className="flex items-center justify-center bg-black">
-          <span className="absolute mx-auto py-4 flex border w-fit bg-gradient-to-r blur-xl from-red-500 to-rose-500 bg-clip-text text-xl box-content font-extrabold text-transparent text-center select-none">
-            {failure}
-          </span>
-          <h1 className="relative top-0 w-fit h-auto py-4 justify-center flex bg-gradient-to-r items-center from-red-500 to-rose-500 bg-clip-text text-xl font-extrabold text-transparent text-center select-auto">
-            {failure}
-          </h1>
-        </div>
+        <AiOutlineLoading className="h-8 w-8 animate-spin text-sky-500" />
       )}
       <div className="flex gap-1">
         <p>
           {register ? "Already have an account?" : "Don't have an account?"}
         </p>
         <Link
-          className="text-sky-500 font-bold"
+          className="font-bold text-sky-500"
           href={register ? "/login" : "/register"}
         >
           {register ? " Login " : " Register "}
         </Link>
       </div>
+      {failure && (
+        <Alert
+        error
+          progress={progress}
+          message={failure}
+        />
+      )}
     </form>
   );
 }

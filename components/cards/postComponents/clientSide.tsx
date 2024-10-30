@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Tooltip from "@/components/nav/navcomponents/tooltip";
 import { FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { GoStarFill } from "react-icons/go";
@@ -74,26 +73,24 @@ export default function PostClientSide({
           setShowComments={setShowComments}
         />
       )}
-      <div className="flex p-2 gap-2 w-full z-10">
-        <button onClick={handleLike} className="relative group">
+      <div className="flex w-full gap-2 p-2">
+        <button onClick={handleLike} className="group relative">
           {like === 1 ? (
-            <GoStarFill className="w-10 h-10 fill-sky-500 transition-all duration-500 animate-fadeIn" />
+            <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
           ) : (
-            <GoStar className="w-10 h-10 transition-all duration-500 animate-fadeIn" />
+            <GoStar className="h-8 w-7 animate-fadeIn transition-all duration-500" />
           )}
-          <Tooltip text="Vibe" className="z-10" />
         </button>
         <button
           onClick={() => setShowComments(!showComments)}
-          className="relative group"
+          className="group relative"
         >
-          <FaRegComment className="w-9 h-10 ml-1" />
-          <Tooltip text="Comment" className="z-10" />
+          <FaRegComment className="ml-1 h-8 w-7" />
         </button>
       </div>
-      <div className="px-2 w-full flex flex-col gap-1">
+      <div className="flex w-full flex-col gap-1 px-2">
         <div
-          className={`flex flex-col items-start w-full ${
+          className={`flex w-full flex-col items-start ${
             truncate ? "truncate" : ""
           }`}
         >
@@ -102,7 +99,7 @@ export default function PostClientSide({
           </p>
           {description.length > 200 && (
             <button
-              className="text-xs md:text-md text-zinc-300/90"
+              className="md:text-md text-xs text-zinc-300/90"
               onClick={handleTruncate}
               type="button"
             >
@@ -110,10 +107,10 @@ export default function PostClientSide({
             </button>
           )}
         </div>
-        <h2 className="text-xs md:text-md text-zinc-300/90">
+        <h2 className="md:text-md text-xs text-zinc-300/90">
           Comments {commentsNumber}
         </h2>
-        <h2> {handleDate(date)}</h2>
+        <h2 className="md:text-md text-xs"> {handleDate(date)}</h2>
       </div>
     </>
   );

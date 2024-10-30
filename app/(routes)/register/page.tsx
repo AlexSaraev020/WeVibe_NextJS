@@ -1,18 +1,16 @@
 import React from "react";
-import Form from "../../../components/login + register/form";
+import Form from "../../../components/authForm/form";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
-import { GradualSpacing } from "@/components/textAnimation/gradualSpacing";
 
 export default function Page() {
   return (
-    <div className="h-screen w-full flex flex-col gap-10 items-center justify-center transition-all duration-1000 animate-fadeIn">
-      <h2 className={` text-6xl sm:text-7xl md:text-8xl font-extrabold flex`}>
-        <GradualSpacing text="We" className="text-zinc-200 z-10" />
-        <Image src={Logo} alt="Logo" className="w-20 h-18 md:w-24 md:h-24" />
-        <GradualSpacing text="ibe" className="text-sky-500 z-10" />
-      </h2>
-
+    <div className="flex h-screen w-full animate-fadeIn flex-col items-center justify-center gap-10 transition-all duration-1000">
+      <div className="flex animate-fadeIn items-center justify-center text-7xl font-extrabold transition-all duration-500 md:text-8xl">
+        <h2 className="text-sky-100">We</h2>
+        <Image src={Logo} alt="Logo" className="h-18 w-20 md:h-28 md:w-28" />
+        <h2 className="text-sky-500">ibe</h2>
+      </div>
       <Form className="z-10" register />
     </div>
   );

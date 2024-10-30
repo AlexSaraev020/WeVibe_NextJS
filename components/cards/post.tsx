@@ -10,7 +10,7 @@ export default async function Post({ post }: { post: PostType }) {
       <div className="flex items-center p-2 md:p-0">
       <Link
           href={`/profile` + `?user=${post.createdBy._id}`}
-          className="text-sm md:text-lg font-bold flex items-center justify-center z-10"
+          className="text-sm md:text-lg font-bold flex items-center justify-center "
         >
         <Image
           src={post.createdBy.image}
@@ -29,7 +29,7 @@ export default async function Post({ post }: { post: PostType }) {
           src={post.image}
           priority
           alt="Image"
-          className="max-h-[45rem] object-contain z-10 relative"
+          className="max-h-[20rem] md:max-h-[40rem] object-contain  relative"
           width={1080}
           height={1080}
         />
@@ -37,7 +37,7 @@ export default async function Post({ post }: { post: PostType }) {
           src={post.image}
           priority
           alt="ImageBackground"
-          className="max-h-[45rem] absolute inset-0 z-0 blur-xl opacity-35"
+          className="max-h-[20rem] md:max-h-[40rem] absolute inset-0 z-0 blur-xl opacity-35"
           width={1080}
           height={1080}
         />
