@@ -4,17 +4,17 @@ import PostClientSide from "./postComponents/clientSide";
 import { PostType } from "@/types/post/postType";
 import Link from "next/link";
 
-export default async function Post({ post }: { post: PostType }) {
+export default function Post({ post }: { post: PostType }) {
   return (
-    <div className="flex w-full flex-col items-start justify-center transition-all duration-500 md:bg-gradient-to-b from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 md:shadow-glow md:shadow-postBackground/50 md:px-2 rounded-xl mb-20">
-      <div className="flex items-center py-2 md:p-0 animate-fadeIn transition-all duration-500 w-full">
+    <div className="mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
+      <div className="flex w-full animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
         <Link
-          href={`/profile` + `?user=${post.createdBy._id}`}
+          href={`/profile?user=${post.createdBy._id}`}
           className="flex items-center justify-center text-sm font-bold md:text-lg"
         >
           <Image
             src={post.createdBy.image}
-            alt="Placeholder"
+            alt={post.createdBy.username}
             className="h-9 w-9 rounded-full p-1 md:h-14 md:w-14 md:p-3"
             width={400}
             height={400}
@@ -24,7 +24,7 @@ export default async function Post({ post }: { post: PostType }) {
         </Link>
         <p className="ml-2 text-sm text-gray-400 md:text-lg">{post.title}</p>
       </div>
-      <div className="relative w-full md:p-0 animate-fadeIn transition-all duration-500 bg-zinc-950">
+      <div className="relative w-full animate-fadeIn bg-zinc-950 transition-all duration-500 md:p-0">
         <Image
           src={post.image}
           priority
@@ -35,7 +35,6 @@ export default async function Post({ post }: { post: PostType }) {
         />
         <Image
           src={post.image}
-          priority
           alt="ImageBackground"
           className="absolute inset-0 -z-10 max-h-[20rem] opacity-35 blur-xl md:max-h-[40rem]"
           width={1080}

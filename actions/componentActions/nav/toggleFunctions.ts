@@ -5,7 +5,7 @@ export interface toggleFunctionsProps {
   setShowSearch: (showSearch: boolean) => void;
   setShowCreatePost: (showCreatePost: boolean) => void;
   router: AppRouterInstance;
-  userId: string;
+  userId: string | null;
   showLogoutPrompt: boolean;
   showSearch: boolean;
   showCreatePost: boolean;

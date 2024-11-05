@@ -9,14 +9,13 @@ import { AiOutlineLoading } from "react-icons/ai";
 export default function ProfileActionsButtons() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("user");
-  const [allow, setAllow] = useState<string | undefined>(undefined);
-  
+  const [allow, setAllow] = useState<string>("");
 
   useEffect(() => {
     if (userId) {
       allowFollowing({
         userId,
-        setAllow
+        setAllow,
       });
     }
   }, [userId]);
@@ -40,7 +39,7 @@ export default function ProfileActionsButtons() {
       if (response.status < 300) {
         allowFollowing({
           userId,
-          setAllow
+          setAllow,
         });
       }
       console.log(response);
@@ -49,8 +48,8 @@ export default function ProfileActionsButtons() {
 
   return (
     <div>
-      {allow === undefined && (
-          <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
+      {allow === "" && (
+        <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
       )}
       {allow === "follow" && (
         <button
@@ -73,9 +72,6 @@ export default function ProfileActionsButtons() {
           Edit
         </button>
       )}
-      <p>
-        { allow && allow?.length > 0 ? allow : "undefined"}
-      </p>
     </div>
   );
 }

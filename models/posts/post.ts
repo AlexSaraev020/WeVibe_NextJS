@@ -26,8 +26,8 @@ const PostSchema = new Schema<Post>({
     ref: "User",
     required: true,
   },
-  comments: [{ type: Schema.Types.ObjectId, default: null, ref: "Comment" }],
-  likes: [{ type: Schema.Types.ObjectId, default: null, ref: "Likes" }],
+  comments: [{ type: Schema.Types.ObjectId, default: [], ref: "Comment" }],
+  likes: [{ type: Schema.Types.ObjectId, default: [], ref: "Likes" }],
 });
 
 export const PostModel: Model<Post> = models.Post || model("Post", PostSchema);
