@@ -33,7 +33,7 @@ export default function RootLayout({
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <Nav />
         {children}
-        <div className="absolute transition-all duration-500 animate-fadeIn top-0 z-[-2] min-h-screen w-screen bg-[radial-gradient(ellipse_60%_60%_at_50%_-20%,rgba(14,165,233,0.3),rgba(255,255,255,0))]"/>
+        <div className="fixed transition-all duration-500 animate-fadeIn top-0 z-[-2] min-h-screen w-screen bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))]"/>
       </body>
     </html>
   );

@@ -19,18 +19,35 @@ export const handleLogOut = ({
 };
 export const handleSearch = ({
   setShowSearch,
+  setShowCreatePost,
+  setShowLogoutPrompt,
   showSearch,
 }: toggleFunctionsProps) => {
+  setShowLogoutPrompt(false);
+  setShowCreatePost(false);
   setShowSearch(!showSearch);
 };
 
 export const handleCreatePost = ({
   setShowCreatePost,
+  setShowSearch,
+  setShowLogoutPrompt,
   showCreatePost,
 }: toggleFunctionsProps) => {
+  setShowLogoutPrompt(false);
+  setShowSearch(false);
   setShowCreatePost(!showCreatePost);
 };
 
-export const handleProfile = ({ router, userId }: toggleFunctionsProps) => {
+export const handleProfile = ({
+  router,
+  userId,
+  setShowLogoutPrompt,
+  setShowCreatePost,
+  setShowSearch,
+}: toggleFunctionsProps) => {
+  setShowLogoutPrompt(false);
+  setShowSearch(false);
+  setShowCreatePost(false);
   router.push("/profile" + `?user=${userId}`);
 };

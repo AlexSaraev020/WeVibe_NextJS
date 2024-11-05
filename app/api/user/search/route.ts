@@ -16,7 +16,10 @@ export async function GET(req: NextRequest) {
     }
     await connect();
 
-    const users = await UserModel.find({ username: { $regex: query , $options: "i" } });
+    const users = await UserModel.find({ username: { $regex: query , $options: "i" } })
+    .select("_id username image bio")
+    .exec();
+    
     if (!users) {
       return NextResponse.json(
         { message: `Users with the name ${query} not found` },

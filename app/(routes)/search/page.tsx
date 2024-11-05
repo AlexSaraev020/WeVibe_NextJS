@@ -14,11 +14,11 @@ export default async function Page({
 
   return (
     <div className=" flex-1 w-full flex items-start justify-center">
-      <ul className="flex flex-col w-full items-center justify-start gap-10 overflow-auto py-32">
+      <ul className="flex flex-col w-full items-center justify-start gap-10 overflow-auto py-10">
         {response.users.length > 0 ? (
           response.users.map((user: UserType) => (
             <li
-              className="relative p-3 flex flex-col w-4/12 hover:shadow-glow rounded-lg hover:shadow-sky-500 border-2 border-white/20 hover:border-sky-500 delay-100 transition-all duration-500 hover:scale-105 animate-fadeIn"
+              className="relative p-3 flex flex-col w-4/12 hover:shadow-glow rounded-lg hover:shadow-postBackground/50 border-2 border-transparent hover:border-postBackground/50 delay-100 transition-all duration-500 hover:scale-105 animate-fadeIn"
               key={user._id}
             >
               <Link
@@ -34,12 +34,10 @@ export default async function Page({
                   className="w-14 h-14 rounded-full"
                 />
 
-                <div className="flex flex-col w-full pr-10">
+                <div className="flex flex-col justify-center w-full pr-10">
                   <h2 className="text-xl">{user.username}</h2>
                   <p className="truncate text-zinc-400/70 w-11/12">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Temporibus, sapiente. Alias neque ducimus provident
-                    accusantium aliquam, non voluptatibus officiis repellendus.
+                    {user.bio}
                   </p>
                 </div>
               </Link>

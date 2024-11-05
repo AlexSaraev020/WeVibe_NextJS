@@ -5,15 +5,17 @@ interface AlertProps {
   progress: number;
   message: string;
   error?: boolean;
+  className?: string;
 }
-export default function Alert({ progress, message, error }: AlertProps) {
+export default function Alert({ progress, message, error , className }: AlertProps) {
   return (
     <div
       className={twMerge(
-        "absolute bottom-2 flex min-w-60 max-w-80 animate-fadeIn flex-col items-center justify-center gap-2 rounded-xl border-2 bg-transparent p-2 transition-all duration-500 md:bottom-5 md:right-5 md:py-4",
+        "fixed bottom-2 flex min-w-60 max-w-80 animate-fadeIn flex-col items-center justify-center gap-2 rounded-xl border-2 bg-transparent p-2 transition-all duration-500 md:bottom-5 md:right-5 md:py-4",
         error
           ? "border-red-500 border-red-500/80 text-red-100 shadow-red-500"
           : "border-sky-500 border-sky-500/80 text-sky-100 shadow-sky-500",
+        className,
       )}
     >
       <h2 className="md:text-md text-xs font-semibold">{message}</h2>

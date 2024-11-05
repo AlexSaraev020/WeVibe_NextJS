@@ -113,11 +113,11 @@ export default function Form({ register, className }: FormProps) {
         <AiOutlineLoading className="h-8 w-8 animate-spin text-sky-500" />
       )}
       <div className="flex gap-1">
-        <p>
+        <p className="text-sm md:text-md">
           {register ? "Already have an account?" : "Don't have an account?"}
         </p>
         <Link
-          className="font-bold text-sky-500"
+          className="font-bold text-sky-500 text-sm md:text-md"
           href={register ? "/login" : "/register"}
         >
           {register ? " Login " : " Register "}

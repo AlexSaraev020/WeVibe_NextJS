@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { content } from "./navcomponents/buttons";
+import { displayedButtons } from "./navcomponents/buttons";
 import Logout from "./navcomponents/prompts/logout";
 import CreatePost from "./navcomponents/prompts/createPost";
 import Search from "./navcomponents/search";
@@ -15,6 +15,7 @@ import {
   handleProfile,
   handleSearch,
 } from "@/actions/componentActions/nav/toggleFunctions";
+import { Router } from "next/router";
 export default function Nav() {
   const paths = useMemo(() => ["/", "/register", "/login"], []);
   const path = usePathname();
@@ -54,7 +55,7 @@ export default function Nav() {
       showLogoutPrompt || showCreatePost ? "hidden" : "auto";
   }, [showLogoutPrompt, showCreatePost]);
 
-  const navButtons = content({
+  const navButtons = displayedButtons({
     handleCreatePost: handleCreatePost,
     handleSearch: handleSearch,
     handleLogOut: handleLogOut,
@@ -63,6 +64,16 @@ export default function Nav() {
     profilePicture: userImage,
   });
 
+  useEffect(()=>{
+    const disable__Search__OnRouteChange = () => {
+      setShowSearch(false);
+    }
+    Router.events.on("routeChangeComplete", disable__Search__OnRouteChange);
+    return () => {
+      Router.events.off("routeChangeComplete", disable__Search__OnRouteChange);
+    }
+  },[])
+
   return (
     <>
       {showLogoutPrompt && <Logout setShowLogoutPrompt={setShowLogoutPrompt} />}
@@ -70,7 +81,7 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && (
         <nav
-          className={`group fixed bottom-0 z-10 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 border-sky-500 bg-black p-1 shadow-glow-sm shadow-sky-400 transition-all delay-1000 duration-1000 group-hover:delay-0 md:order-1 md:h-screen md:w-fit md:flex-col md:items-start md:justify-start md:gap-0 md:border-r-2 md:border-t-0 md:p-4 ${
+          className={`border-postBackground/50 bg-black lg:bg-transparent group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:hover:border-none lg:hover:shadow-none lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:p-4 ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
@@ -79,12 +90,12 @@ export default function Nav() {
               src={Logo}
               alt="WeVibe Logo"
               priority
-              className="md:w-18 md:h-18 h-14 w-14 transition-all delay-1000 duration-1000 group-hover:h-28 group-hover:w-28 group-hover:delay-0"
+              className="h-10 w-10 transition-all delay-1000 duration-1000 lg:h-14 lg:w-14 lg:group-hover:h-28 lg:group-hover:w-28 lg:group-hover:delay-0"
               width={100}
               height={100}
             />
           </Link>
-          <div className="flex flex-row gap-4 md:flex-col md:gap-8 md:px-2 md:py-10">
+          <div className="flex flex-row items-start gap-4 lg:flex-col lg:gap-8 lg:px-2 lg:py-10">
             {navButtons.map((item) => (
               <div className="group relative" key={item.id}>
                 <button
@@ -101,10 +112,10 @@ export default function Nav() {
                     })
                   }
                   disabled={isLoaded ? false : true}
-                  className="relative flex items-center justify-start gap-2"
+                  className="relative flex items-center justify-center gap-2"
                 >
                   {item.icon}
-                  <h2 className="text-md max-w-0 overflow-hidden font-semibold opacity-0 transition-all delay-1000 duration-1000 group-hover:max-w-xs group-hover:opacity-100 group-hover:delay-0">
+                  <h2 className="text-md hidden lg:block max-w-0 overflow-hidden font-semibold opacity-0 transition-all lg:delay-1000 lg:duration-1000 lg:group-hover:max-w-xs lg:group-hover:opacity-100 lg:group-hover:delay-0">
                     {item.name}
                   </h2>
                 </button>

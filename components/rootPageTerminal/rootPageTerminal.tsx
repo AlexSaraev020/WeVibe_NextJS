@@ -14,9 +14,9 @@ export default function RootPageTerminal() {
           onClick={() => setShowTerminal(false)}
           text="Get Started"
           type="button"
-          className="text-xl text-sky-100 hover:text-sky-300"
+          className="text-md md:text-xl text-sky-100 hover:text-sky-300"
         >
-          <MdKeyboardArrowRight className="h-7 w-7 text-sky-100 transition-all duration-500 group-hover:text-sky-400" />
+          <MdKeyboardArrowRight className=" h-5 w-5 md:h-7 md:w-7 text-sky-100 transition-all duration-500 group-hover:text-sky-400" />
         </ShinyButton>
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-4">

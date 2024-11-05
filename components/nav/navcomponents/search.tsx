@@ -26,11 +26,12 @@ export default function Search() {
   const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSearch("");
-  };  return (
+  };
+  return (
     <form
       onSubmit={searchSubmit}
       autoComplete="off"
-      className=" w-8/12 md:w-4/12 fixed top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+      className="relative left-1/2 top-16 z-50 w-11/12 -translate-x-1/2 -translate-y-1/2 transform md:w-4/12 mb-10"
     >
       <div className="relative">
         <input
@@ -41,23 +42,25 @@ export default function Search() {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearch(e.target.value)
           }
-          className="w-full h-12 px-4 bg-transparent text-white focus:outline-none rounded-full border-2 border-sky-600 shadow-glow-sm shadow-sky-500 focus:shadow-glow focus:shadow-sky-500 transition-all duration-500 animate-fadeIn"
+          className="h-12 w-full animate-fadeIn rounded-full border-2 border-sky-700 bg-black/30 px-4 text-white shadow-glow-sm shadow-sky-500 transition-all duration-500 focus:shadow-glow focus:shadow-sky-500 focus:outline-none"
         />
-        {showClear && (
+        <div className="flex gap-2 absolute top-1/2 -translate-y-1/2 transform right-2">
+          {showClear && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="transform animate-fadeIn transition-all duration-500"
+            >
+              <MdClear className="h-5 w-5 fill-sky-100/80" />
+            </button>
+          )}
           <button
-            type="button"
-            onClick={handleClear}
-            className="absolute top-1/2 right-12 transform -translate-y-1/2 transition-all duration-500 animate-fadeIn"
+            type="submit"
+            className="transform animate-fadeIn transition-all duration-500 bg-sky-900/80 rounded-full p-1"
           >
-            <MdClear className="w-5 h-5 fill-sky-300/70" />
+            <CiSearch className="h-7 w-7 fill-sky-100/80" />
           </button>
-        )}
-        <button
-          type="submit"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 transition-all duration-500 animate-fadeIn"
-        >
-          <CiSearch className="w-7 h-7 fill-sky-400" />
-        </button>
+        </div>
       </div>
     </form>
   );

@@ -4,23 +4,19 @@ import { followUser } from "@/actions/user/userActions/follow";
 import { unfollowUser } from "@/actions/user/userActions/unfollow";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
 
 export default function ProfileActionsButtons() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("user");
-  const [buttonPlaceholder, setButtonPlaceholder] = useState<boolean>(true);
-  const [allowFollow, setAllowFollow] = useState<boolean>(false);
-  const [allowUnfollow, setAllowUnfollow] = useState<boolean>(false);
-  const [allowEdit, setAllowEdit] = useState<boolean>(false);
+  const [allow, setAllow] = useState<string | undefined>(undefined);
+  
 
   useEffect(() => {
     if (userId) {
       allowFollowing({
         userId,
-        setButtonPlaceholder,
-        setAllowFollow,
-        setAllowUnfollow,
-        setAllowEdit,
+        setAllow
       });
     }
   }, [userId]);
@@ -31,10 +27,7 @@ export default function ProfileActionsButtons() {
       if (response.status < 300) {
         allowFollowing({
           userId,
-          setButtonPlaceholder,
-          setAllowFollow,
-          setAllowUnfollow,
-          setAllowEdit,
+          setAllow,
         });
       }
       console.log(response);
@@ -47,10 +40,7 @@ export default function ProfileActionsButtons() {
       if (response.status < 300) {
         allowFollowing({
           userId,
-          setButtonPlaceholder,
-          setAllowFollow,
-          setAllowUnfollow,
-          setAllowEdit,
+          setAllow
         });
       }
       console.log(response);
@@ -59,32 +49,33 @@ export default function ProfileActionsButtons() {
 
   return (
     <div>
-      {buttonPlaceholder && (
-        <button className="w-24 h-10 bg-gray-500 rounded-full text-white font-bold">
-          Loading...
-        </button>
+      {allow === undefined && (
+          <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
       )}
-      {allowFollow && (
+      {allow === "follow" && (
         <button
           onClick={handleFollowUser}
-          className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold"
+          className="h-8 w-16 rounded-full bg-postBackground/50 font-bold text-white shadow-glow shadow-postBackground/50 transition-all duration-500 hover:scale-105 md:h-10 md:w-24"
         >
           Follow
         </button>
       )}
-      {allowUnfollow && (
+      {allow === "unfollow" && (
         <button
           onClick={handleUnfollowUser}
-          className="w-24 h-10 bg-sky-500 rounded-full text-white font-bold"
+          className="h-8 w-16 rounded-full bg-postBackground/50 font-bold text-white shadow-glow shadow-postBackground/50 transition-all duration-500 hover:scale-105 md:h-10 md:w-24"
         >
           Unfollow
         </button>
       )}
-      {allowEdit && (
-        <button className="w-24 h-10 bg-gray-500 rounded-full text-white font-bold">
+      {allow === "edit" && (
+        <button className="h-8 w-16 rounded-full bg-slate-600 font-bold text-white shadow-glow shadow-slate-600 transition-all duration-500 hover:scale-105 md:h-10 md:w-24">
           Edit
         </button>
       )}
+      <p>
+        { allow && allow?.length > 0 ? allow : "undefined"}
+      </p>
     </div>
   );
 }

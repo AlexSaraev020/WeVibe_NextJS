@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Alert from "./alert";
 
-export default function IsUserLoggedin() {
+export default function IsUserLoggedinPromptNotification() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -38,8 +38,14 @@ export default function IsUserLoggedin() {
   }, [isUserLoggedIn]);
 
   return (
-    <div className="fixed bottom-0 right-0">
-      {showAlert && <Alert message={isUserLoggedIn} progress={progress} />}
+    <div className="fixed bottom-5 md:bottom-0 right-0 flex w-full items-center justify-center pb-10 md:justify-end md:pb-0">
+      {showAlert && (
+        <Alert
+          className="relative bg-black"
+          message={isUserLoggedIn}
+          progress={progress}
+        />
+      )}
     </div>
   );
 }

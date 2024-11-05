@@ -1,10 +1,10 @@
 import { IoSearch } from "react-icons/io5";
-import { IoIosCreate } from "react-icons/io";
+import { FaCirclePlus } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
 import Image from "next/image";
 import { toggleFunctionsProps } from "@/actions/componentActions/nav/toggleFunctions";
 
-interface contentProps {
+interface DisplayedButtonsProps {
   handleLogOut: ({
     setShowLogoutPrompt,
     showLogoutPrompt,
@@ -19,28 +19,16 @@ interface contentProps {
   profilePicture: string;
 }
 
-export const content = ({
+export const displayedButtons = ({
   handleLogOut,
   handleSearch,
   handleCreatePost,
   handleProfile,
   userName,
   profilePicture,
-}: contentProps) => [
+}: DisplayedButtonsProps) => [
   {
     id: 1,
-    name: "Search",
-    icon: <IoSearch id="search" className="h-8 w-8 group-hover:w-10 group-hover:h-10 transition-all duration-500 group-hover:delay-0 delay-1000" />,
-    onClick: handleSearch,
-  },
-  {
-    id: 2,
-    name: "Create",
-    icon: <IoIosCreate id="create" className="h-8 w-8 group-hover:w-10 group-hover:h-10 transition-all duration-500 group-hover:delay-0 delay-1000" />,
-    onClick: handleCreatePost,
-  },
-  {
-    id: 3,
     name: userName,
     icon: (
       <Image
@@ -48,15 +36,43 @@ export const content = ({
         alt="user"
         width={40}
         height={40}
-        className="h-7 w-7 rounded-full group-hover:w-9 group-hover:h-9 transition-all duration-500 group-hover:delay-0 delay-1000"
+        className="h-7 w-7 rounded-full transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-9 md:group-hover:w-9"
       />
     ),
     onClick: handleProfile,
   },
   {
+    id: 2,
+    name: "Create",
+    icon: (
+      <FaCirclePlus
+        id="create"
+        className="h-7 w-7 transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-9 md:group-hover:w-9"
+      />
+    ),
+    onClick: handleCreatePost,
+  },
+  {
+    id: 3,
+    name: "Search",
+    icon: (
+      <IoSearch
+        id="search"
+        className="h-8 w-8 transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-10 md:group-hover:w-10"
+      />
+    ),
+    onClick: handleSearch,
+  },
+
+  {
     id: 4,
     name: "Logout",
-    icon: <IoLogOut id="logout" className="h-8 w-8 group-hover:w-10 group-hover:h-10 transition-all duration-500 group-hover:delay-0 delay-1000" />,
+    icon: (
+      <IoLogOut
+        id="logout"
+        className="h-8 w-8 transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-10 md:group-hover:w-10"
+      />
+    ),
     onClick: handleLogOut,
   },
 ];

@@ -32,6 +32,9 @@ export default function PostClientSide({
     const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
     return timeAgo;
   };
+  useEffect(() => {
+    document.documentElement.style.overflow = showComments ? "hidden" : "auto";
+  }, [showComments]);
   const handleLike = () => {
     if (like === undefined && dislike === undefined) {
       setLike(1);
@@ -73,44 +76,46 @@ export default function PostClientSide({
           setShowComments={setShowComments}
         />
       )}
-      <div className="flex w-full gap-2 p-2">
-        <button onClick={handleLike} className="group relative">
-          {like === 1 ? (
-            <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
-          ) : (
-            <GoStar className="h-8 w-7 animate-fadeIn transition-all duration-500" />
-          )}
-        </button>
-        <button
-          onClick={() => setShowComments(!showComments)}
-          className="group relative"
-        >
-          <FaRegComment className="ml-1 h-8 w-7" />
-        </button>
-      </div>
-      <div className="flex w-full flex-col gap-1 px-2">
-        <div
-          className={`flex w-full flex-col items-start ${
-            truncate ? "truncate" : ""
-          }`}
-        >
-          <p className="text-sm md:text-lg">
-            {truncate ? description.slice(0, 200) : description}
-          </p>
-          {description.length > 200 && (
-            <button
-              className="md:text-md text-xs text-zinc-300/90"
-              onClick={handleTruncate}
-              type="button"
-            >
-              {truncate ? "Show more" : "Show less"}
-            </button>
-          )}
+      <div className="flex w-full flex-col pb-4">
+        <div className="flex w-full gap-2 p-2">
+          <button onClick={handleLike} type="button">
+            {like === 1 ? (
+              <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
+            ) : (
+              <GoStar className="h-8 w-7 animate-fadeIn transition-all duration-500" />
+            )}
+          </button>
+          <button
+            onClick={() => setShowComments(!showComments)}
+            type="button"
+          >
+            <FaRegComment className="ml-1 h-8 w-7" />
+          </button>
         </div>
-        <h2 className="md:text-md text-xs text-zinc-300/90">
-          Comments {commentsNumber}
-        </h2>
-        <h2 className="md:text-md text-xs"> {handleDate(date)}</h2>
+        <div className="flex w-full flex-col gap-1 px-2">
+          <div
+            className={`flex w-full flex-col items-start ${
+              truncate ? "truncate" : ""
+            }`}
+          >
+            <p className="text-sm md:text-lg">
+              {truncate ? description.slice(0, 200) : description}
+            </p>
+            {description.length > 200 && (
+              <button
+                className="md:text-md text-xs text-zinc-300/90"
+                onClick={handleTruncate}
+                type="button"
+              >
+                {truncate ? "Show more" : "Show less"}
+              </button>
+            )}
+          </div>
+          <h2 className="md:text-md text-xs text-zinc-300/90">
+            Comments {commentsNumber}
+          </h2>
+          <h2 className="md:text-md text-xs"> {handleDate(date)}</h2>
+        </div>
       </div>
     </>
   );

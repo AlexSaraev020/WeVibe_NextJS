@@ -9,8 +9,8 @@ import Comment from "./comment";
 interface CommentsSectionProps {
   comments: CommentType[];
   postId: string;
-  setShowComments: (showComments: boolean) => void;
-  setAddedCommentCounter: (addedCommentCounter: number) => void;
+  setShowComments?: (showComments: boolean) => void;
+  setAddedCommentCounter?: (addedCommentCounter: number) => void;
   addedCommentCounter: number;
 }
 
@@ -24,7 +24,7 @@ export default function CommentsSection({
   const [comment, setComment] = useState<string>("");
 
   const handleClickOutside = () => {
-    setShowComments(false);
+    setShowComments && setShowComments(false);
   };
 
   const handleClickInside = (e: React.MouseEvent) => {
@@ -35,34 +35,34 @@ export default function CommentsSection({
     const response = await addComment(postId, comment);
     if (response?.status === 200) {
       setComment("");
-      setAddedCommentCounter(addedCommentCounter + 1);
+      setAddedCommentCounter && setAddedCommentCounter(addedCommentCounter + 1);
     }
   };
   return (
     <div
       onClick={handleClickOutside}
-      className="fixed bg-black/60 h-[100dvh] w-full z-50 inset-0 flex items-center justify-center"
+      className="fixed inset-0 z-50 flex h-[100dvh] w-full items-end justify-center bg-black/60 md:items-center"
     >
       <div
         onClick={handleClickInside}
-        className="relative bg-black/90 w-11/12 h-5/6 md:w-5/12 border-2 border-sky-500 transition-all duration-500 flex flex-col items-center justify-center gap-6 p-6 rounded-xl shadow-glow shadow-sky-500 animate-fadeIn"
+        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 md:p-6 md:shadow-glow md:shadow-postBackground/50 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2"
       >
         <h2>
-          <span className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 text-center text-transparent bg-clip-text neon-text">
+          <span className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text text-center text-xl font-extrabold text-transparent md:text-3xl">
             Comments
           </span>
         </h2>
         <button
-          className="absolute top-2 right-2"
-          onClick={() => setShowComments(false)}
+          className="absolute right-2 top-2 rounded-full p-1 md:p-0"
+          onClick={() => setShowComments && setShowComments(false)}
         >
-          <IoClose className="cursor-pointer w-7 h-7 md:w-10 md:h-10 hover:scale-105 transition-all duration-500 hover:text-sky-400" />
+          <IoClose className="h-7 w-7 cursor-pointer transition-all duration-500 fill-sky-100 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
-        <ul className="w-full flex flex-col items-center overflow-y-auto h-full gap-4 scrollbar-thin ">
+        <ul className="flex h-full w-full flex-col items-center py-2 gap-4 overflow-y-auto scrollbar-thin">
           {comments.length ? (
             comments.map((commentContent) => (
               <li
-                className="w-full flex flex-col items-center justify-center"
+                className="flex w-full flex-col items-center justify-center"
                 key={commentContent._id}
               >
                 <Comment
@@ -79,7 +79,7 @@ export default function CommentsSection({
         </ul>
         <form
           onSubmit={handleSubmitComment}
-          className="flex items-center justify-center w-full gap-4"
+          className="flex w-full items-center justify-center gap-4"
         >
           <textarea
             name="Comment section"
@@ -87,23 +87,23 @@ export default function CommentsSection({
             placeholder="Write a comment..."
             onChange={(e) => setComment(e.target.value)}
             value={comment}
-            rows={2}
-            className="rounded-lg resize-none w-11/12 bg-transparent border-2 border-zinc-600 focus:border-sky-500 focus:outline-none focus:shadow-glow focus:shadow-sky-500 transition-all duration-500 p-2.5 text-sm"
+            rows={1}
+            className="w-full resize-none rounded-lg border-2 border-zinc-600 bg-transparent p-2 text-sm transition-all duration-500 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={comment.length === 0}
-            className={`w-1/12 flex items-center justify-center border-2  h-full rounded-lg transition-all duration-500 hover:scale-105 ${
+            className={`flex h-full w-20 items-center justify-center rounded-lg border-2 transition-all duration-500 hover:scale-105 ${
               comment.length > 0
-                ? "shadow-glow-sm shadow-sky-500 border-sky-500"
-                : "shadow-none border-zinc-600"
+                ? "border-postBackground/50 shadow-glow-sm shadow-postBackground/50"
+                : "border-zinc-600 shadow-none"
             } `}
           >
             <FaArrowUp
-              className={`w-6 h-6 ${
+              className={`h-5 w-5 ${
                 comment.length > 0
-                  ? "animate-bounce text-sky-500 transition-all duration-500"
-                  : "text-zinc-600 "
+                  ? "animate-bounce text-postBackground/70 transition-all duration-500"
+                  : "text-zinc-600"
               }`}
             />
           </button>

@@ -2,28 +2,26 @@ import axios from "axios";
 
 interface AllowFollowingProps {
   userId: string;
-  setButtonPlaceholder: (buttonPlaceholder: boolean) => void;
-  setAllowFollow: (allowFollow: boolean) => void;
-  setAllowUnfollow: (allowUnfollow: boolean) => void;
-  setAllowEdit: (allowEdit: boolean) => void;
+  setAllow?: (allow: string | undefined) => void;
 }
 
-export const allowFollowing = async ({userId, setButtonPlaceholder, setAllowFollow, setAllowUnfollow, setAllowEdit}: AllowFollowingProps) => {
+export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) => {
+  console.log("called")
+  setAllow && setAllow("called")
   const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(
       `${url}/api/user/allowFollowing?user=${userId}`
     );
     if(response.status < 300) {
-      setButtonPlaceholder(false);
-      setAllowFollow(response.data.allowedActions.allowFollowing);
-      setAllowUnfollow(response.data.allowedActions.allowUnfollowing);
-      setAllowEdit(response.data.allowedActions.allowEditing);
+      setAllow && setAllow(response.data.allow)
     }
+    return response
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     }
     console.error("Error following:", error);
+    setAllow && setAllow(undefined)
   }
 };

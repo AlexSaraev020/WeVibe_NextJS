@@ -52,7 +52,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     <div className="fixed bg-black/60 h-[100dvh] w-full z-50 inset-0 flex items-center justify-center">
       <form
         onSubmit={handleCreatePost}
-        className="bg-black/90 ease-in-out hover:bg-black/70 delay-100 md:w-4/12 border-2 border-sky-600 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-sky-500 animate-fadeIn"
+        className="bg-black/90 ease-in-out hover:bg-black/70 md:w-4/12 border-2 border-sky-600 transition-all duration-1000 flex flex-col gap-6 p-6 rounded-xl shadow-glow shadow-sky-500 animate-fadeIn"
       >
         <h2 className="text-3xl py-1 md:text-5xl font-extrabold bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 text-center text-transparent bg-clip-text neon-text">
           Create Post
@@ -114,7 +114,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               className="text-xl focus:outline-none outline-none"
               htmlFor="description"
             >
-              Description<span className="text-sky-500">*</span>
+              Description
             </label>
             <textarea
               minLength={10}
