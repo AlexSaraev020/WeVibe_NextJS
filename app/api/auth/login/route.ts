@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
     const token = await generateToken(existingUser._id.toString());
 
-    cookies().set({
+    (await cookies()).set({
       name: "authToken",
       value: token,
       maxAge: 14 * 24 * 60 * 60,

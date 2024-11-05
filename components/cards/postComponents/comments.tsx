@@ -66,7 +66,6 @@ export default function CommentsSection({
                 key={commentContent._id}
               >
                 <Comment
-                  key={commentContent._id}
                   commentContent={commentContent}
                 />
               </li>
@@ -85,13 +84,15 @@ export default function CommentsSection({
             name="Comment section"
             id="comment"
             placeholder="Write a comment..."
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e:React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
             value={comment}
             rows={1}
+            aria-label="Write a comment"
             className="w-full resize-none rounded-lg border-2 border-zinc-600 bg-transparent p-2 text-sm transition-all duration-500 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none"
           />
           <button
             type="submit"
+            aria-label="Submit comment"
             disabled={comment.length === 0}
             className={`flex h-full w-20 items-center justify-center rounded-lg border-2 transition-all duration-500 hover:scale-105 ${
               comment.length > 0

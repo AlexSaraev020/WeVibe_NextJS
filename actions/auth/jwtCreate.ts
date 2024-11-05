@@ -11,7 +11,6 @@ const secretKey = createHash("sha256").update(secret).digest();
 export const generateToken = async (userId: string) => {
   const payload = {
     userId,
-    iat: Math.floor(Date.now() / 1000),
   };
 
   const jwe = await new CompactEncrypt(

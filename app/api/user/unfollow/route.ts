@@ -4,31 +4,31 @@ import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  if (req.method !== "GET") {
+export async function POST(req: NextRequest) {
+  if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 400 }
+      { status: 400 },
     );
   }
-  const queryString = req.nextUrl.searchParams.get("user");
-  if (!queryString) {
-    return NextResponse.json({ message: "Query not found" }, { status: 400 });
-  }
   try {
+    const body = await req.json();
+    if (!body) {
+      return NextResponse.json({ message: "Body not found" }, { status: 400 });
+    }
+    const { query } = body;
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const userId = new Types.ObjectId(isLoggedIn);
-    const query = new Types.ObjectId(queryString);
     if (!userId || !query) {
       return NextResponse.json(
         { message: "UserId or query not found" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     await connect();
@@ -37,21 +37,21 @@ export async function GET(req: NextRequest) {
     if (!queriedUser || !loggedUser) {
       return NextResponse.json(
         { message: "You are not logged in or user not found!" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     if (!queriedUser.followers.includes(userId)) {
       return NextResponse.json(
         { message: "You don't follow this user!" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!loggedUser.following.includes(query)) {
       return NextResponse.json(
         { message: "You don't follow this user!" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -61,13 +61,13 @@ export async function GET(req: NextRequest) {
     ]);
     return NextResponse.json(
       { message: "Unfollowed successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "An error occurred", error: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });

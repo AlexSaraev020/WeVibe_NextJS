@@ -55,6 +55,7 @@ export default function Comment({ commentContent }: CommentProps) {
               {truncate ? (
                 <p
                   className="text-sm font-medium text-sky-400 transition-all duration-500 hover:scale-105"
+                  aria-label="Read more"
                   onClick={() => setTruncate(false)}
                 >
                   Read more
@@ -63,6 +64,7 @@ export default function Comment({ commentContent }: CommentProps) {
                 <p
                   className="text-sm font-medium text-sky-400 transition-all duration-500 hover:scale-105"
                   onClick={() => setTruncate(true)}
+                  aria-label="Read less"
                 >
                   Read less
                 </p>

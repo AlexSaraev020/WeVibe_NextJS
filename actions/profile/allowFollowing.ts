@@ -2,12 +2,10 @@ import axios from "axios";
 
 interface AllowFollowingProps {
   userId: string;
-  setAllow?: (allow: string | undefined) => void;
+  setAllow?: (allow: string) => void;
 }
 
 export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) => {
-  console.log("called")
-  setAllow && setAllow("called")
   const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(
@@ -22,6 +20,5 @@ export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) =>
       return error.response.data;
     }
     console.error("Error following:", error);
-    setAllow && setAllow(undefined)
   }
 };

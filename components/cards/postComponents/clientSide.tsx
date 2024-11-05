@@ -27,11 +27,18 @@ export default function PostClientSide({
   const [showComments, setShowComments] = useState<boolean>(false);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [addedCommentCounter, setAddedCommentCounter] = useState<number>(0);
-  const handleDate = (date: string) => {
+  const [timeAgo, setTimeAgo] = useState<string | null>(null);
+
+  useEffect(() => {
     const convertedDate = new Date(date);
-    const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
-    return timeAgo;
-  };
+    if (!isNaN(convertedDate.getTime())) {
+      const time = formatDistanceToNow(convertedDate, { addSuffix: true });
+      setTimeAgo(time);
+    } else {
+      console.error("Invalid date:", date);
+      setTimeAgo("Invalid date");
+    }
+  }, [date]);
   useEffect(() => {
     document.documentElement.style.overflow = showComments ? "hidden" : "auto";
   }, [showComments]);
@@ -48,9 +55,6 @@ export default function PostClientSide({
   const handleTruncate = () => {
     setTruncate(!truncate);
   };
-  useEffect(() => {
-    document.documentElement.style.overflow = showComments ? "hidden" : "auto";
-  }, [showComments]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -60,6 +64,8 @@ export default function PostClientSide({
           setComments([]);
         }
         setComments(comments);
+      }else{
+        setComments([]);
       }
     };
     fetchComments();
@@ -85,10 +91,7 @@ export default function PostClientSide({
               <GoStar className="h-8 w-7 animate-fadeIn transition-all duration-500" />
             )}
           </button>
-          <button
-            onClick={() => setShowComments(!showComments)}
-            type="button"
-          >
+          <button onClick={() => setShowComments(!showComments)} type="button">
             <FaRegComment className="ml-1 h-8 w-7" />
           </button>
         </div>
@@ -114,7 +117,7 @@ export default function PostClientSide({
           <h2 className="md:text-md text-xs text-zinc-300/90">
             Comments {commentsNumber}
           </h2>
-          <h2 className="md:text-md text-xs"> {handleDate(date)}</h2>
+          <time className="md:text-md text-xs"> {timeAgo}</time>
         </div>
       </div>
     </>
