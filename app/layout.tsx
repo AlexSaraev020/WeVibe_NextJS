@@ -24,7 +24,6 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-redeviation-bs-uid="static-value"
       suppressHydrationWarning={true}
       className="overflow-y-scroll bg-black text-white antialiased scrollbar-thin scrollbar-track-black scrollbar-thumb-black"
     >
