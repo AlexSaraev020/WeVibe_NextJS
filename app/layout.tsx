@@ -28,6 +28,8 @@ export default function RootLayout({
       className="overflow-y-scroll bg-black text-white antialiased scrollbar-thin scrollbar-track-black scrollbar-thumb-black"
     >
       <body
+            suppressHydrationWarning={true}
+
         className={`${mingzat.className} relative`}
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />

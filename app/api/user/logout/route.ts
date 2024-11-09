@@ -1,13 +1,24 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  try {
-    const response = NextResponse.json(
-      { message: "Logged out" },
-      { status: 200 }
+export async function POST(req: Request) {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 },
     );
-    response.cookies.delete("authToken");
-    return response;
+  }
+  const cookieStore = await cookies();
+  try {
+    const response = cookieStore.delete("authToken");
+
+    if (!response) {
+      return NextResponse.json(
+        { message: "An error occurred" },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ message: "Logged out successfully" }, { status: 200 });
   } catch (error: unknown) {
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }

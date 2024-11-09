@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 export const checkUserLoggedIn = async () => {
     const cookieStore = await cookies();
     const token = cookieStore.get("authToken");
-    console.log("token: ",token?.value);
     if (!token) {
         return false;
     }

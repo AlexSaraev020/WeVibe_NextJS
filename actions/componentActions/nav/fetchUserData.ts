@@ -18,32 +18,37 @@ export const fetchUserWithTimeout = async ({
   path,
   router,
 }: FetchUserWithTimeoutProps) => {
-  const fetchUser = async () => {
-    const response = await getUser();
-    if (response.status >= 400 && !paths.includes(path)) {
-      router.push("/");
-      return null;
-    }
-    return response.user;
-  };
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Timeout")), 3000)
-  );
-  try {
-    const result = await Promise.race([fetchUser(), timeout]);
-    setUserName(result.username);
-    setUserId(result._id);
-    setUserImage(result.image);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (error.message === "Timeout") {
-        console.error("Request timed out, reloading page...");
-        window.location.reload();
-      } else {
-        console.error("Error fetching user:", error);
+  if(!paths.includes(path)) {
+    const fetchUser = async () => {
+      const response = await getUser();
+      if (response.status >= 400 && !paths.includes(path)) {
+        router.push("/");
       }
-    } else {
-      console.error("Unknown error:", error);
+      return response.user;
+    };
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), 3000)
+    );
+    try {
+      const result = await Promise.race([fetchUser(), timeout]);
+      setUserName(result.username);
+      setUserId(result._id);
+      setUserImage(result.image);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message === "Timeout") {
+          console.error("Request timed out, reloading page...");
+          window.location.reload();
+        } else {
+          console.error("Error fetching user:", error);
+        }
+      } else {
+        console.error("Unknown error:", error);
+      }
     }
+  }else{
+    setUserName("");
+    setUserId("");
+    setUserImage("");
   }
 };

@@ -25,7 +25,7 @@ export default function PostClientSide({
   const [dislike, setDislike] = useState<number | undefined>(undefined);
   const [truncate, setTruncate] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(false);
-  const [comments, setComments] = useState<CommentType[]>([]);
+
   const [addedCommentCounter, setAddedCommentCounter] = useState<number>(0);
   const [timeAgo, setTimeAgo] = useState<string | null>(null);
 
@@ -56,21 +56,6 @@ export default function PostClientSide({
     setTruncate(!truncate);
   };
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      if (showComments) {
-        const comments = await getComments(postId);
-        if (!comments) {
-          setComments([]);
-        }
-        setComments(comments);
-      }else{
-        setComments([]);
-      }
-    };
-    fetchComments();
-  }, [addedCommentCounter, postId, showComments]);
-  console.log(comments);
   return (
     <>
       {showComments && (
@@ -78,7 +63,7 @@ export default function PostClientSide({
           addedCommentCounter={addedCommentCounter}
           setAddedCommentCounter={setAddedCommentCounter}
           postId={postId}
-          comments={comments}
+          showComments={showComments}
           setShowComments={setShowComments}
         />
       )}

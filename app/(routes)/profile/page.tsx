@@ -5,12 +5,10 @@ import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
 import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { user: string };
+export default async function Page(props: {
+  searchParams: Promise<{ user: string }>;
 }) {
-  const { user } = await searchParams
+  const { user } = await props.searchParams;
   const response = await getUserProfile(user);
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
@@ -30,7 +28,7 @@ export default async function Page({
                 <h1 className="max-w-full truncate text-lg font-semibold md:text-3xl">
                   {response.data.user.username}
                 </h1>
-                <ProfileActionsButtons />
+                <ProfileActionsButtons userId={user} />
               </div>
               <div className="mt-1 flex gap-2 md:mt-4 md:gap-6">
                 <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">

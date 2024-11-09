@@ -1,8 +1,9 @@
-import { model, Model, models, ObjectId, Schema } from "mongoose";
+import { model, Model, models, Schema, Types } from "mongoose";
 
 export interface Likes extends Document {
-  post: ObjectId;
-  user: ObjectId;
+  _id: Types.ObjectId;
+  post: Types.ObjectId;
+  user: Types.ObjectId;
   createdAt: Date;
 }
 

@@ -3,10 +3,12 @@ import Image from "next/image";
 import PostClientSide from "./postComponents/clientSide";
 import { PostType } from "@/types/post/postType";
 import Link from "next/link";
+import KebabSection from "./postComponents/kebabSection";
 
 export default function Post({ post }: { post: PostType }) {
   return (
-    <div className="mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
+    <div className="relative mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
+      <KebabSection postId={post._id} userId={post.createdBy._id} />
       <div className="flex w-full animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
         <Link
           href={`/profile?user=${post.createdBy._id}`}
@@ -36,7 +38,7 @@ export default function Post({ post }: { post: PostType }) {
         <Image
           src={post.image}
           alt="ImageBackground"
-          className="absolute inset-0 -z-10 max-h-[20rem] opacity-35 blur-xl md:max-h-[40rem]"
+          className="absolute inset-0 -z-10 max-h-[20rem] opacity-20 blur-sm md:max-h-[40rem]"
           width={1080}
           height={1080}
         />

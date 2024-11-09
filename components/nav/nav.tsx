@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
+import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png"
 import { usePathname, useRouter } from "next/navigation";
 import { displayedButtons } from "./navcomponents/buttons";
 import Logout from "./navcomponents/prompts/logout";
@@ -61,7 +62,7 @@ export default function Nav() {
     handleLogOut: handleLogOut,
     handleProfile: handleProfile,
     userName: isLoaded ? userName : "Profile",
-    profilePicture: userImage,
+    profilePicture: userImage? userImage : ProfilePlaceholder,
   });
 
   useEffect(()=>{
@@ -79,7 +80,7 @@ export default function Nav() {
       {showLogoutPrompt && <Logout setShowLogoutPrompt={setShowLogoutPrompt} />}
       {showCreatePost && <CreatePost setShowCreatePost={setShowCreatePost} />}
       {showSearch && <Search />}
-      {!paths.includes(path) && (
+      {!paths.includes(path) && !showCreatePost && !showLogoutPrompt && (
         <nav
           className={`border-postBackground/50 bg-black lg:bg-transparent group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-t-2 p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:hover:border-none lg:hover:shadow-none lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:p-4 ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"

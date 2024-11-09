@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 
 interface AllowFollowingProps {
@@ -9,7 +10,7 @@ export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) =>
   const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(
-      `${url}/api/user/allowFollowing?user=${userId}`
+      `/api/user/allowFollowing?user=${userId}`
     );
     if(response.status < 300) {
       setAllow && setAllow(response.data.allow)

@@ -10,7 +10,6 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
   const router = useRouter();
   const handleLogOut = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    e.stopPropagation();
     try {
       const response = await logoutUser();
       if (response?.status === 200) {

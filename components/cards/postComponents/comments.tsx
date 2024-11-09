@@ -1,28 +1,44 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaArrowUp } from "react-icons/fa";
 import { addComment } from "@/actions/posts/comments/addComment";
 import { CommentType } from "@/types/post/postType";
 import Comment from "./comment";
+import { getComments } from "@/actions/posts/comments/getComments";
 
 interface CommentsSectionProps {
-  comments: CommentType[];
   postId: string;
   setShowComments?: (showComments: boolean) => void;
   setAddedCommentCounter?: (addedCommentCounter: number) => void;
   addedCommentCounter: number;
+  showComments: boolean;
 }
 
 export default function CommentsSection({
   postId,
-  comments,
   setShowComments,
   setAddedCommentCounter,
   addedCommentCounter,
+  showComments,
 }: CommentsSectionProps) {
   const [comment, setComment] = useState<string>("");
+  const [comments, setComments] = useState<CommentType[]>([]);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (showComments) {
+        const comments = await getComments(postId);
+        if (!comments) {
+          setComments([]);
+        }
+        setComments(comments);
+      } else {
+        setComments([]);
+      }
+    };
+    fetchComments();
+  }, [addedCommentCounter, postId, showComments]);
   const handleClickOutside = () => {
     setShowComments && setShowComments(false);
   };
@@ -45,7 +61,7 @@ export default function CommentsSection({
     >
       <div
         onClick={handleClickInside}
-        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 md:p-6 md:shadow-glow md:shadow-postBackground/50 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2"
+        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:shadow-glow md:shadow-postBackground/50"
       >
         <h2>
           <span className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text text-center text-xl font-extrabold text-transparent md:text-3xl">
@@ -56,18 +72,16 @@ export default function CommentsSection({
           className="absolute right-2 top-2 rounded-full p-1 md:p-0"
           onClick={() => setShowComments && setShowComments(false)}
         >
-          <IoClose className="h-7 w-7 cursor-pointer transition-all duration-500 fill-sky-100 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
+          <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
-        <ul className="flex h-full w-full flex-col items-center py-2 gap-4 overflow-y-auto scrollbar-thin">
+        <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-thin">
           {comments.length ? (
             comments.map((commentContent) => (
               <li
                 className="flex w-full flex-col items-center justify-center"
                 key={commentContent._id}
               >
-                <Comment
-                  commentContent={commentContent}
-                />
+                <Comment commentContent={commentContent} />
               </li>
             ))
           ) : (
@@ -84,7 +98,9 @@ export default function CommentsSection({
             name="Comment section"
             id="comment"
             placeholder="Write a comment..."
-            onChange={(e:React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setComment(e.target.value)
+            }
             value={comment}
             rows={1}
             aria-label="Write a comment"

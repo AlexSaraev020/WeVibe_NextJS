@@ -5,11 +5,12 @@ import Image from "next/image";
 import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import Link from "next/link";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { q: string };
-}) {
+export default async function Page(
+  props: {
+    searchParams: Promise<{ q: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const response = await getUsersByQuery(searchParams.q);
 
   return (

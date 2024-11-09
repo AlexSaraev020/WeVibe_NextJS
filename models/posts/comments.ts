@@ -1,6 +1,7 @@
 import { Document, model, Model, models, Schema, Types } from "mongoose";
 
 export interface Comment extends Document {
+  _id: Types.ObjectId;
   comment: string;
   post: Types.ObjectId;
   user: Types.ObjectId;

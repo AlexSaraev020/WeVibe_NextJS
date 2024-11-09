@@ -8,6 +8,6 @@ export interface UserType {
     createdAt: Date;
     posts: [];
     followers: string[];
-    follows: string[];
+    following: string[];
   }
   

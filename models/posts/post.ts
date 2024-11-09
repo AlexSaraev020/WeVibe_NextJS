@@ -1,5 +1,6 @@
 import { Document, model, Model, models, Schema, Types } from "mongoose";
 export interface Post extends Document {
+  _id: Types.ObjectId;
   title: string;
   description: string;
   image: string;

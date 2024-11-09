@@ -1,7 +1,7 @@
 import { IoSearch } from "react-icons/io5";
 import { FaCirclePlus } from "react-icons/fa6";
 import { IoLogOut } from "react-icons/io5";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { toggleFunctionsProps } from "@/actions/componentActions/nav/toggleFunctions";
 
 interface DisplayedButtonsProps {
@@ -16,7 +16,7 @@ interface DisplayedButtonsProps {
   }: toggleFunctionsProps) => void;
   handleProfile: ({ router, userId }: toggleFunctionsProps) => void;
   userName: string;
-  profilePicture: string;
+  profilePicture: string | StaticImageData;
 }
 
 export const displayedButtons = ({

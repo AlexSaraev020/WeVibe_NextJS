@@ -6,12 +6,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 type Allow = "edit" | "follow" | "unfollow";
 
-
 export async function GET(req: NextRequest) {
   if (req.method !== "GET") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -20,15 +19,13 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const query = req.nextUrl.searchParams.get("user");
     if (!query) {
       return NextResponse.json({ message: "Query not found" }, { status: 404 });
     }
-    
-    console.log("userId", userId);
     await connect();
 
     let allow: Allow;
@@ -37,7 +34,10 @@ export async function GET(req: NextRequest) {
     } else {
       const user = await UserModel.findOne({ _id: query }).exec();
       if (!user) {
-        return NextResponse.json({ message: "User not found" }, { status: 404 });
+        return NextResponse.json(
+          { message: "User not found" },
+          { status: 404 },
+        );
       }
       const objectUserId = new Types.ObjectId(userId);
       allow = user.followers.includes(objectUserId) ? "unfollow" : "follow";

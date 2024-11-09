@@ -6,9 +6,11 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 
-export default function ProfileActionsButtons() {
-  const searchParams = useSearchParams();
-  const userId = searchParams.get("user");
+interface Props {
+  userId: string;
+}
+
+export default function ProfileActionsButtons({userId}: Props) {
   const [allow, setAllow] = useState<string>("");
 
   useEffect(() => {
