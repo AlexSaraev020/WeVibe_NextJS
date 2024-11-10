@@ -5,11 +5,13 @@ interface InputProps {
     name: string
     id: string
     placeholder: string
+    maxLength: number
+    minLength: number
     required: boolean
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function FormInput({ type, name, id, placeholder, required, onChange }: InputProps) {
+export default function FormInput({ type, name, id, placeholder, required, onChange, maxLength, minLength }: InputProps) {
     return (
         <>
             <label
@@ -23,6 +25,8 @@ export default function FormInput({ type, name, id, placeholder, required, onCha
                 type={type}
                 name={name}
                 id={id}
+                maxLength={maxLength}
+                minLength={minLength}
                 placeholder={placeholder}
                 required={required}
                 onChange={onChange}

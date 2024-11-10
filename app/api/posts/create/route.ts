@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
+import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 export async function POST(req: Request) {
   try {
     if (req.method !== "POST") {
@@ -22,6 +23,11 @@ export async function POST(req: Request) {
         { message: "Please fill the required fields" },
         { status: 400 },
       );
+    }
+
+    const validFields = validate__Fields__Length({ title, description });
+    if (validFields) {
+      return NextResponse.json({ message: validFields }, { status: 400 });
     }
 
     const userId = await checkUserLoggedIn();

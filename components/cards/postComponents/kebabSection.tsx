@@ -5,14 +5,17 @@ import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { allowDelete } from "@/actions/posts/deletion/alllowDelete";
 import { deletePost } from "@/actions/posts/deletion/delete";
+import { useRouter } from "next/navigation";
 
 interface Props {
   userId: string;
   postId: string;
+  imageUrl: string;
 }
-export default function KebabSection({ userId, postId }: Props) {
+export default function KebabSection({ userId, postId , imageUrl}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [allow, setAllow] = useState<boolean>(false);
+  const router = useRouter();
   useEffect(() => {
     if (isOpen && userId) {
       (async () => {
@@ -21,7 +24,7 @@ export default function KebabSection({ userId, postId }: Props) {
     }
   }, [userId, isOpen]);
   const handleDelete = async () => {
-    const response = await deletePost({ postId, createdBy: userId });
+    const response = await deletePost({ postId, createdBy: userId, imageUrl , router });
     console.log(response);
   };
   return (
@@ -36,8 +39,8 @@ export default function KebabSection({ userId, postId }: Props) {
         <div className="absolute right-4 top-16 z-50 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base">
           {allow && (
             <button
-              onClick={() => handleDelete}
-              className="flex items-center gap-1 hover:text-gray-100"
+              onClick={handleDelete}
+              className="flex items-center gap-1 z-50 hover:text-gray-100"
             >
               <h2>Delete</h2> <FaRegTrashAlt className="h-4 w-4" />
             </button>

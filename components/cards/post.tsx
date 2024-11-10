@@ -8,7 +8,7 @@ import KebabSection from "./postComponents/kebabSection";
 export default function Post({ post }: { post: PostType }) {
   return (
     <div className="relative mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
-      <KebabSection postId={post._id} userId={post.createdBy._id} />
+      <KebabSection imageUrl={post.image} postId={post._id} userId={post.createdBy._id} />
       <div className="flex w-full animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
         <Link
           href={`/profile?user=${post.createdBy._id}`}

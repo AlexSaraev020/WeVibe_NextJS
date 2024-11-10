@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { generateToken } from "@/actions/auth/jwtCreate";
 import { ObjectId } from "mongoose";
+import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
     if (req.method !== "POST") {
       return NextResponse.json(
         { message: "Method not allowed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,8 +24,13 @@ export async function POST(req: Request) {
     if (!email || !password) {
       return NextResponse.json(
         { message: "All fields are required" },
-        { status: 401 }
+        { status: 401 },
       );
+    }
+
+    const validFields = validate__Fields__Length({ email, password });
+    if (validFields) {
+      return NextResponse.json({ message: validFields }, { status: 400 });
     }
 
     const existingUser = (await UserModel.findOne({ email })) as {
@@ -35,19 +41,19 @@ export async function POST(req: Request) {
     if (!existingUser) {
       return NextResponse.json(
         { message: "User doesn't exist!" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      existingUser.password
+      existingUser.password,
     );
 
     if (!isPasswordCorrect) {
       return NextResponse.json(
         { message: "Incorrect password!" },
-        { status: 402 }
+        { status: 402 },
       );
     }
     const token = await generateToken(existingUser._id.toString());
@@ -68,7 +74,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "An error occurred", error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -107,6 +107,8 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
           </label>
           <div className="flex flex-col gap-2">
             <FormInput
+              minLength={22}
+              maxLength={50}
               type="text"
               id="title"
               placeholder="Enter post title"
@@ -123,7 +125,8 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               Description
             </label>
             <textarea
-              minLength={10}
+              minLength={2}
+              maxLength={500}
               rows={1}
               id="description"
               value={description}

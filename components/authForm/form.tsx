@@ -74,6 +74,8 @@ export default function Form({ register, className }: FormProps) {
         {register && (
           <div className="flex w-9/12 flex-col gap-2 md:gap-3">
             <FormInput
+              maxLength={50}
+              minLength={2}
               onChange={(e) => setUserName(e.target.value)}
               type="text"
               name="Name"
@@ -85,6 +87,8 @@ export default function Form({ register, className }: FormProps) {
         )}
         <div className="flex w-9/12 flex-col gap-2 md:gap-3">
           <FormInput
+            maxLength={254}
+            minLength={6}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             name="Email"
@@ -93,6 +97,8 @@ export default function Form({ register, className }: FormProps) {
             required
           />
           <FormInput
+            maxLength={64}
+            minLength={8}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             name="Password"
@@ -113,23 +119,17 @@ export default function Form({ register, className }: FormProps) {
         <AiOutlineLoading className="h-8 w-8 animate-spin text-sky-500" />
       )}
       <div className="flex gap-1">
-        <p className="text-sm md:text-md">
+        <p className="md:text-md text-sm">
           {register ? "Already have an account?" : "Don't have an account?"}
         </p>
         <Link
-          className="font-bold text-sky-500 text-sm md:text-md"
+          className="md:text-md text-sm font-bold text-sky-500"
           href={register ? "/login" : "/register"}
         >
           {register ? " Login " : " Register "}
         </Link>
       </div>
-      {failure && (
-        <Alert
-        error
-          progress={progress}
-          message={failure}
-        />
-      )}
+      {failure && <Alert error progress={progress} message={failure} />}
     </form>
   );
 }
