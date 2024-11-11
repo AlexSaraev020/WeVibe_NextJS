@@ -1,19 +1,17 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
-import { CommentsModel } from "@/models/posts/comments";
 import { LikesModel } from "@/models/posts/likes";
-import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 
-export async function DELETE(req: Request) {
-  if (req.method !== "DELETE") {
+export async function POST(req: Request) {
+  if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
     );
   }
   try {
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isUserLoggedIn = await checkUserLoggedIn();
+    if (!isUserLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
@@ -23,23 +21,18 @@ export async function DELETE(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId, createdBy } = body;
+    const { postId } = body;
     if (!postId) {
       return NextResponse.json(
         { message: "No post id found" },
         { status: 400 },
       );
     }
-    if (createdBy !== loggedUser) {
-      return NextResponse.json(
-        { message: "You are not allowed to delete this post", allow: false },
-        { status: 403 },
-      );
+    const isLiked = await LikesModel.findOne({ user: isUserLoggedIn, post: postId }).exec();
+    if (isLiked) {
+      return NextResponse.json({ isLiked: true }, { status: 200 });
     }
-    await PostModel.findByIdAndDelete(postId);
-    await LikesModel.deleteMany({ post: postId });
-    await CommentsModel.deleteMany({ post: postId });
-    return NextResponse.json({ message: "Post deleted" }, { status: 200 });
+    return NextResponse.json({ isLiked: false }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

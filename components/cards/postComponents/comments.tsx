@@ -48,11 +48,12 @@ export default function CommentsSection({
   };
   const handleSubmitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setComment("");
     const response = await addComment(postId, comment);
     if (response?.status === 200) {
-      setComment("");
       setAddedCommentCounter && setAddedCommentCounter(addedCommentCounter + 1);
     }
+    
   };
   return (
     <div

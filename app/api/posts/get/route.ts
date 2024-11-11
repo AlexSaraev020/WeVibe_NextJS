@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   try {
     const posts = await PostModel.find({})
       .sort({ createdAt: -1 })
-      .populate({ path: "createdBy", model: UserModel })
+      .populate({ path: "createdBy", model: UserModel ,select: "username image"})
       .select("_id title description image createdAt createdBy comments")
       .exec();
     if (!posts.length) {

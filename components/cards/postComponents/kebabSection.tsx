@@ -25,7 +25,6 @@ export default function KebabSection({ userId, postId , imageUrl}: Props) {
   }, [userId, isOpen]);
   const handleDelete = async () => {
     const response = await deletePost({ postId, createdBy: userId, imageUrl , router });
-    console.log(response);
   };
   return (
     <>

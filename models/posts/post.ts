@@ -6,8 +6,8 @@ export interface Post extends Document {
   image: string;
   createdAt: Date;
   createdBy: Types.ObjectId;
-  comments: Types.ObjectId[] | null;
-  likes: Types.ObjectId[] | null;
+  comments: Types.ObjectId[];
+  likes: Types.ObjectId[];
 }
 
 const PostSchema = new Schema<Post>({

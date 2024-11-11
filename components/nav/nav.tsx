@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
-import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png"
+import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { usePathname, useRouter } from "next/navigation";
 import { displayedButtons } from "./navcomponents/buttons";
 import Logout from "./navcomponents/prompts/logout";
@@ -62,18 +62,18 @@ export default function Nav() {
     handleLogOut: handleLogOut,
     handleProfile: handleProfile,
     userName: isLoaded ? userName : "Profile",
-    profilePicture: userImage? userImage : ProfilePlaceholder,
+    profilePicture: userImage ? userImage : ProfilePlaceholder,
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     const disable__Search__OnRouteChange = () => {
       setShowSearch(false);
-    }
+    };
     Router.events.on("routeChangeComplete", disable__Search__OnRouteChange);
     return () => {
       Router.events.off("routeChangeComplete", disable__Search__OnRouteChange);
-    }
-  },[])
+    };
+  }, []);
 
   return (
     <>
@@ -82,7 +82,7 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && !showCreatePost && !showLogoutPrompt && (
         <nav
-          className={`border-postBackground/50 bg-black lg:bg-transparent group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:hover:border-none lg:hover:shadow-none lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:p-4 ${
+          className={`group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >
@@ -116,7 +116,7 @@ export default function Nav() {
                   className="relative flex items-center justify-center gap-2"
                 >
                   {item.icon}
-                  <h2 className="text-md hidden lg:block max-w-0 overflow-hidden font-semibold opacity-0 transition-all lg:delay-1000 lg:duration-1000 lg:group-hover:max-w-xs lg:group-hover:opacity-100 lg:group-hover:delay-0">
+                  <h2 className="text-md hidden max-w-0 overflow-hidden font-semibold opacity-0 transition-all lg:block lg:delay-1000 lg:duration-1000 lg:group-hover:max-w-xs lg:group-hover:opacity-100 lg:group-hover:delay-0">
                     {item.name}
                   </h2>
                 </button>

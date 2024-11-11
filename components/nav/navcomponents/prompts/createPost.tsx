@@ -107,7 +107,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
           </label>
           <div className="flex flex-col gap-2">
             <FormInput
-              minLength={22}
+              minLength={2}
               maxLength={50}
               type="text"
               id="title"

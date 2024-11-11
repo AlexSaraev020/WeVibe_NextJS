@@ -31,7 +31,6 @@ export default function ProfileActionsButtons({userId}: Props) {
           setAllow,
         });
       }
-      console.log(response);
     }
   };
 
@@ -44,7 +43,6 @@ export default function ProfileActionsButtons({userId}: Props) {
           setAllow,
         });
       }
-      console.log(response);
     }
   };
 

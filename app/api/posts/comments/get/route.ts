@@ -32,7 +32,6 @@ export async function POST(req: Request) {
         select: ["username", "image"],
       })
       .exec();
-      console.log("comments", comments)
     if (!comments.length) {
       return NextResponse.json(
         { message: "Comments not found" },
