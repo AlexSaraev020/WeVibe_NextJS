@@ -79,19 +79,21 @@ export default function PostClientSide({
               )}
             </button>
           )}
-          <button className="" onClick={() => setShowComments(!showComments)} type="button">
-            <FaRegComment className="ml-1 h-8 w-7 transition-all duration-500 animate-fadeIn" />
+          <button
+            className=""
+            onClick={() => setShowComments(!showComments)}
+            type="button"
+          >
+            <FaRegComment className="ml-1 h-8 w-7 animate-fadeIn transition-all duration-500" />
           </button>
         </div>
         <div className="flex w-full flex-col gap-1 px-2">
-          <div
-            className={`flex w-full flex-col items-start ${
-              truncate ? "truncate" : ""
-            }`}
-          >
-            <p className="text-sm md:text-lg">
-              {truncate ? description.slice(0, 200) : description}
-            </p>
+          <div className="flex w-full flex-col items-start">
+            <p className="max-w-full break-all text-sm font-medium text-zinc-300">
+            {truncate && description.length >= 200
+              ? description.slice(0, 200) + "..."
+              : description}
+          </p>
             {description.length > 200 && (
               <button
                 className="md:text-md text-xs text-zinc-300/90"
@@ -102,6 +104,7 @@ export default function PostClientSide({
               </button>
             )}
           </div>
+
           <h2 className="md:text-md text-xs text-zinc-300/90">
             Comments {commentsNumber}
           </h2>

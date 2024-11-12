@@ -16,7 +16,7 @@ export default async function Home() {
       <div className="flex items-center justify-center text-6xl font-extrabold md:text-8xl transition-all duration-500 animate-fadeIn">
         <h2 className="text-sky-100">We</h2>
         <Image src={Logo} alt="Logo" className="h-16 w-16 md:h-28 md:w-28" />
-        <h2 className="text-sky-500">ibe</h2>
+        <h2 className="text-postBackground/70">ibe</h2>
       </div>
       <RootPageTerminal />
     </div>

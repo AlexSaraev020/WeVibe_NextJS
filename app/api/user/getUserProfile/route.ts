@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   if (req.method !== "GET") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   try {
@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { message: "User id not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
     await connect();
     const user = await UserModel.findOne({ _id: userId })
-      .select("-password")
+      .select("-password -__v")
       .populate({
         path: "posts",
         model: PostModel,
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "An error occurred", error: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });

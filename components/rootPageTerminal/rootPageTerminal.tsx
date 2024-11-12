@@ -22,7 +22,7 @@ export default function RootPageTerminal() {
         <div className="flex w-full flex-col items-center justify-center gap-4">
           <p className="w-10/12 animate-fadeIn text-center text-xs font-medium leading-relaxed text-sky-100 sm:w-8/12 sm:text-sm md:w-6/12 md:text-base">
             <span className="sm:text-md text-sm font-bold md:text-lg">
-              We<span className="text-sky-400">Vibe</span>
+              We<span className="text-postBackground/80">Vibe</span>
             </span>{" "}
             is a place where every photo tells a story, every post is a personal
             touch, and every connection is an invitation to share something

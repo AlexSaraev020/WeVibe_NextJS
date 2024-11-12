@@ -64,10 +64,10 @@ export default function Form({ register, className }: FormProps) {
   }, [failure]);
   return (
     <form
-      className={`${className} z-10 flex w-10/12 flex-col items-center justify-center gap-8 rounded-xl border border-sky-500 bg-transparent py-5 shadow-glow shadow-sky-500 md:w-3/6 md:py-10 lg:w-4/12 xl:w-3/12`}
+      className={`${className} z-10 flex w-10/12 flex-col items-center justify-center gap-8 rounded-xl border-2 border-postBackground/60 bg-transparent py-5 shadow-glow shadow-postBackground/50 md:w-3/6 md:py-10 lg:w-4/12 xl:w-3/12`}
       onSubmit={handleSubmit}
     >
-      <h2 className="font-sans text-2xl font-bold text-sky-400 md:text-4xl">
+      <h2 className="font-sans text-2xl font-bold text-postBackground/90 md:text-4xl">
         {register ? "Register" : "Login"}
       </h2>
       <div className="flex w-full flex-col items-center justify-center gap-3">
@@ -103,6 +103,7 @@ export default function Form({ register, className }: FormProps) {
             type="password"
             name="Password"
             id="password"
+            password
             placeholder="Enter your password"
             required
           />
@@ -123,7 +124,7 @@ export default function Form({ register, className }: FormProps) {
           {register ? "Already have an account?" : "Don't have an account?"}
         </p>
         <Link
-          className="md:text-md text-sm font-bold text-sky-500"
+          className="md:text-md text-sm font-bold text-postBackground/90"
           href={register ? "/login" : "/register"}
         >
           {register ? " Login " : " Register "}

@@ -28,7 +28,7 @@ export default async function Page(props: {
                 <h1 className="max-w-full truncate text-lg font-semibold md:text-3xl">
                   {response.data.user.username}
                 </h1>
-                <ProfileActionsButtons userId={user} />
+                <ProfileActionsButtons user={response.data.user} />
               </div>
               <div className="mt-1 flex gap-2 md:mt-4 md:gap-6">
                 <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
