@@ -2,16 +2,11 @@ import axios from "axios";
 
 interface HandleLikeProps{
     postId: string;
-    setLike: (like: boolean) => void;
 }
 
-export const handleLike = async ({ postId , setLike}: HandleLikeProps) => {
+export const handleLike = async ({ postId}: HandleLikeProps) => {
   try {
-    const response = await axios.put(`/api/posts/handleLike`, { postId });
-    if(response.status < 300) {
-        setLike(response.data.like)
-    }
-    return response;
+    await axios.put(`/api/posts/handleLike`, { postId });
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

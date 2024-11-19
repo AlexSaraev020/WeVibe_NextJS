@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import EditProfile from "./editProfile";
 import { UserType } from "@/types/userTypes/user/userType";
+import ShinyButton from "../buttons/shinyButton";
 
 interface Props {
   user: UserType;
@@ -56,28 +57,37 @@ export default function ProfileActionsButtons({ user }: Props) {
         <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
       )}
       {allow === "follow" && (
-        <button
+        <ShinyButton
+          type="button"
           onClick={handleFollowUser}
-          className="h-8 w-16 rounded-full bg-postBackground/50 font-bold text-white shadow-glow shadow-postBackground/50 transition-all duration-500 hover:scale-105 md:h-10 md:w-24"
-        >
-          Follow
-        </button>
+          bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
+          topLineColor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
+          className=" w-14 md:w-24 text-xs bg-postBackground/20 font-semibold text-sky-200 hover:shadow-lg hover:shadow-postBackground/30 md:text-lg"
+          text={"Follow"}
+          background="bg-sky-900 py-1"
+        />
       )}
       {allow === "unfollow" && (
-        <button
+        <ShinyButton
           onClick={handleUnfollowUser}
-          className="h-8 w-16 rounded-full bg-postBackground/50 font-bold text-white shadow-glow shadow-postBackground/50 transition-all duration-500 hover:scale-105 md:h-10 md:w-24"
-        >
-          Unfollow
-        </button>
+          bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
+          topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
+          className=" w-16 md:w-24 bg-neutral-700 text-zinc-400 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
+          text={"Unfollow"}
+          type="button"
+          background="bg-neutral-800 py-1"
+        />
       )}
       {allow === "edit" && (
-        <button
-          onClick={() => setEdit(true)}
-          className="h-8 w-16 rounded-full bg-slate-600 font-bold text-white shadow-glow shadow-slate-600 transition-all duration-500 hover:scale-105 md:h-10 md:w-24"
-        >
-          Edit
-        </button>
+        <ShinyButton
+          onClick={() => (edit === false ? setEdit(true) : setEdit(true))}
+          bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
+          topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
+          className=" w-14 md:w-24 bg-neutral-700 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
+          text={"Edit"}
+          background="bg-neutral-800 py-1"
+          type="button"
+        />
       )}
     </>
   );

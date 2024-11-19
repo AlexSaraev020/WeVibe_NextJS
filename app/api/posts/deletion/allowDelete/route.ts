@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     );
   }
   try {
+    
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     if (createdBy !== loggedUser) {
       return NextResponse.json(
         { message: "You are not allowed to delete this post", allow: false },
-        { status: 403 },
+        { status: 200 },
       );
     }
     return NextResponse.json(

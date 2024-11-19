@@ -48,6 +48,7 @@ export default function Post({ post }: { post: PostType }) {
         description={post.description}
         date={post.createdAt.toString()}
         commentsNumber={post.comments.length}
+        likesNumber={post.likes && post.likes.length}
       />
     </div>
   );

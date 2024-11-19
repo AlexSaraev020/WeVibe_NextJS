@@ -3,14 +3,14 @@ interface ValidateFieldsLengthProps {
   email?: string;
   password?: string;
   title?: string;
-  description?: string;
+  bio?: string;
 }
 export const validate__Fields__Length = ({
   username,
   email,
   password,
   title,
-  description,
+  bio,
 }: ValidateFieldsLengthProps) => {
   const MIN_USERNAME_LENGTH = 2;
   const MAX_USERNAME_LENGTH = 50;
@@ -20,8 +20,8 @@ export const validate__Fields__Length = ({
   const MIN_EMAIL_LENGTH = 6;
   const MIN_TITLE_LENGTH = 2;
   const MAX_TITLE_LENGTH = 50;
-  const MIN_DESCRIPTION_LENGTH = 2;
-  const MAX_DESCRIPTION_LENGTH = 500;
+  const MIN_BIO_LENGTH = 2;
+  const MAX_BIO_LENGTH = 200;
 
   if (
     (username && username.length < MIN_USERNAME_LENGTH) ||
@@ -46,11 +46,11 @@ export const validate__Fields__Length = ({
     return `Title must be between ${MIN_TITLE_LENGTH} and ${MAX_TITLE_LENGTH} characters.`;
   }
   if (
-    description &&
-    (description.length < MIN_DESCRIPTION_LENGTH ||
-      description.length > MAX_DESCRIPTION_LENGTH)
+    bio &&
+    (bio.length < MIN_BIO_LENGTH ||
+      bio.length > MAX_BIO_LENGTH)
   ) {
-    return `Description must be between ${MIN_DESCRIPTION_LENGTH} and ${MAX_DESCRIPTION_LENGTH} characters.`;
+    return `Bio must be between ${MIN_BIO_LENGTH} and ${MAX_BIO_LENGTH} characters.`;
   }
 
   return null;

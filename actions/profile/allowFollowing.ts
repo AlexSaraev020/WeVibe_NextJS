@@ -7,7 +7,6 @@ interface AllowFollowingProps {
 }
 
 export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.get(
       `/api/user/allowFollowing?user=${userId}`

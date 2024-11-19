@@ -34,8 +34,8 @@ export async function POST(req: Request) {
       .exec();
     if (!comments.length) {
       return NextResponse.json(
-        { message: "Comments not found" },
-        { status: 404 }
+        { message: "No comments" },
+        { status: 200 }
       );
     }
 

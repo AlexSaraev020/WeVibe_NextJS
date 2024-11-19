@@ -6,10 +6,12 @@ import { addComment } from "@/actions/posts/comments/addComment";
 import { CommentType } from "@/types/post/postType";
 import Comment from "./comment";
 import { getComments } from "@/actions/posts/comments/getComments";
+import { AiOutlineLoading } from "react-icons/ai";
+
 
 interface CommentsSectionProps {
   postId: string;
-  setShowComments?: (showComments: boolean) => void;
+  setShowComments: (showComments: boolean) => void;
   setAddedCommentCounter?: (addedCommentCounter: number) => void;
   addedCommentCounter: number;
   showComments: boolean;
@@ -24,15 +26,11 @@ export default function CommentsSection({
 }: CommentsSectionProps) {
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<CommentType[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchComments = async () => {
       if (showComments) {
-        const comments = await getComments(postId);
-        if (!comments) {
-          setComments([]);
-        }
-        setComments(comments);
+        await getComments({ postId, setLoading, setComments });
       } else {
         setComments([]);
       }
@@ -40,7 +38,7 @@ export default function CommentsSection({
     fetchComments();
   }, [addedCommentCounter, postId, showComments]);
   const handleClickOutside = () => {
-    setShowComments && setShowComments(false);
+    setShowComments(false);
   };
 
   const handleClickInside = (e: React.MouseEvent) => {
@@ -53,7 +51,6 @@ export default function CommentsSection({
     if (response?.status === 200) {
       setAddedCommentCounter && setAddedCommentCounter(addedCommentCounter + 1);
     }
-    
   };
   return (
     <div
@@ -76,10 +73,10 @@ export default function CommentsSection({
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
         <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-thin">
-          {comments.length ? (
+          {comments && comments.length > 0 ? (
             comments.map((commentContent) => (
               <li
-                className="flex w-full flex-col items-center justify-center"
+                className="flex w-full flex-col items-center justify-center px-2"
                 key={commentContent._id}
               >
                 <Comment commentContent={commentContent} />
@@ -87,7 +84,7 @@ export default function CommentsSection({
             ))
           ) : (
             <div>
-              <p className="text-zinc-200">No comments yet</p>
+              <p className="text-zinc-200">{loading ? <AiOutlineLoading className="animate-spin" /> : "No comments"}</p>
             </div>
           )}
         </ul>

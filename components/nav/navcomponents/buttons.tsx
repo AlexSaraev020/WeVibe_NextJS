@@ -5,10 +5,6 @@ import Image, { StaticImageData } from "next/image";
 import { toggleFunctionsProps } from "@/actions/componentActions/nav/toggleFunctions";
 
 interface DisplayedButtonsProps {
-  handleLogOut: ({
-    setShowLogoutPrompt,
-    showLogoutPrompt,
-  }: toggleFunctionsProps) => void;
   handleSearch: ({ setShowSearch, showSearch }: toggleFunctionsProps) => void;
   handleCreatePost: ({
     setShowCreatePost,
@@ -20,7 +16,6 @@ interface DisplayedButtonsProps {
 }
 
 export const displayedButtons = ({
-  handleLogOut,
   handleSearch,
   handleCreatePost,
   handleProfile,
@@ -62,17 +57,5 @@ export const displayedButtons = ({
       />
     ),
     onClick: handleSearch,
-  },
-
-  {
-    id: 4,
-    name: "Logout",
-    icon: (
-      <IoLogOut
-        id="logout"
-        className="h-8 w-8 transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-10 md:group-hover:w-10"
-      />
-    ),
-    onClick: handleLogOut,
   },
 ];

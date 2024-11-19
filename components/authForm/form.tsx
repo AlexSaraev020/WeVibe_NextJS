@@ -19,7 +19,7 @@ export default function Form({ register, className }: FormProps) {
   const [password, setPassword] = useState<string>("");
   const [failure, setFailure] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
+
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,28 +40,6 @@ export default function Form({ register, className }: FormProps) {
     setLoading(false);
   }, [failure]);
 
-  useEffect(() => {
-    if (failure) {
-      setProgress(0);
-      const interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return prev;
-          }
-          return prev + 100 / 30;
-        });
-      }, 100);
-      const timeout = setTimeout(() => {
-        setFailure(undefined);
-        setProgress(0);
-      }, 3000);
-      return () => {
-        clearTimeout(timeout);
-        clearInterval(interval);
-      };
-    }
-  }, [failure]);
   return (
     <form
       className={`${className} z-10 flex w-10/12 flex-col items-center justify-center gap-8 rounded-xl border-2 border-postBackground/60 bg-transparent py-5 shadow-glow shadow-postBackground/50 md:w-3/6 md:py-10 lg:w-4/12 xl:w-3/12`}
@@ -111,8 +89,8 @@ export default function Form({ register, className }: FormProps) {
       </div>
       <ShinyButton
         onClick={() => setFailure(undefined)}
-        className="w-32 font-semibold"
-        textStyle="py-2"
+        className="w-32 font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30"
+        background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"
         type="submit"
         text={register ? "Register" : "Login"}
       />
@@ -130,7 +108,14 @@ export default function Form({ register, className }: FormProps) {
           {register ? " Login " : " Register "}
         </Link>
       </div>
-      {failure && <Alert error progress={progress} message={failure} />}
+      {failure && (
+        <Alert
+          error
+          failure={failure}
+          setFailure={setFailure}
+          message={failure}
+        />
+      )}
     </form>
   );
 }

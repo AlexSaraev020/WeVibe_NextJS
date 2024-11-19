@@ -14,9 +14,10 @@ export default function RootPageTerminal() {
           onClick={() => setShowTerminal(false)}
           text="Get Started"
           type="button"
-          className="text-md md:text-xl text-sky-100 hover:text-sky-300"
+          background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+          className="text-md text-sky-100 shadow-xl shadow-postBackground/20 hover:text-sky-300 hover:shadow-2xl hover:shadow-postBackground/50 md:text-xl"
         >
-          <MdKeyboardArrowRight className=" h-5 w-5 md:h-7 md:w-7 text-sky-100 transition-all duration-500 group-hover:text-sky-400" />
+          <MdKeyboardArrowRight className="h-5 w-5 text-sky-100 transition-all duration-500 group-hover:text-sky-400 md:h-7 md:w-7" />
         </ShinyButton>
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -30,17 +31,19 @@ export default function RootPageTerminal() {
             enjoyable. We&#39;re building a friendly community where you can be
             yourself.
           </p>
-          <div className="flex gap-2 animate-fadeIn">
+          <div className="flex animate-fadeIn gap-2">
             <ShinyButton
               onClick={() => router.push("/login")}
-              className="w-24 text-sm font-semibold text-sky-100 md:w-32 md:text-lg"
+              background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+              className="w-24 text-sm font-semibold text-sky-100 shadow-xl shadow-postBackground/20 hover:shadow-2xl hover:shadow-postBackground/50 md:w-32 md:text-lg"
               text={"Login"}
             />
             <ShinyButton
               onClick={() => router.push("/register")}
               bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
               topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
-              className="w-24 bg-white/20 text-sm font-semibold hover:shadow-white/50 md:w-32 md:text-lg"
+              background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+              className="w-24 bg-white/20 text-sm font-semibold shadow-xl shadow-white/20 hover:shadow-2xl hover:shadow-white/50 md:w-32 md:text-lg"
               text={"Register"}
             />
           </div>

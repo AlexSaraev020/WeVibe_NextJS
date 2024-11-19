@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const posts = await PostModel.find({})
       .sort({ createdAt: -1 })
       .populate({ path: "createdBy", model: UserModel ,select: "username image"})
-      .select("_id title description image createdAt createdBy comments")
+      .select("_id title description image createdAt createdBy comments likes")
       .exec();
     if (!posts.length) {
       return NextResponse.json({ message: "Posts not found" }, { status: 404 });

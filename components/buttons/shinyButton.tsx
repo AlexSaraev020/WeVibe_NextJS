@@ -9,7 +9,7 @@ interface ShinyButtonProps {
   children?: React.ReactNode;
   bottomLineCollor?: string;
   topLineColor?: string;
-  textStyle?: string;
+  background?: string;
 }
 
 export default function ShinyButton({
@@ -20,21 +20,21 @@ export default function ShinyButton({
   className,
   bottomLineCollor,
   topLineColor,
-  textStyle,
+  background,
 }: ShinyButtonProps) {
   return (
     <button
       type={type}
       onClick={onClick}
       className={twMerge(
-        "group relative inline-block cursor-pointer rounded-full bg-slate-800 p-[2px] leading-6 text-white no-underline shadow-2xl shadow-zinc-900 transition-all duration-500 hover:shadow-glow hover:shadow-postBackground/50",
+        "group relative inline-block cursor-pointer rounded-full bg-slate-800 p-[2px] leading-6 text-white no-underline shadow-zinc-900 transition-all duration-500 hover:shadow-glow hover:shadow-postBackground/50",
         className,
       )}
     >
       <span className="absolute inset-0 overflow-hidden rounded-full">
         <span className={twMerge("absolute inset-0 rounded-full bg-gradient-to-r from-white/0 via-postBackground/50 to-white/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100", topLineColor)} />
       </span>
-      <div className={twMerge("relative z-10 flex items-center justify-center space-x-2 rounded-full bg-gradient-to-tr from-black via-neutral-900 to-black px-6 py-3 font-sans ring-1 ring-white/10", textStyle)}>
+      <div className={twMerge("relative z-10 flex items-center justify-center space-x-2 rounded-full px-6 py-3 font-sans ring-1 ring-white/10", background)}>
         <span>{text}</span>
         {children}
       </div>

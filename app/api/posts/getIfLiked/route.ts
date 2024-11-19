@@ -1,5 +1,6 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { LikesModel } from "@/models/posts/likes";
+import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -29,10 +30,11 @@ export async function POST(req: Request) {
       );
     }
     const isLiked = await LikesModel.findOne({ user: isUserLoggedIn, post: postId }).exec();
+    const postLikesNumber = await PostModel.findOne({ _id: postId }).select("likes").exec();
     if (isLiked) {
-      return NextResponse.json({ isLiked: true }, { status: 200 });
+      return NextResponse.json({ isLiked: true , likes: postLikesNumber?.likes }, { status: 200 });
     }
-    return NextResponse.json({ isLiked: false }, { status: 200 });
+    return NextResponse.json({ isLiked: false , likes: postLikesNumber?.likes }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

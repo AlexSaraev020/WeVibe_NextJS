@@ -4,6 +4,7 @@ import ProfilePosts from "@/components/cards/profilePosts";
 import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
 import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
+import Long_Text_Truncate from "@/components/text/longTextTruncate";
 
 export default async function Page(props: {
   searchParams: Promise<{ user: string }>;
@@ -13,19 +14,19 @@ export default async function Page(props: {
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
       {response.status === 200 ? (
-        <div className="flex h-full w-full flex-col items-center justify-center gap-10 pb-4">
-          <div className="flex w-11/12 items-center justify-center gap-1 p-4 md:w-full md:gap-4">
+        <div className="mt-10 flex h-full w-11/12 flex-col items-center justify-center gap-10 pb-4 md:w-full">
+          <div className="flex w-full items-start justify-center gap-4 p-4 md:w-4/12">
             <Image
               src={response.data.user.image}
               width={400}
               height={400}
               priority
               alt="user"
-              className="h-20 w-20 rounded-full md:h-48 md:w-48"
+              className="mt-6 h-20 w-20 rounded-full md:mt-0 md:h-48 md:w-48"
             />
-            <div className="flex flex-col">
-              <div className="flex items-center justify-center gap-4 md:gap-8">
-                <h1 className="max-w-full truncate text-lg font-semibold md:text-3xl">
+            <div className="mt-4 flex flex-col">
+              <div className="flex items-center gap-4 md:gap-8">
+                <h1 className="truncate text-lg font-semibold md:text-3xl">
                   {response.data.user.username}
                 </h1>
                 <ProfileActionsButtons user={response.data.user} />
@@ -56,9 +57,21 @@ export default async function Page(props: {
                   <p className="text-md md:text-lg">Following</p>
                 </div>
               </div>
-              <p className="text-sm text-white/70">{response.data.user.bio}</p>
+              {response.data.user.bio.length > 0 && (
+                <Long_Text_Truncate
+                  className="hidden md:block text-white/50"
+                  text={response.data.user.bio}
+                />
+              )}
             </div>
           </div>
+
+          {response.data.user.bio.length > 0 && (
+            <Long_Text_Truncate
+              className="-mt-10 block w-11/12 sm:w-8/12 md:hidden text-white/20"
+              text={response.data.user.bio}
+            />
+          )}
           <div className="flex items-center justify-center gap-4">
             <IoImages className="h-6 w-6 md:h-8 md:w-8" color="white" />
             <h2 className="text-xl font-semibold md:text-2xl">Posts</h2>

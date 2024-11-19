@@ -8,26 +8,29 @@ import CommentsSection from "./comments";
 import { getComments } from "@/actions/posts/comments/getComments";
 import { CommentType } from "@/types/post/postType";
 import { handleLike } from "@/actions/posts/handleLike/handleLike";
-import { getLikes } from "@/actions/posts/handleLike/getLikes";
+import { getLikes } from "@/actions/posts/handleLike/get_If_Liked";
 
 interface PostBottomSideProps {
   description: string;
   date: string;
   postId: string;
   commentsNumber: number;
+  likesNumber: number;
 }
 
 export default function PostClientSide({
   postId,
+  likesNumber,
   description,
   date,
   commentsNumber,
 }: PostBottomSideProps) {
-  const [like, setLike] = useState<boolean | undefined>(undefined);
+  const [like, setLike] = useState<boolean>(false);
   const [truncate, setTruncate] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(false);
   const [addedCommentCounter, setAddedCommentCounter] = useState<number>(0);
   const [timeAgo, setTimeAgo] = useState<string | null>(null);
+  const [likes, setLikes] = useState<number>(likesNumber);
 
   useEffect(() => {
     const convertedDate = new Date(date);
@@ -44,12 +47,13 @@ export default function PostClientSide({
   }, [showComments]);
   useEffect(() => {
     (async () => {
-      await getLikes({ postId, setLike });
+      await getLikes({ postId, setLike, setLikes });
     })();
   }, [postId]);
   const handleLikeOnClick = async () => {
-    setLike((prevLike) => !prevLike);
-    await handleLike({ postId, setLike });
+    setLike(!like);
+    setLikes((prevLikes) => (!like ? prevLikes + 1 : prevLikes - 1));
+    await handleLike({ postId });
   };
   const handleTruncate = () => {
     setTruncate(!truncate);
@@ -68,9 +72,7 @@ export default function PostClientSide({
       )}
       <div className="flex w-full flex-col pb-4">
         <div className="flex w-full gap-2 p-2">
-          {like === undefined ? (
-            <div className="h-8 w-7"></div>
-          ) : (
+          
             <button onClick={handleLikeOnClick} type="button">
               {like ? (
                 <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
@@ -78,7 +80,7 @@ export default function PostClientSide({
                 <GoStar className="h-8 w-7 animate-fadeIn transition-all duration-500" />
               )}
             </button>
-          )}
+        
           <button
             className=""
             onClick={() => setShowComments(!showComments)}
@@ -90,10 +92,10 @@ export default function PostClientSide({
         <div className="flex w-full flex-col gap-1 px-2">
           <div className="flex w-full flex-col items-start">
             <p className="max-w-full break-all text-sm font-medium text-zinc-300">
-            {truncate && description.length >= 200
-              ? description.slice(0, 200) + "..."
-              : description}
-          </p>
+              {truncate && description.length >= 200
+                ? description.slice(0, 200) + "..."
+                : description}
+            </p>
             {description.length > 200 && (
               <button
                 className="md:text-md text-xs text-zinc-300/90"
@@ -104,6 +106,19 @@ export default function PostClientSide({
               </button>
             )}
           </div>
+          {likes > 0 ? (
+            <h2 className="md:text-md text-xs text-zinc-300/90">
+              {like
+                ? likes === 1
+                  ? "Vibed by you"
+                  : likes === 2
+                    ? "Vibed by you and 1 more person"
+                    : `Vibed by you and other ${likes - 1} people`
+                : `${likes} vibes`}
+            </h2>
+          ) : (
+            <h2 className="md:text-md text-xs text-zinc-300/90">No vibes yet</h2>
+          )}
 
           <h2 className="md:text-md text-xs text-zinc-300/90">
             Comments {commentsNumber}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
+import { twMerge } from "tailwind-merge";
 
 interface InputProps {
   type: string;
@@ -12,12 +13,15 @@ interface InputProps {
   password?: boolean;
   required: boolean;
   value?: string;
+  update?: boolean;
+  autoComplete?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function FormInput({
   type,
   name,
+  autoComplete,
   id,
   placeholder,
   required,
@@ -26,20 +30,26 @@ export default function FormInput({
   maxLength,
   password,
   minLength,
+  update,
 }: InputProps) {
   const [hidePass, setHidePass] = useState<boolean>(false);
   return (
     <>
       <label
         htmlFor={id}
-        className="text-sm outline-none focus:outline-none md:text-xl"
+        className={twMerge(
+          !update
+            ? "text-sm outline-none focus:outline-none md:text-xl"
+            : "text-xs md:text-base",
+        )}
       >
         {name}
-        <span className="text-postBackground/80">*</span>
+        {!update && <span className="text-postBackground/80">*</span>}
       </label>
       <div className="relative w-full">
         <input
-          className="w-full rounded-md border-2 border-zinc-600 bg-black px-2 placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-2 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none focus:border-postBackground/50 md:py-2"
+          autoComplete={autoComplete}
+          className="w-full rounded-md border-2 border-zinc-600 bg-black px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base"
           type={password ? (hidePass ? "text" : "password") : type}
           name={name}
           id={id}
@@ -57,7 +67,7 @@ export default function FormInput({
             className="absolute right-3 top-1/2 -translate-y-1/2"
           >
             {hidePass ? (
-              <GoEye className="h-3 w-3 md:h-5 md:w-5 text-postBackground/80" />
+              <GoEye className="h-3 w-3 text-postBackground/80 md:h-5 md:w-5" />
             ) : (
               <GoEyeClosed className="h-3 w-3 md:h-5 md:w-5" />
             )}

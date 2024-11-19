@@ -2,6 +2,7 @@
 import { logoutUser } from "@/actions/auth/logout";
 import { useRouter } from "next/navigation";
 import React from "react";
+import ShinyButton from "@/components/buttons/shinyButton";
 
 interface LogoutProps {
   setShowLogoutPrompt: (showLogoutPrompt: boolean) => void;
@@ -10,14 +11,10 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
   const router = useRouter();
   const handleLogOut = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await logoutUser();
-      if (response?.status === 200) {
-        setShowLogoutPrompt(false);
-        router.push("/");
-      }
-    } catch (error) {
-      console.error("Error logging out:", error);
+    const response = await logoutUser();
+    if (response?.status === 200) {
+      setShowLogoutPrompt(false);
+      router.push("/");
     }
   };
   return (
@@ -33,18 +30,21 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
           Are you sure you want to log out?
         </h3>
         <div className="flex justify-center gap-10">
-          <button
+          <ShinyButton
             type="submit"
-            className="z-50 w-24 rounded-md border-2 border-zinc-600 text-xl shadow-glow-sm shadow-zinc-600 transition-all duration-500 hover:scale-110 hover:border-postBackground/50 hover:text-sky-100 hover:shadow-glow hover:shadow-postBackground/50 md:text-2xl"
-          >
-            Yes
-          </button>
-          <button
+            className="w-24 bg-red-950/50 text-sm font-semibold text-red-100 hover:text-red-400 hover:shadow-red-500/70 md:w-28 md:text-lg"
+            bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
+            topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
+            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            text={"Yes"}
+          />
+          <ShinyButton
+            type="button"
             onClick={() => setShowLogoutPrompt(false)}
-            className="w-24 rounded-md border-2 border-zinc-600 text-xl shadow-glow-sm shadow-zinc-600 transition-all duration-500 hover:scale-110 hover:border-red-400/70 hover:text-red-100 hover:shadow-glow hover:shadow-red-400/70 md:text-2xl"
-          >
-            No
-          </button>
+            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            className="w-24 text-sm font-semibold text-sky-100 md:w-28 md:text-lg"
+            text={"No"}
+          />
         </div>
       </div>
     </form>

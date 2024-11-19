@@ -21,15 +21,10 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const router = useRouter();
   const cancelCreatePost = async () => {
     try {
-      if (!image) {
-        setShowCreatePost(false);
-      }
-      await axios.delete("api/uploadthing", {
-        data: {
-          url: image,
-        },
-      });
       if (image) {
+        await axios.delete("api/uploadthing", {
+          data: { url: image },
+        });
         setImage("");
       }
       setShowCreatePost(false);
@@ -98,7 +93,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 />
                 <div className="mb-4 h-2.5 w-full rounded-full bg-zinc-700">
                   <div
-                    className="h-2.5 rounded-full bg-sky-600 shadow-glow-sm shadow-sky-500 transition-all duration-500"
+                    className={`h-2.5 rounded-full bg-sky-600 shadow-glow-sm w-[${progress}%] shadow-sky-500 transition-all duration-500`}
                     style={{ width: `${progress}%` }}
                   />
                 </div>

@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const logoutUser = async () => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await axios.post(`/api/user/logout`);
     return response;

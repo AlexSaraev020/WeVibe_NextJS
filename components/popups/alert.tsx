@@ -1,13 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface AlertProps {
-  progress: number;
-  message: string;
+  message: string | undefined;
   error?: boolean;
+  setShowAlert: (showAlert: boolean) => void;
   className?: string;
+  loggedIn?: boolean;
+  setMessage?: (message: string | undefined) => void;
 }
-export default function Alert({ progress, message, error , className }: AlertProps) {
+export default function Alert({
+  message,
+  setShowAlert,
+  error,
+  loggedIn,
+  className,
+  setMessage,
+}: AlertProps) {
+  const [progress, setProgress] = useState<number>(0);
+
+  useEffect(() => {
+    if (message) {
+      setProgress(0);
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 100 / 30;
+        });
+      }, 100);
+      const timeout = setTimeout(() => {
+        setMessage && setMessage(undefined);
+        {
+          loggedIn && sessionStorage.removeItem("isLoggedIn");
+        }
+        setShowAlert(false);
+        setProgress(0);
+      }, 3000);
+      return () => {
+        clearTimeout(timeout);
+        clearInterval(interval);
+      };
+    }
+  }, [message]);
   return (
     <div
       className={twMerge(

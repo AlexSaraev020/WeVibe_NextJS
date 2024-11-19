@@ -11,6 +11,7 @@ const config: Config = {
       boxShadow: {
         glow: "0 0px 20px rgba(255,255, 255, 0.35)",
         "glow-sm": "0 0px 10px rgba(255,255, 255, 0.35)",
+        bottom: "0 10px 20px rgba(255, 255, 255, 0.35)",
       },
       colors: {
         background: "var(--background)",
@@ -20,7 +21,7 @@ const config: Config = {
       animation: {
         shimmer: "shimmer 2s linear infinite",
         fadeIn: "fadeIn 0.8s ease-out forwards",
-        appear:"appear 0.8s ease-out forwards"
+        appear: "appear 0.8s ease-out forwards",
       },
       keyframes: {
         shimmer: {
@@ -36,8 +37,8 @@ const config: Config = {
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         appear: {
-          "0%": { opacity: "0", },
-          "100%": { opacity: "1", },
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         shinePulse: {
           "0%": {
@@ -52,7 +53,6 @@ const config: Config = {
         },
       },
     },
-    
   },
   plugins: [require("tailwind-scrollbar")],
 };
