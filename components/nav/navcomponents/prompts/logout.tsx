@@ -35,13 +35,13 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
             className="w-24 bg-red-950/50 text-sm font-semibold text-red-100 hover:text-red-400 hover:shadow-red-500/70 md:w-28 md:text-lg"
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
-            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            background="bg-gradient-to-tr py-2 md:py-1 from-black via-neutral-950 to-black"
             text={"Yes"}
           />
           <ShinyButton
             type="button"
             onClick={() => setShowLogoutPrompt(false)}
-            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"
             className="w-24 text-sm font-semibold text-sky-100 md:w-28 md:text-lg"
             text={"No"}
           />

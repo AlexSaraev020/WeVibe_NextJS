@@ -12,10 +12,11 @@ interface InputProps {
   minLength: number;
   password?: boolean;
   required: boolean;
-  value?: string;
+  value: string;
   update?: boolean;
   autoComplete?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  ariaLabel: string;
 }
 
 export default function FormInput({
@@ -25,6 +26,7 @@ export default function FormInput({
   id,
   placeholder,
   required,
+  ariaLabel,
   onChange,
   value,
   maxLength,
@@ -34,20 +36,31 @@ export default function FormInput({
 }: InputProps) {
   const [hidePass, setHidePass] = useState<boolean>(false);
   return (
-    <>
+    <div className="relative flex w-full flex-col gap-1">   
+      {(value?.length === maxLength || (value && value.length < minLength)) && (
+        <div>
+          {value && value.length < minLength && (
+            <h2 className="absolute right-0 top-0 animate-fadeIn text-xs text-red-500 transition-all duration-500 md:text-sm">
+              At least {minLength} characters*
+            </h2>
+          )}
+          {value && value.length === maxLength && (
+            <h2 className="absolute right-0 top-0 animate-fadeIn text-xs text-red-500 transition-all duration-500 md:text-sm">
+              Max {maxLength} characters*{" "}
+            </h2>
+          )}
+        </div>
+      )}
       <label
         htmlFor={id}
-        className={twMerge(
-          !update
-            ? "text-sm outline-none focus:outline-none md:text-xl"
-            : "text-xs md:text-base",
-        )}
+        className="text-xs md:text-base"
       >
         {name}
         {!update && <span className="text-postBackground/80">*</span>}
       </label>
       <div className="relative w-full">
         <input
+          aria-label={ariaLabel}
           autoComplete={autoComplete}
           className="w-full rounded-md border-2 border-zinc-600 bg-black px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base"
           type={password ? (hidePass ? "text" : "password") : type}
@@ -74,6 +87,6 @@ export default function FormInput({
           </button>
         )}
       </div>
-    </>
+    </div>
   );
 }

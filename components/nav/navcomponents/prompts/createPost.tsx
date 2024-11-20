@@ -7,6 +7,8 @@ import { createPost } from "@/actions/posts/createPost";
 import { useRouter } from "next/navigation";
 import FormInput from "@/components/authForm/formElements/input";
 import { twMerge } from "tailwind-merge";
+import Textarea from "@/components/authForm/formElements/textarea";
+import ShinyButton from "@/components/buttons/shinyButton";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
@@ -17,7 +19,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
-  const [imageCover, setImageCover] = useState<boolean>(false);
+  const [imageCover, setImageCover] = useState<boolean>(true);
   const router = useRouter();
   const cancelCreatePost = async () => {
     try {
@@ -35,6 +37,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
 
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("triggered");
     try {
       const response = await createPost({ title, description, image });
       if (response) {
@@ -49,12 +52,12 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     <div className="fixed inset-0 z-50 flex h-[100dvh] w-full items-center justify-center bg-black/60">
       <form
         onSubmit={handleCreatePost}
-        className="flex animate-fadeIn flex-col gap-6 rounded-xl border-2 border-sky-600 bg-black/90 p-6 shadow-glow shadow-sky-500 transition-all duration-1000 ease-in-out hover:bg-black/70 md:w-4/12"
+        className="flex w-11/12 animate-fadeIn flex-col gap-6 rounded-xl border-2 border-sky-600 bg-black/90 p-6 shadow-glow shadow-sky-500 transition-all duration-1000 ease-in-out hover:bg-black/70 md:w-4/12"
       >
         <h2 className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text py-1 text-center text-2xl font-extrabold text-transparent md:text-5xl">
           Create Post
         </h2>
-        <div className="flex flex-col gap-4">
+        <div className="relative flex flex-col gap-4">
           <label htmlFor="image-input max-h-72">
             {image?.length ? (
               <Image
@@ -64,7 +67,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 width={600}
                 height={400}
                 className={twMerge(
-                  "max-h-72 rounded-xl object-cover md:max-h-96",
+                  "max-h-72 rounded-xl object-cover md:max-h-80",
                   imageCover ? "object-cover" : "object-contain",
                 )}
               />
@@ -88,23 +91,32 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                   onUploadProgress={(progress) => {
                     setProgress(progress);
                   }}
-                  className="h-40 border-none transition-all duration-500 hover:scale-105 md:h-96"
+                  className="h-40 border-none transition-all duration-500 hover:scale-105 md:h-80"
                   endpoint="imageUploader"
                 />
-                <div className="mb-4 h-2.5 w-full rounded-full bg-zinc-700">
-                  <div
-                    className={`h-2.5 rounded-full bg-sky-600 shadow-glow-sm w-[${progress}%] shadow-sky-500 transition-all duration-500`}
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
+                {image.length === 0 && (
+                  <div className="mb-4 h-2.5 w-full rounded-full bg-zinc-700">
+                    <div
+                      className={`h-2.5 rounded-full bg-sky-600 shadow-glow-sm w-[${progress}%] shadow-sky-500 transition-all duration-500`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
               </>
+            )}
+            {image.length > 0 && (
+              <h2 className="w-full pt-2 text-center text-xs font-bold italic text-postBackground/90 md:text-sm">
+                You can tap on image to zoom out
+              </h2>
             )}
           </label>
           <div className="flex flex-col gap-2">
             <FormInput
+              ariaLabel="Enter post title"
               minLength={2}
               maxLength={50}
               type="text"
+              value={title}
               id="title"
               placeholder="Enter post title"
               required
@@ -112,43 +124,50 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               name={"Title"}
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <label
-              className="text-sm outline-none focus:outline-none md:text-xl"
-              htmlFor="description"
-            >
-              Description
-            </label>
-            <textarea
-              minLength={2}
-              maxLength={500}
-              rows={1}
-              id="description"
-              value={description}
-              placeholder="Enter post description"
-              onChange={(e) => setDescription(e.target.value)}
-              className="rounded-md border bg-black p-2 placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-none focus:shadow-glow focus:shadow-sky-500 focus:outline-none focus:outline-sky-400"
-            />
-          </div>
+          <Textarea
+            ariaLabel="Enter post description"
+            minLength={2}
+            maxLength={200}
+            value={description}
+            id="description"
+            placeHolder="Enter post description"
+            onChange={(e) => setDescription(e.target.value)}
+            name={"Description"}
+            rows={2}
+          />
         </div>
-        <div className="flex w-full items-center justify-start gap-10">
-          <button
-            disabled={image?.length ? false : true}
-            className={
-              image?.length
-                ? "w-32 rounded-xl bg-white/90 py-2 text-lg font-extrabold text-black shadow-glow-sm shadow-zinc-400/90 transition-all duration-500 hover:scale-105 hover:bg-white hover:shadow-glow hover:shadow-white"
-                : "w-32 rounded-xl bg-white/10 py-2 text-lg font-extrabold text-white/50 shadow-glow-sm shadow-zinc-400/60"
-            }
-          >
-            Create Post
-          </button>
-          <button
-            type="button"
+        <div className="flex w-full items-center justify-start gap-3">
+          <ShinyButton
+            disabled={image.length > 0 ? false : true}
+            bottomLineCollor={twMerge(
+              image.length > 0
+                ? ""
+                : "bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0",
+            )}
+            topLineColor={twMerge(
+              image.length > 0
+                ? ""
+                : "bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0",
+            )}
+            className={twMerge(
+              "w-20 text-xs font-semibold hover:shadow-lg hover:shadow-postBackground/30 md:w-24 md:text-lg",
+              image.length === 0
+                ? "pointer-events-none text-neutral-500 hover:shadow-neutral-700"
+                : "text-sky-100",
+            )}
+            text={"Create"}
+            background="bg-black py-2 md:py-1"
+            type="submit"
+          />
+          <ShinyButton
             onClick={cancelCreatePost}
-            className="w-32 rounded-xl border-2 border-white/90 py-2 text-lg font-extrabold shadow-glow-sm shadow-white/90 transition-all duration-500 hover:scale-105 hover:border-white hover:shadow-glow hover:shadow-white"
-          >
-            Cancel
-          </button>
+            bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
+            topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
+            className="w-20 text-xs font-semibold text-white/70 hover:text-neutral-200 hover:shadow-lg hover:shadow-white/30 md:w-24 md:text-lg"
+            text={"Cancel"}
+            background="bg-black py-2 md:py-1"
+            type="button"
+          />
         </div>
       </form>
     </div>

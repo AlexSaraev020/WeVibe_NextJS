@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "../authForm/form";
 import EditForm from "./editProfileComponents/editForm";
 import { UserType } from "@/types/userTypes/user/userType";
@@ -9,15 +9,20 @@ import Logout from "../nav/navcomponents/prompts/logout";
 interface EditProfileProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
+  edit: boolean;
 }
-export default function EditProfile({ user, setEdit }: EditProfileProps) {
+export default function EditProfile({ user, setEdit, edit }: EditProfileProps) {
   const [account, setAccount] = useState<boolean>(false);
   const [logout, setLogout] = useState<boolean>(false);
 
+  useEffect(() => {
+    document.documentElement.style.overflow = edit || logout ? "hidden" : "auto";
+    document.body.style.overflow = edit || logout ? "hidden" : "auto";
+  }, [edit , logout]);
   return (
     <>
       {logout && <Logout setShowLogoutPrompt={setLogout} />}
-      <div className="absolute inset-0 z-40 w-full flex flex-col items-center justify-center bg-black/60">
+      <div className="fixed inset-0 z-40 flex w-full animate-appear flex-col items-center justify-center bg-black/60 transition-all duration-500">
         {account ? (
           <EditForm
             setAccount={setAccount}

@@ -25,17 +25,16 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning={true}
-      className="overflow-y-scroll bg-black text-white antialiased scrollbar-thin scrollbar-track-black scrollbar-thumb-black"
+      className="overflow-y-scroll bg-black text-white antialiased scrollbar-none"
     >
       <body
-            suppressHydrationWarning={true}
-
-        className={`${mingzat.className} relative`}
+        suppressHydrationWarning={true}
+        className={`${mingzat.className} relative scrollbar-none`}
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <Nav />
         {children}
-        <div className="fixed transition-all duration-500 animate-fadeIn top-0 z-[-2] min-h-screen w-screen bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))]"/>
+        <div className="fixed top-0 z-[-2] min-h-screen w-screen animate-fadeIn bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))] transition-all duration-500" />
       </body>
     </html>
   );

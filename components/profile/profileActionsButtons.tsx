@@ -52,7 +52,7 @@ export default function ProfileActionsButtons({ user }: Props) {
 
   return (
     <>
-      {edit && <EditProfile user={user} setEdit={setEdit} />}
+      {edit && <EditProfile edit={edit} user={user} setEdit={setEdit} />}
       {allow === "" && (
         <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
       )}
@@ -62,9 +62,9 @@ export default function ProfileActionsButtons({ user }: Props) {
           onClick={handleFollowUser}
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
-          className=" w-14 md:w-24 text-xs bg-postBackground/20 font-semibold text-sky-200 hover:shadow-lg hover:shadow-postBackground/30 md:text-lg"
+          className=" w-16 md:w-24 text-xs bg-postBackground/20 font-semibold text-sky-200 hover:shadow-lg hover:shadow-postBackground/30 md:text-lg"
           text={"Follow"}
-          background="bg-sky-900 py-1"
+          background="bg-sky-900 py-2 md:py-1"
         />
       )}
       {allow === "unfollow" && (
@@ -75,7 +75,7 @@ export default function ProfileActionsButtons({ user }: Props) {
           className=" w-16 md:w-24 bg-neutral-700 text-zinc-400 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
           text={"Unfollow"}
           type="button"
-          background="bg-neutral-800 py-1"
+          background="bg-neutral-800 py-2 md:py-1"
         />
       )}
       {allow === "edit" && (
@@ -83,9 +83,9 @@ export default function ProfileActionsButtons({ user }: Props) {
           onClick={() => (edit === false ? setEdit(true) : setEdit(true))}
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
-          className=" w-14 md:w-24 bg-neutral-700 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
+          className=" w-16 md:w-24  text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
           text={"Edit"}
-          background="bg-neutral-800 py-1"
+          background="bg-neutral-800 py-2 md:py-1"
           type="button"
         />
       )}

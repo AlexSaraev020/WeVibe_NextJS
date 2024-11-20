@@ -4,31 +4,37 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 interface loginUserProps {
   email: string;
   password: string;
-  setFailure: (failure: string | undefined) => void;
+  setMessage: (message: string | undefined) => void;
+  setShowAlert: (showAlert: boolean) => void;
   router: AppRouterInstance;
 }
 export const loginUser = async ({
   email,
   password,
-  setFailure,
+  setMessage,
+  setShowAlert,
   router,
 }: loginUserProps) => {
   if (!email || !password) {
-    setFailure("All fields are required.");
+    setMessage("All fields are required.");
+    setShowAlert(true);
     return;
   }
   try {
     const response = await axios.post("/api/auth/login", { email, password });
     if (response.status === 200) {
-      setFailure(undefined);
+      setMessage(undefined);
       sessionStorage.setItem("isLoggedIn", "Logged In!");
+      setShowAlert(false);
       router.push("/home");
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      setFailure(error.response.data.message);
+      setMessage(error.response.data.message);
+      setShowAlert(true);
     } else {
-      setFailure("An unexpected error occurred.");
+      setMessage("An unexpected error occurred.");
+      setShowAlert(true);
     }
   }
 };

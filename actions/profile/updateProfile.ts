@@ -29,6 +29,9 @@ export const updateProfile = async ({
     });
     if(response.status < 300) {
       setMessage(response.data.message);
+      setTimeout(()=>{
+        setEdit(false);
+      },3000)
       setShowAlert(true);
     }
     if (

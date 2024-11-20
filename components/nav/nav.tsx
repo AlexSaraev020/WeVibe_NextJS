@@ -20,7 +20,6 @@ export default function Nav() {
   const paths = useMemo(() => ["/", "/register", "/login"], []);
   const path = usePathname();
   const router = useRouter();
-  const [showLogoutPrompt, setShowLogoutPrompt] = useState<boolean>(false);
   const [userImage, setUserImage] = useState<string>("");
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -31,7 +30,6 @@ export default function Nav() {
   useEffect(() => {
     if (paths.includes(path)) {
       setShowCreatePost(false);
-      setShowLogoutPrompt(false);
       setShowSearch(false);
     }
     fetchUserWithTimeout({
@@ -51,9 +49,13 @@ export default function Nav() {
   }, [router, userName]);
 
   useEffect(() => {
-    document.documentElement.style.overflow =
-      showLogoutPrompt || showCreatePost ? "hidden" : "auto";
-  }, [showLogoutPrompt, showCreatePost]);
+    document.documentElement.style.overflow = showCreatePost
+      ? "hidden"
+      : "auto";
+      document.body.style.overflow = showCreatePost
+      ? "hidden"
+      : "auto";
+  }, [ showCreatePost]);
 
   const navButtons = displayedButtons({
     handleCreatePost: handleCreatePost,
@@ -79,7 +81,7 @@ export default function Nav() {
       {showSearch && <Search />}
       {!paths.includes(path) && !showCreatePost && (
         <nav
-          className={`group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
+          className={`group fixed bottom-0 z-30 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >

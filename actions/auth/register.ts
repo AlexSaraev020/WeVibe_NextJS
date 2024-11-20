@@ -5,7 +5,8 @@ interface RegisterProps {
   userName: string;
   email: string;
   password: string;
-  setFailure: (failure: string | undefined) => void;
+  setMessage: (message: string | undefined) => void;
+  setShowAlert: (showAlert: boolean) => void;
   router: AppRouterInstance;
 }
 
@@ -13,7 +14,8 @@ export const registerUser = async ({
   userName,
   email,
   password,
-  setFailure,
+  setShowAlert,
+  setMessage,
   router,
 }: RegisterProps) => {
   try {
@@ -24,14 +26,17 @@ export const registerUser = async ({
     });
 
     if (response.status === 200) {
-      setFailure(undefined);
+      setMessage(undefined);
+      setShowAlert(false);
       router.push("/");
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      setFailure(error.response.data.message);
+      setMessage(error.response.data.message);
+      setShowAlert(true);
     } else {
-      setFailure("An unexpected error occurred.");
+      setMessage("An unexpected error occurred.");
+      setShowAlert(true);
     }
   }
 };

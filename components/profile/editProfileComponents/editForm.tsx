@@ -10,6 +10,7 @@ import { updateProfile } from "@/actions/profile/updateProfile";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/popups/alert";
 import { twMerge } from "tailwind-merge";
+import Textarea from "@/components/authForm/formElements/textarea";
 interface EditFormProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
@@ -67,7 +68,7 @@ export default function EditForm({
   };
   return (
     <>
-      <form className="relative flex w-11/12 flex-col items-center justify-center gap-4 rounded-xl border-2 border-postBackground/50 bg-black py-5 shadow-glow shadow-postBackground/50 transition-all duration-500 md:w-3/6 md:py-10 lg:w-5/12 xl:w-4/12">
+      <form className="relative flex w-11/12 animate-fadeIn flex-col items-center justify-center gap-4 rounded-xl border-2 border-postBackground/50 bg-black py-5 shadow-glow shadow-postBackground/50 transition-all duration-500 sm:w-7/12 md:w-3/6 md:py-10 lg:w-5/12 xl:w-4/12">
         <div
           onClick={() => setAccount(!account)}
           className="relative z-10 flex h-12 w-[8.5rem] items-center justify-center gap-4 rounded-full border-2 border-postBackground/50 shadow-glow shadow-postBackground/50 hover:cursor-pointer md:h-14 md:w-[10.5rem]"
@@ -159,9 +160,10 @@ export default function EditForm({
             </div>
             <div className="flex w-11/12 flex-col items-start justify-center gap-2">
               <FormInput
+                ariaLabel="Enter your username"
                 update
                 maxLength={50}
-                minLength={2}
+                minLength={3}
                 value={username}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setUserName(e.target.value)
@@ -172,21 +174,18 @@ export default function EditForm({
                 placeholder="Change your username"
                 required
               />
-              <label htmlFor="comment" className="text-xs md:text-base">
-                Bio
-              </label>
-              <textarea
-                name="Comment section"
-                id="comment"
-                placeholder="Change bio"
+
+              <Textarea
+                name="Bio"
+                id="bio"
+                rows={4}
+                maxLength={200}
+                minLength={0}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setBio(e.target.value)
                 }
                 value={bio}
-                rows={4}
-                maxLength={200}
-                aria-label="Write a comment"
-                className="w-full resize-none rounded-lg border-2 border-zinc-600 bg-transparent p-2 text-sm transition-all duration-500 scrollbar-none focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none"
+                ariaLabel="Enter your bio"
               />
             </div>
           </>
@@ -195,9 +194,10 @@ export default function EditForm({
         {account && (
           <div className="flex w-11/12 flex-col gap-2 md:gap-3">
             <FormInput
+              ariaLabel="Enter your email"
               update
-              maxLength={50}
-              minLength={2}
+              maxLength={254}
+              minLength={6}
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
@@ -209,12 +209,14 @@ export default function EditForm({
               required
             />
             <FormInput
+              ariaLabel="Enter your password"
               update
-              maxLength={50}
-              minLength={2}
+              maxLength={64}
+              minLength={8}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)
               }
+              value={password}
               type="password"
               password
               name="Password"
@@ -224,20 +226,20 @@ export default function EditForm({
             />
           </div>
         )}
-        <div className="mt-6 grid w-11/12 grid-cols-3 items-center justify-center gap-4">
+        <div className="mt-6 grid w-11/12 grid-cols-3 items-center justify-center gap-2 md:w-7/12">
           <ShinyButton
             type="button"
             onClick={handleSave}
-            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
-            className="w-24 text-sm font-semibold text-sky-100 shadow-2xl hover:shadow-postBackground/30 md:w-full md:text-lg"
+            background="bg-gradient-to-tr from-black via-neutral-950 py-2 md:py-1 to-black"
+            className="text-sm font-semibold text-sky-100 shadow-2xl hover:shadow-postBackground/30 md:w-full md:text-lg"
             text={"Save"}
           />
           <ShinyButton
             onClick={cancelProfileUpdate}
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
-            className="w-24 bg-white/20 text-sm font-semibold shadow-2xl hover:shadow-white/30 md:w-full md:text-lg"
-            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            className=" text-sm font-semibold shadow-2xl hover:shadow-white/30 md:w-full md:text-lg"
+            background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"
             text={"Cancel"}
             type="button"
           />
@@ -245,10 +247,10 @@ export default function EditForm({
           <ShinyButton
             type="button"
             onClick={() => setLogout(true)}
-            className="w-24 bg-red-950/50 text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
+            className=" text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
-            background="bg-gradient-to-tr from-black via-neutral-950 to-black"
+            background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"
             text={"Logout"}
           />
           {account && (
@@ -257,8 +259,8 @@ export default function EditForm({
               onClick={handleSave}
               bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
               topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
-              background="bg-gradient-to-tr from-black via-neutral-950 to-black"
-              className="col-span-3 w-24 bg-red-950/50 text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
+              background="bg-gradient-to-tr from-black py-2 via-neutral-950 to-black"
+              className="col-span-3 text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
               text={"Delete Account"}
             />
           )}

@@ -43,6 +43,7 @@ export default function PostClientSide({
     }
   }, [date]);
   useEffect(() => {
+    document.body.style.overflow = showComments ? "hidden" : "auto";
     document.documentElement.style.overflow = showComments ? "hidden" : "auto";
   }, [showComments]);
   useEffect(() => {
