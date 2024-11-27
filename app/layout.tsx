@@ -5,7 +5,9 @@ import Nav from "@/components/nav/nav";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
-
+import { UserImageContextProvider } from "@/contexts/user/userImageContext";
+import { AlertContextProvider } from "@/contexts/alert/alertContext";
+import Alert from "@/components/popups/alert";
 export const metadata: Metadata = {
   title: "WeVibe",
   description: "Meet new people to vibe with",
@@ -32,8 +34,13 @@ export default function RootLayout({
         className={`${mingzat.className} relative scrollbar-none`}
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-        <Nav />
-        {children}
+        <AlertContextProvider>
+        <UserImageContextProvider>
+          <Nav />
+          {children}
+          <Alert/>
+        </UserImageContextProvider>
+        </AlertContextProvider>
         <div className="fixed top-0 z-[-2] min-h-screen w-screen animate-fadeIn bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))] transition-all duration-500" />
       </body>
     </html>

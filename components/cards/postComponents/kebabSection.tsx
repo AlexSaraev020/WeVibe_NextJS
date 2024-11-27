@@ -32,7 +32,7 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute right-4 top-3 z-40 rounded-full p-1"
+        className="absolute right-4 top-3 z-20 rounded-full p-1"
       >
         <GoKebabHorizontal className="text-2xl text-gray-400 md:text-3xl" />
       </button>

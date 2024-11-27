@@ -5,10 +5,11 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import axios from "axios";
 import { createPost } from "@/actions/posts/createPost";
 import { useRouter } from "next/navigation";
-import FormInput from "@/components/authForm/formElements/input";
+import FormInput from "@/components/forms/formElements/input";
 import { twMerge } from "tailwind-merge";
-import Textarea from "@/components/authForm/formElements/textarea";
+import Textarea from "@/components/forms/formElements/textarea";
 import ShinyButton from "@/components/buttons/shinyButton";
+import { useAlert } from "@/contexts/alert/alertContext";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
@@ -21,6 +22,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const [progress, setProgress] = useState<number>(0);
   const [imageCover, setImageCover] = useState<boolean>(true);
   const router = useRouter();
+  const { setMessage, setError } = useAlert();
   const cancelCreatePost = async () => {
     try {
       if (image) {
@@ -37,16 +39,15 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
 
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("triggered");
-    try {
-      const response = await createPost({ title, description, image });
-      if (response) {
-        setShowCreatePost(false);
-        router.refresh();
-      }
-    } catch (error) {
-      console.error("Error creating post:", error);
-    }
+    await createPost({
+      title,
+      setShowCreatePost,
+      description,
+      router,
+      image,
+      setMessage,
+      setError,
+    });
   };
   return (
     <div className="fixed inset-0 z-50 flex h-[100dvh] w-full items-center justify-center bg-black/60">
@@ -76,6 +77,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 <UploadDropzone
                   config={{
                     mode: "auto",
+                    appendOnPaste: true,
                   }}
                   appearance={{
                     button: {
@@ -84,9 +86,10 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                   }}
                   onClientUploadComplete={(res) => {
                     setImage(res[0].url);
+                    setMessage("Image uploaded");
                   }}
                   onUploadError={(error: Error) => {
-                    alert(`ERROR! ${error.message}`);
+                    setMessage(error.message);
                   }}
                   onUploadProgress={(progress) => {
                     setProgress(progress);
@@ -120,6 +123,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
               id="title"
               placeholder="Enter post title"
               required
+              labelDisplay
               onChange={(e) => setTitle(e.target.value)}
               name={"Title"}
             />

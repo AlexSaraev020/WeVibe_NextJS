@@ -67,14 +67,16 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { message: "User created successfully" },
+      { message: "Account created successfully!" },
       { status: 200 },
     );
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error", error },
-      { status: 501 },
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "An error occurred", error: error.message },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }

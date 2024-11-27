@@ -1,33 +1,33 @@
 import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-interface loginUserProps {
-  email: string;
-  password: string;
+interface UpdatePasswordProps {
+  password: string | null;
   setMessage: (message: string | undefined) => void;
-  router: AppRouterInstance;
   setError: (error: boolean) => void;
+  router: AppRouterInstance;
 }
-export const loginUser = async ({
-  email,
+export const updatePassword = async ({
   password,
-  setMessage,
   setError,
+  setMessage,
   router,
-}: loginUserProps) => {
+}: UpdatePasswordProps) => {
   try {
-    const response = await axios.post("/api/auth/login", { email, password });
-    if (response.status === 200) {
+    const response = await axios.post(
+      "/api/auth/resetPassword/updatePassword",
+      { password },
+    );
+    if (response.status < 300) {
       setError(false);
       setMessage(response.data.message);
-      router.push("/home");
+      router.push("/login");
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      console.log("Server response error:", error.response.data.message);
+      setError(true)
       setMessage(error.response.data.message);
-      setError(true);
-      return error.response.data.message;
+      return error.response.data;
     }
     console.error("Error following:", error);
   }

@@ -5,7 +5,7 @@ import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
 import RootPageTerminal from "@/components/rootPageTerminal/rootPageTerminal";
 
-export default async function Home() {
+export default async function Page() {
   const cookieStore = await cookies();
   const token = cookieStore.get("authToken");
   if (token) {

@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Form from "../authForm/form";
-import EditForm from "./editProfileComponents/editForm";
+import EditForm from "../forms/editProfileForm/editForm";
 import { UserType } from "@/types/userTypes/user/userType";
-import { twMerge } from "tailwind-merge";
 import Logout from "../nav/navcomponents/prompts/logout";
 
 interface EditProfileProps {

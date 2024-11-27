@@ -33,13 +33,13 @@ export default function RootPageTerminal() {
           </p>
           <div className="flex animate-fadeIn gap-2">
             <ShinyButton
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/auth/login")}
               background="bg-gradient-to-tr py-2 from-black via-neutral-950 to-black"
               className="w-24 text-sm font-semibold text-sky-100 shadow-xl shadow-postBackground/20 hover:shadow-2xl hover:shadow-postBackground/50 md:w-32 md:text-lg"
               text={"Login"}
             />
             <ShinyButton
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/auth/register")}
               bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
               topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
               background="bg-gradient-to-tr py-2 from-black via-neutral-950 to-black"

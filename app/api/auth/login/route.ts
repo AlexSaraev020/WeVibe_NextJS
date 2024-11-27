@@ -4,7 +4,6 @@ import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { generateToken } from "@/actions/auth/jwtCreate";
-import { ObjectId } from "mongoose";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 
 export async function POST(req: Request) {
@@ -33,10 +32,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
 
-    const existingUser = (await UserModel.findOne({ email })) as {
-      _id: ObjectId;
-      password: string;
-    };
+    const existingUser = await UserModel.findOne({ email }).exec();
 
     if (!existingUser) {
       return NextResponse.json(
@@ -66,7 +62,7 @@ export async function POST(req: Request) {
       sameSite: "strict",
     });
 
-    return NextResponse.json({ message: "Login successful!" }, { status: 200 });
+    return NextResponse.json({ message: "Logged in!" }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

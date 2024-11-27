@@ -17,7 +17,7 @@ export default function Post({ post }: { post: PostType }) {
           <Image
             src={post.createdBy.image}
             alt={post.createdBy.username}
-            className="h-9 w-9 rounded-full p-1 md:h-14 md:w-14 md:p-3"
+            className="h-9 w-9 rounded-full p-1 md:h-14 md:w-14 object-cover md:p-3"
             width={400}
             height={400}
           />

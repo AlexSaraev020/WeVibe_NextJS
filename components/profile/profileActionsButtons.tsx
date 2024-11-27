@@ -85,7 +85,7 @@ export default function ProfileActionsButtons({ user }: Props) {
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           className=" w-16 md:w-24  text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700  md:text-lg"
           text={"Edit"}
-          background="bg-neutral-800 py-2 md:py-1"
+          background="bg-zinc-800 py-2 md:py-1"
           type="button"
         />
       )}

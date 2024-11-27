@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import FormInput from "./formElements/input";
+import FormInput from "../formElements/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { registerUser } from "@/actions/auth/register";
 import { loginUser } from "@/actions/auth/login";
 import { AiOutlineLoading } from "react-icons/ai";
-import ShinyButton from "../buttons/shinyButton";
-import Alert from "../popups/alert";
+import ShinyButton from "../../buttons/shinyButton";
+import { useAlert } from "@/contexts/alert/alertContext";
 
 interface FormProps {
   register?: boolean;
@@ -17,9 +17,8 @@ export default function Form({ register, className }: FormProps) {
   const [userName, setUserName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [message, setMessage] = useState<string | undefined>(undefined);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { setMessage, setError , message } = useAlert();
 
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,17 +28,17 @@ export default function Form({ register, className }: FormProps) {
       register
         ? await registerUser({
             userName,
-            setShowAlert,
             email,
             password,
+            setError,
             setMessage,
             router,
           })
         : await loginUser({
             email,
+            setError,
             password,
             setMessage,
-            setShowAlert,
             router,
           });
     }
@@ -61,7 +60,7 @@ export default function Form({ register, className }: FormProps) {
           {register && (
             <div className="flex w-9/12 flex-col gap-2 md:gap-3">
               <FormInput
-              ariaLabel="Enter your username"
+                ariaLabel="Enter your username"
                 maxLength={50}
                 minLength={3}
                 onChange={(e) => setUserName(e.target.value)}
@@ -70,13 +69,14 @@ export default function Form({ register, className }: FormProps) {
                 value={userName}
                 id="name"
                 placeholder="Enter your name"
+                labelDisplay
                 required
               />
             </div>
           )}
           <div className="flex w-9/12 flex-col gap-2 md:gap-3">
             <FormInput
-            ariaLabel="Enter your email"
+              ariaLabel="Enter your email"
               maxLength={254}
               minLength={6}
               onChange={(e) => setEmail(e.target.value)}
@@ -85,10 +85,11 @@ export default function Form({ register, className }: FormProps) {
               name="Email"
               id="email"
               placeholder="Enter your email"
+              labelDisplay
               required
             />
             <FormInput
-            ariaLabel="Enter your password"
+              ariaLabel="Enter your password"
               maxLength={64}
               minLength={8}
               onChange={(e) => setPassword(e.target.value)}
@@ -97,6 +98,7 @@ export default function Form({ register, className }: FormProps) {
               name="Password"
               id="password"
               password
+              labelDisplay
               placeholder="Enter your password"
               required
             />
@@ -112,26 +114,28 @@ export default function Form({ register, className }: FormProps) {
         {loading && (
           <AiOutlineLoading className="h-8 w-8 animate-spin text-sky-500" />
         )}
-        <div className="flex gap-1">
-          <p className="md:text-md text-sm">
-            {register ? "Already have an account?" : "Don't have an account?"}
-          </p>
-          <Link
-            className="md:text-md text-sm font-bold text-postBackground/90"
-            href={register ? "/login" : "/register"}
-          >
-            {register ? " Login " : " Register "}
-          </Link>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-1">
+            <p className="md:text-md text-sm">
+              {register ? "Already have an account?" : "Don't have an account?"}
+            </p>
+            <Link
+              className="md:text-md text-sm font-bold text-postBackground/90"
+              href={register ? "/auth/login" : "/auth/register"}
+            >
+              {register ? " Login " : " Register "}
+            </Link>
+          </div>
+          {!register && (
+            <Link
+              className="md:text-md text-center text-sm font-bold text-postBackground/90"
+              href={"/auth/resetpassword"}
+            >
+              Forgot password?
+            </Link>
+          )}
         </div>
       </form>
-      {showAlert && (
-        <Alert
-          error
-          setShowAlert={setShowAlert}
-          setMessage={setMessage}
-          message={message}
-        />
-      )}
     </>
   );
 }

@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 interface ShinyButtonProps {
   text: string;
   className?: string;
-  onClick?: () => void;
+  onClick?: ( ) => void;
   type?: "button" | "submit" | "reset";
   children?: React.ReactNode;
   bottomLineCollor?: string;

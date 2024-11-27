@@ -1,26 +1,30 @@
 import axios from "axios";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-interface loginUserProps {
-  email: string;
-  password: string;
+interface VerifyResetCodeProps {
+  code: string;
   setMessage: (message: string | undefined) => void;
-  router: AppRouterInstance;
+  setEmailSent: (emailSent: boolean) => void;
+  setCodeVerified: (codeVerified: boolean) => void;
   setError: (error: boolean) => void;
 }
-export const loginUser = async ({
-  email,
-  password,
+
+export const verifyResetCode = async ({
+  code,
   setMessage,
+  setEmailSent,
   setError,
-  router,
-}: loginUserProps) => {
+  setCodeVerified,
+}: VerifyResetCodeProps) => {
   try {
-    const response = await axios.post("/api/auth/login", { email, password });
+    const response = await axios.post(
+      "/api/auth/resetPassword/verifyResetCode",
+      { code },
+    );
     if (response.status === 200) {
-      setError(false);
+      setError(false)
       setMessage(response.data.message);
-      router.push("/home");
+      setEmailSent(false);
+      setCodeVerified(true);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

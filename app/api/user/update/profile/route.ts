@@ -11,7 +11,6 @@ export async function PUT(req: Request) {
       { status: 400 },
     );
   }
-  console.log("method passed");
   try {
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
@@ -20,24 +19,19 @@ export async function PUT(req: Request) {
         { status: 401 },
       );
     }
-    console.log("user logged in");
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
     const { username, bio, image } = body;
-    console.log("body parsed" + username + bio + image);
     if (!username && !bio && !image) {
       return NextResponse.json(
         { message: "Username, bio or image are required" },
         { status: 400 },
       );
     }
-
     await connect();
-    console.log("db connected");
     const loggedUser = await UserModel.findById(isLoggedIn);
-    console.log("user found " + loggedUser?.username);
     if (!loggedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
@@ -48,7 +42,6 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
-    console.log("validated data length");
     let userNameUpdated = false;
     let bioUpdated = false;
     let imageUpdated = false;
@@ -76,7 +69,6 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
-    console.log("user updated");
     await loggedUser.save();
     return NextResponse.json(
       {
@@ -84,6 +76,7 @@ export async function PUT(req: Request) {
         usernameUpdated: userNameUpdated,
         bioUpdated: bioUpdated,
         imageUpdated: imageUpdated,
+        image: loggedUser.image,
       },
       { status: 200 },
     );

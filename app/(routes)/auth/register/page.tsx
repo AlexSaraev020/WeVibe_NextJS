@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../../../components/authForm/form";
+import Form from "@/components/forms/authForm/form"
 import Logo from "@/public/icons/WeVibe.png";
 import Image from "next/image";
 

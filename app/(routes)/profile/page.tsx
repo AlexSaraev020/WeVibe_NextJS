@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/image";
 import ProfilePosts from "@/components/cards/profilePosts";
 import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
 import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
+import ProfilePictureZoom from "./profilePictureZoom";
 
 export default async function Page(props: {
   searchParams: Promise<{ user: string }>;
@@ -16,14 +16,9 @@ export default async function Page(props: {
       {response.status === 200 ? (
         <div className="mt-10 flex h-full w-11/12 flex-col items-center justify-center gap-10 pb-4 md:w-full">
           <div className="flex w-full items-start justify-center gap-4 p-4 md:w-4/12">
-            <Image
-              src={response.data.user.image}
-              width={400}
-              height={400}
-              priority
-              alt="user"
-              className="mt-6 h-20 w-20 rounded-full md:mt-0 md:h-48 md:w-48"
-            />
+            <div className="w-fit">
+              <ProfilePictureZoom image={response.data.user.image} />
+            </div>
             <div className="mt-4 flex flex-col">
               <div className="flex items-center gap-4 md:gap-8">
                 <h1 className="truncate text-lg font-semibold md:text-3xl">
@@ -59,7 +54,7 @@ export default async function Page(props: {
               </div>
               {response.data.user.bio.length > 0 && (
                 <Long_Text_Truncate
-                  className="hidden md:block text-white/50"
+                  className="hidden text-white/50 md:block"
                   text={response.data.user.bio}
                 />
               )}
@@ -68,7 +63,7 @@ export default async function Page(props: {
 
           {response.data.user.bio.length > 0 && (
             <Long_Text_Truncate
-              className="-mt-10 block w-11/12 sm:w-8/12 md:hidden text-white/20"
+              className="-mt-10 block w-11/12 text-white/20 sm:w-8/12 md:hidden"
               text={response.data.user.bio}
             />
           )}
@@ -80,7 +75,7 @@ export default async function Page(props: {
         </div>
       ) : (
         <div>
-          <h1>An error occured: 404</h1>
+          <h1>User not found or an error occurred 404</h1>
         </div>
       )}
     </div>

@@ -16,11 +16,12 @@ import {
   handleSearch,
 } from "@/actions/componentActions/nav/toggleFunctions";
 import { Router } from "next/router";
+import { useUserImage } from "@/contexts/user/userImageContext";
 export default function Nav() {
-  const paths = useMemo(() => ["/", "/register", "/login"], []);
+  const paths = useMemo(() => ["/", "/auth/register", "/auth/login" , "/auth/resetpassword"], []);
   const path = usePathname();
   const router = useRouter();
-  const [userImage, setUserImage] = useState<string>("");
+  const { userImage, setUserImage } = useUserImage();
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
@@ -46,16 +47,14 @@ export default function Nav() {
     if (userName) {
       setIsLoaded(true);
     }
-  }, [router, userName]);
+  }, [router, userName ]);
 
   useEffect(() => {
     document.documentElement.style.overflow = showCreatePost
       ? "hidden"
       : "auto";
-      document.body.style.overflow = showCreatePost
-      ? "hidden"
-      : "auto";
-  }, [ showCreatePost]);
+    document.body.style.overflow = showCreatePost ? "hidden" : "auto";
+  }, [showCreatePost]);
 
   const navButtons = displayedButtons({
     handleCreatePost: handleCreatePost,
@@ -78,10 +77,13 @@ export default function Nav() {
   return (
     <>
       {showCreatePost && <CreatePost setShowCreatePost={setShowCreatePost} />}
-      {showSearch && <Search />}
+      {showSearch && <Search setShowSearch={setShowSearch} />}
+      {!isLoaded && !paths.includes(path) && (
+        <div className="fixed inset-0 top-0 z-40 min-h-screen w-screen bg-black bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))] transition-all duration-75" />
+      )}
       {!paths.includes(path) && !showCreatePost && (
         <nav
-          className={`group fixed bottom-0 z-30 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
+          className={`group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >

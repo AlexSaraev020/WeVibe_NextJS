@@ -37,13 +37,13 @@ export const fetchUserWithTimeout = async ({
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.message === "Timeout") {
-          console.error("Request timed out, reloading page...");
+          console.log("Request timed out, reloading page...");
           window.location.reload();
         } else {
-          console.error("Error fetching user:", error);
+          console.log("Error fetching user:", error);
         }
       } else {
-        console.error("Unknown error:", error);
+        console.log("Unknown error:", error);
       }
     }
   }else{

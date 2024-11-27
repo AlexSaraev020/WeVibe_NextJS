@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       { $push: { posts: newPost._id } },
     );
 
-    return NextResponse.json({ newPost }, { status: 201 });
+    return NextResponse.json({ message:"Post created successfully!" }, { status: 201 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

@@ -1,5 +1,4 @@
 import { jwtDecode } from "@/actions/auth/jwtDecode";
-import { DecodedToken } from "@/types/userTypes/token/decoded";
 import { cookies } from "next/headers";
 
 export const checkUserLoggedIn = async () => {
@@ -9,9 +8,8 @@ export const checkUserLoggedIn = async () => {
         return false;
     }
     try {
-        const payload = (await jwtDecode(token.value)) as DecodedToken;
-        const userId = payload.userId;
-        return userId;
+        const decodedToken = await jwtDecode(token.value);
+        return decodedToken;
     } catch (error: unknown) {
         if(error instanceof Error) {
             console.error(error.message);

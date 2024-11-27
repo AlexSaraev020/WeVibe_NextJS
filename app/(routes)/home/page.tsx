@@ -2,7 +2,6 @@ import React from "react";
 import Post from "@/components/cards/post";
 import { getPosts } from "@/actions/posts/getPosts";
 import { PostType } from "@/types/post/postType";
-import IsUserLoggedinPromptNotification from "@/components/popups/isUserLoggedin";
 
 export const revalidate = 60;
 export default async function Page() {
@@ -21,7 +20,6 @@ export default async function Page() {
         )}
       </ul>
 
-      <IsUserLoggedinPromptNotification />
     </div>
   );
 }

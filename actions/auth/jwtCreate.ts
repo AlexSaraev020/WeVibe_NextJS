@@ -8,9 +8,9 @@ if (!secret) {
   throw new Error("JWT_PRIVATE is not defined");
 }
 const secretKey = createHash("sha256").update(secret).digest();
-export const generateToken = async (userId: string) => {
+export const generateToken = async (value: string) => {
   const payload = {
-    userId,
+    value,
   };
 
   const jwe = await new CompactEncrypt(

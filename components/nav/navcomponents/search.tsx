@@ -4,7 +4,10 @@ import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 import { MdClear } from "react-icons/md";
 
-export default function Search() {
+interface SearchProps {
+  setShowSearch: (showSearch: boolean) => void;
+}
+export default function Search({ setShowSearch }: SearchProps) {
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [showClear, setShowClear] = useState<boolean>(false);
@@ -14,6 +17,7 @@ export default function Search() {
     if (search) {
       router.push(`/search` + `?q=${encodedSearch}`);
       setSearch("");
+      setShowSearch(false);
     }
   };
   useEffect(() => {
@@ -31,7 +35,7 @@ export default function Search() {
     <form
       onSubmit={searchSubmit}
       autoComplete="off"
-      className="relative left-1/2 top-16 z-50 w-11/12 -translate-x-1/2 -translate-y-1/2 transform md:w-4/12 mb-10"
+      className="relative left-1/2 top-16 z-50 mb-10 w-11/12 -translate-x-1/2 -translate-y-1/2 transform md:w-4/12"
     >
       <div className="relative">
         <input
@@ -44,7 +48,7 @@ export default function Search() {
           }
           className="h-12 w-full animate-fadeIn rounded-full border-2 border-sky-700 bg-black/30 px-4 text-white shadow-glow-sm shadow-sky-500 transition-all duration-500 focus:shadow-glow focus:shadow-sky-500 focus:outline-none"
         />
-        <div className="flex gap-2 absolute top-1/2 -translate-y-1/2 transform right-2">
+        <div className="absolute right-2 top-1/2 flex -translate-y-1/2 transform gap-2">
           {showClear && (
             <button
               type="button"
@@ -56,7 +60,7 @@ export default function Search() {
           )}
           <button
             type="submit"
-            className="transform animate-fadeIn transition-all duration-500 bg-sky-900/80 rounded-full p-1"
+            className="transform animate-fadeIn rounded-full bg-sky-900/80 p-1 transition-all duration-500"
           >
             <CiSearch className="h-7 w-7 fill-sky-100/80" />
           </button>

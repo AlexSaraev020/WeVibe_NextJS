@@ -31,7 +31,7 @@ export const displayedButtons = ({
         alt="user"
         width={40}
         height={40}
-        className="h-7 w-7 rounded-full transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-9 md:group-hover:w-9"
+        className="h-7 w-7 object-cover rounded-full transition-all delay-1000 duration-500 group-hover:delay-0 md:group-hover:h-9 md:group-hover:w-9"
       />
     ),
     onClick: handleProfile,
