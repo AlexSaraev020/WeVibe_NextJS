@@ -1,3 +1,5 @@
+import { UserType } from "../userTypes/user/userType";
+
 export interface PostType {
   _id: string;
   title: string;
@@ -16,10 +18,8 @@ export interface PostType {
 export interface CommentType {
   _id: string;
   comment: string;
-  user: {
-    _id: string;
-    username: string;
-    image: string;
-  };
+  user: UserType;
+  replies: string[];
+  likes: UserType[];
   createdAt: string;
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getUser } from "../../user/getUser";
+import { getUser } from "../../user/searchUser";
 
 export const addComment = async (postId: string, comment: string) => {
   try {

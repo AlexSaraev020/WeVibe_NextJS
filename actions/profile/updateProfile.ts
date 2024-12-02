@@ -10,7 +10,8 @@ interface UpdateProfileProps {
   router: AppRouterInstance;
   setEdit: (edit: boolean) => void;
   setMessage: (message: string | undefined) => void;
-  setUserImage: (image: string) => void;
+  setUserImage: (userImage: string) => void;
+  setUsername: (username: string) => void;
   setError: (error: boolean) => void;
 }
 export const updateProfile = async ({
@@ -18,6 +19,7 @@ export const updateProfile = async ({
   setError,
   username,
   setUserImage,
+  setUsername,
   bio,
   image,
   currentImage,
@@ -25,7 +27,7 @@ export const updateProfile = async ({
   setEdit,
 }: UpdateProfileProps) => {
   try {
-    const response = await axios.put("/api/user/update/profile", {
+    const response = await axios.put("/api/user/profile/update/profile", {
       username,
       bio,
       image,
@@ -34,6 +36,9 @@ export const updateProfile = async ({
       setError(false);
       setMessage(response.data.message);
       setEdit(false);
+    }
+    if (response.data.usernameUpdated === true) {
+      setUsername(response.data.username);
     }
     if (
       response.data.imageUpdated === true &&
@@ -49,10 +54,8 @@ export const updateProfile = async ({
 
       router.push("/home");
       setMessage(response.data.message);
-      return response.data;
     }
     router.refresh();
-    return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       console.log("Server response error:", error.response.data.message);

@@ -35,7 +35,7 @@ export default function Search({ setShowSearch }: SearchProps) {
     <form
       onSubmit={searchSubmit}
       autoComplete="off"
-      className="relative left-1/2 top-16 z-50 mb-10 w-11/12 -translate-x-1/2 -translate-y-1/2 transform md:w-4/12"
+      className="relative left-1/2 top-16 z-50 mb-10 w-11/12 -translate-x-1/2 -translate-y-1/2 transform sm:w-6/12 md:w-4/12"
     >
       <div className="relative">
         <input
@@ -46,9 +46,9 @@ export default function Search({ setShowSearch }: SearchProps) {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearch(e.target.value)
           }
-          className="h-12 w-full animate-fadeIn rounded-full border-2 border-sky-700 bg-black/30 px-4 text-white shadow-glow-sm shadow-sky-500 transition-all duration-500 focus:shadow-glow focus:shadow-sky-500 focus:outline-none"
+          className=" h-8 md:h-12 w-full animate-fadeIn rounded-full border-2 border-sky-700 bg-black/30 px-4 text-white shadow-glow-sm shadow-sky-500 transition-all duration-500 focus:shadow-glow focus:shadow-sky-500 focus:outline-none"
         />
-        <div className="absolute right-2 top-1/2 flex -translate-y-1/2 transform gap-2">
+        <div className="absolute right-1 md:right-2 top-1/2 flex -translate-y-1/2 transform gap-2">
           {showClear && (
             <button
               type="button"
@@ -62,7 +62,7 @@ export default function Search({ setShowSearch }: SearchProps) {
             type="submit"
             className="transform animate-fadeIn rounded-full bg-sky-900/80 p-1 transition-all duration-500"
           >
-            <CiSearch className="h-7 w-7 fill-sky-100/80" />
+            <CiSearch className="h-4 w-4 md:h-7 md:w-7 fill-sky-100/80" />
           </button>
         </div>
       </div>

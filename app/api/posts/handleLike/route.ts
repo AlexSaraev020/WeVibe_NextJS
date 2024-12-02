@@ -1,6 +1,7 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
-import { LikesModel } from "@/models/posts/likes";
+import { connect } from "@/db/mongo/db";
 import { PostModel } from "@/models/posts/post";
+import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 
@@ -12,12 +13,17 @@ export async function PUT(req: Request) {
     );
   }
   try {
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const loggedUserId = await checkUserLoggedIn();
+    if (!loggedUserId) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
+    }
+    await connect();
+    const userLoggedIn = await UserModel.findOne({ _id: loggedUserId }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const body = await req.json();
     if (!body) {
@@ -34,39 +40,27 @@ export async function PUT(req: Request) {
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
-    const isLoggedInUserIdObject = new Types.ObjectId(loggedUser);
+    const isLoggedInUserIdObject = new Types.ObjectId(loggedUserId);
     if (!isLoggedInUserIdObject) {
       return NextResponse.json(
         { message: "User id not found" },
         { status: 400 },
       );
     }
-    const existingLike = await LikesModel.findOne({
-      post: post._id,
-      user: isLoggedInUserIdObject,
-    }).exec();
 
-    if (existingLike) {
-      await LikesModel.deleteOne({
-        post: post._id,
-        user: isLoggedInUserIdObject,
-      }).exec();
+    if (post.likes.includes(isLoggedInUserIdObject)) {
       await PostModel.findOneAndUpdate(
         { _id: postId },
-        { $pull: { likes: existingLike._id } },
+        { $pull: { likes: loggedUserId} },
       ).exec();
       return NextResponse.json(
         { message: "Post unliked", like: false },
         { status: 200 },
       );
     } else {
-      const newLike = await LikesModel.create({
-        post: post._id,
-        user: isLoggedInUserIdObject,
-      });
       await PostModel.findOneAndUpdate(
         { _id: postId },
-        { $addToSet: { likes: newLike._id } },
+        { $addToSet: { likes: loggedUserId } },
       ).exec();
       return NextResponse.json(
         { message: "Post liked", like: true },

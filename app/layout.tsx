@@ -5,7 +5,7 @@ import Nav from "@/components/nav/nav";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
-import { UserImageContextProvider } from "@/contexts/user/userImageContext";
+import { UserNavDataContextProvider } from "@/contexts/user/userNavContext";
 import { AlertContextProvider } from "@/contexts/alert/alertContext";
 import Alert from "@/components/popups/alert";
 export const metadata: Metadata = {
@@ -35,11 +35,11 @@ export default function RootLayout({
       >
         <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <AlertContextProvider>
-        <UserImageContextProvider>
+        <UserNavDataContextProvider>
           <Nav />
           {children}
           <Alert/>
-        </UserImageContextProvider>
+        </UserNavDataContextProvider>
         </AlertContextProvider>
         <div className="fixed top-0 z-[-2] min-h-screen w-screen animate-fadeIn bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))] transition-all duration-500" />
       </body>

@@ -1,7 +1,8 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
-import { LikesModel } from "@/models/posts/likes";
 import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
+import { connect } from "@/db/mongo/db";
+import { Types } from "mongoose";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -29,12 +30,17 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const isLiked = await LikesModel.findOne({ user: isUserLoggedIn, post: postId }).exec();
-    const postLikesNumber = await PostModel.findOne({ _id: postId }).select("likes").exec();
-    if (isLiked) {
-      return NextResponse.json({ isLiked: true , likes: postLikesNumber?.likes }, { status: 200 });
+    let isLiked = false;
+    const isLoggedInUserIdObject = new Types.ObjectId(isUserLoggedIn);
+
+    await connect();
+    const post = await PostModel.findOne({ _id: postId }).exec();
+
+    if (post?.likes.includes(isLoggedInUserIdObject)) {
+      isLiked = true;
     }
-    return NextResponse.json({ isLiked: false , likes: postLikesNumber?.likes }, { status: 200 });
+
+    return NextResponse.json({ isLiked: isLiked , likesNumber: post?.likes.length }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

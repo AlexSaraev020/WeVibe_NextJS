@@ -30,7 +30,7 @@ export async function sendMail({
   }
 
   try {
-    const sendResult = await transport.sendMail({
+    await transport.sendMail({
       from: SMTP_EMAIL,
       to,
       subject,

@@ -1,6 +1,6 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { CommentsModel } from "@/models/posts/comments";
-import { LikesModel } from "@/models/posts/likes";
+import { LikesModel } from "@/models/posts/postLikes";
 import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 

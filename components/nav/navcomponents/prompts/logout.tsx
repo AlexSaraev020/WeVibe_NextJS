@@ -1,5 +1,5 @@
 "use client";
-import { logoutUser } from "@/actions/auth/logout";
+import { logoutUser } from "@/actions/profile/logout";
 import { useRouter } from "next/navigation";
 import React from "react";
 import ShinyButton from "@/components/buttons/shinyButton";

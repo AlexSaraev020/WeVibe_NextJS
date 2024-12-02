@@ -21,17 +21,19 @@ export async function GET(req: NextRequest) {
     await connect();
     const user = await UserModel.findOne({ _id: userId })
       .select("-password -__v")
-      .populate({
-        path: "posts",
-        model: PostModel,
-        select: "image _id createdAt",
-        options: { sort: { createdAt: -1 } },
-      })
       .exec();
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    return NextResponse.json({ user }, { status: 200 });
+    const followersCount = user.followers?.length || 0;
+    const followingCount = user.following?.length || 0;
+    const postCount = user.posts?.length || 0;
+    return NextResponse.json({ user: {
+      ...user.toObject(),
+      posts: postCount,
+      followers: followersCount,
+      following: followingCount
+    }  }, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

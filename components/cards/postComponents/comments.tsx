@@ -7,7 +7,7 @@ import { CommentType } from "@/types/post/postType";
 import Comment from "./comment";
 import { getComments } from "@/actions/posts/comments/getComments";
 import { AiOutlineLoading } from "react-icons/ai";
-
+import Textarea from "@/components/forms/formElements/textarea";
 
 interface CommentsSectionProps {
   postId: string;
@@ -59,7 +59,7 @@ export default function CommentsSection({
     >
       <div
         onClick={handleClickInside}
-        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:shadow-glow md:shadow-postBackground/50"
+        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 shadow-glow shadow-postBackground/50 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:shadow-glow md:shadow-postBackground/50"
       >
         <h2>
           <span className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text text-center text-xl font-extrabold text-transparent md:text-3xl">
@@ -72,19 +72,25 @@ export default function CommentsSection({
         >
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
-        <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-thin">
+        <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-none">
           {comments && comments.length > 0 ? (
             comments.map((commentContent) => (
               <li
                 className="flex w-full flex-col items-center justify-center px-2"
                 key={commentContent._id}
               >
-                <Comment commentContent={commentContent} />
+                <Comment postId={postId} commentContent={commentContent} />
               </li>
             ))
           ) : (
             <div>
-              <p className="text-zinc-200">{loading ? <AiOutlineLoading className="animate-spin" /> : "No comments"}</p>
+              <p className="text-zinc-200">
+                {loading ? (
+                  <AiOutlineLoading className="animate-spin" />
+                ) : (
+                  "No comments"
+                )}
+              </p>
             </div>
           )}
         </ul>
@@ -92,17 +98,16 @@ export default function CommentsSection({
           onSubmit={handleSubmitComment}
           className="flex w-full items-center justify-center gap-4"
         >
-          <textarea
-            name="Comment section"
+          <Textarea
+            name="comment"
             id="comment"
-            placeholder="Write a comment..."
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setComment(e.target.value)
-            }
             value={comment}
-            rows={1}
-            aria-label="Write a comment"
-            className="w-full resize-none rounded-lg border-2 border-zinc-600 bg-transparent p-2 text-sm transition-all duration-500 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none"
+            placeHolder="Write a comment..."
+            onChange={(e) => setComment(e.target.value)}
+            rows={2}
+            minLength={1}
+            maxLength={300}
+            ariaLabel="Comment"
           />
           <button
             type="submit"

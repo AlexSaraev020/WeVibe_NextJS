@@ -24,7 +24,6 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
-    console.log(email, password);
     const validateDataLength = validate__Fields__Length({ email, password });
     if (validateDataLength) {
       return NextResponse.json(

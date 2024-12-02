@@ -3,13 +3,13 @@ import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  if (req.method !== "GET") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 }
+    );
+  }
   try {
-    if (req.method !== "GET") {
-      return NextResponse.json(
-        { message: "Method not allowed" },
-        { status: 400 }
-      );
-    }
     const query = req.nextUrl.searchParams.get("q");
     if (!query) {
       return NextResponse.json({ message: "Query not found" }, { status: 404 });

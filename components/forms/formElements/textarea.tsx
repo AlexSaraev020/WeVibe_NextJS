@@ -1,5 +1,4 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
 interface TextareaProps {
   name: string;
   id: string;
@@ -10,6 +9,7 @@ interface TextareaProps {
   minLength: number;
   maxLength: number;
   ariaLabel: string;
+  showLabel?: boolean;
   update?: boolean;
 }
 
@@ -22,6 +22,7 @@ export default function Textarea({
   rows,
   minLength,
   maxLength,
+  showLabel,
   ariaLabel,
 }: TextareaProps) {
   return (
@@ -35,17 +36,16 @@ export default function Textarea({
           )}
           {value && value.length === maxLength && (
             <h2 className="absolute right-0 top-0 animate-fadeIn text-xs text-red-500 transition-all duration-500 md:text-sm">
-              Max {maxLength} characters*{" "}
+              Max {maxLength} characters*
             </h2>
           )}
         </div>
       )}
-      <label
-        htmlFor={id}
-        className="text-xs md:text-base"
-      >
-        {name}
-      </label>
+      {showLabel && (
+        <label htmlFor={id} className="text-xs md:text-base">
+          {name}
+        </label>
+      )}
       <textarea
         className="w-full resize-none rounded-md border-2 border-zinc-600 bg-black px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 scrollbar-none focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base"
         name={name}

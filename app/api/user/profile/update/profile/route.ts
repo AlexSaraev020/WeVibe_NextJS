@@ -65,6 +65,8 @@ export async function PUT(req: Request) {
           usernameUpdated: userNameUpdated,
           bioUpdated: bioUpdated,
           imageUpdated: imageUpdated,
+          image: loggedUser.image,
+          username: loggedUser.username,
         },
         { status: 400 },
       );
@@ -77,6 +79,7 @@ export async function PUT(req: Request) {
         bioUpdated: bioUpdated,
         imageUpdated: imageUpdated,
         image: loggedUser.image,
+        username: loggedUser.username,
       },
       { status: 200 },
     );

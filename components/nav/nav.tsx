@@ -5,7 +5,6 @@ import Image from "next/image";
 import ProfilePlaceholder from "@/public/placeholders/profilePlaceholder.png";
 import { usePathname, useRouter } from "next/navigation";
 import { displayedButtons } from "./navcomponents/buttons";
-import Logout from "./navcomponents/prompts/logout";
 import CreatePost from "./navcomponents/prompts/createPost";
 import Search from "./navcomponents/search";
 import Link from "next/link";
@@ -16,15 +15,17 @@ import {
   handleSearch,
 } from "@/actions/componentActions/nav/toggleFunctions";
 import { Router } from "next/router";
-import { useUserImage } from "@/contexts/user/userImageContext";
+import { useUserNavData } from "@/contexts/user/userNavContext";
 export default function Nav() {
-  const paths = useMemo(() => ["/", "/auth/register", "/auth/login" , "/auth/resetpassword"], []);
+  const paths = useMemo(
+    () => ["/", "/auth/register", "/auth/login", "/auth/resetpassword"],
+    [],
+  );
   const path = usePathname();
   const router = useRouter();
-  const { userImage, setUserImage } = useUserImage();
+  const { userImage, username, setUserImage,setUsername } = useUserNavData();
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
@@ -34,8 +35,8 @@ export default function Nav() {
       setShowSearch(false);
     }
     fetchUserWithTimeout({
-      setUserName,
       setUserId,
+      setUsername,
       setUserImage,
       paths,
       path,
@@ -44,10 +45,10 @@ export default function Nav() {
   }, [router, path, paths]);
 
   useEffect(() => {
-    if (userName) {
+    if (username) {
       setIsLoaded(true);
     }
-  }, [router, userName ]);
+  }, [router, username]);
 
   useEffect(() => {
     document.documentElement.style.overflow = showCreatePost
@@ -60,7 +61,7 @@ export default function Nav() {
     handleCreatePost: handleCreatePost,
     handleSearch: handleSearch,
     handleProfile: handleProfile,
-    userName: isLoaded ? userName : "Profile",
+    userName: isLoaded ? username : "Profile",
     profilePicture: userImage ? userImage : ProfilePlaceholder,
   });
 
@@ -83,7 +84,7 @@ export default function Nav() {
       )}
       {!paths.includes(path) && !showCreatePost && (
         <nav
-          className={`group fixed bottom-0 z-50 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
+          className={`group fixed bottom-0 z-30 order-2 flex h-fit w-full flex-row items-center justify-center gap-4 border-postBackground/50 bg-black p-1 shadow-glow-sm shadow-postBackground transition-all delay-0 duration-1000 group-hover:delay-0 lg:order-1 lg:h-screen lg:w-fit lg:flex-col lg:items-start lg:justify-start lg:gap-0 lg:border-r-2 lg:border-t-0 lg:bg-transparent lg:p-4 lg:hover:border-none lg:hover:shadow-none ${
             isLoaded ? "animate-fadeIn" : "animate-pulse"
           }`}
         >

@@ -19,7 +19,7 @@ export const updateAccount = async ({
   setShowAlert,
 }: UpdateAccountProps) => {
   try {
-    const response = await axios.put("/api/user/update/account", {
+    const response = await axios.put("/api/user/profile/update/account", {
       email,
       password,
     });

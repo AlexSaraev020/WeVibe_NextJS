@@ -10,9 +10,9 @@ export const getLikes = async ({ postId, setLike , setLikes }: GetLikesProps) =>
     const response = await axios.post("/api/posts/getIfLiked", { postId });
     if (response.status < 300) {
       setLike(response.data.isLiked);
-      setLikes(response.data.likes.length);
+      setLikes(response.data.likesNumber);
     }
-    return response;
+    return;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

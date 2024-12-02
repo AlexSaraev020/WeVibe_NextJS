@@ -1,12 +1,20 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { PostType } from "@/types/post/postType";
+import { getProfilePosts } from "@/actions/profile/getProfilePosts";
 
 interface ProfilePostsProps {
-  posts: PostType[];
+  userId: string;
 }
 
-export default function ProfilePosts({ posts }: ProfilePostsProps) {
+export default function ProfilePosts({ userId }: ProfilePostsProps) {
+  useEffect(() => {
+    (async () => {
+      await getProfilePosts({ userId, setPosts });
+    })();
+  }, [userId]);
+  const [posts, setPosts] = useState<PostType[]>([]);
   return (
       <ul className="grid h-full mb-14 lg:mb-0 grid-cols-2 gap-1 sm:grid-cols-3 w-11/12 md:w-9/12 lg:w-8/12 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent ">
         {posts.length ? (

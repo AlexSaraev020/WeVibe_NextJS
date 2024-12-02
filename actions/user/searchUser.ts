@@ -16,7 +16,7 @@ export const getUser = async () => {
 
 export const getUsersByQuery = async (query: string) => {
   try {
-    const response = await axios.get(`${url}/api/user/search?q=${query}`);
+    const response = await axios.get(`${url}/api/user/searchUser?q=${query}`);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

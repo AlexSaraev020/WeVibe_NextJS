@@ -1,16 +1,19 @@
 import React from "react";
-import ProfilePosts from "@/components/cards/profilePosts";
 import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
 import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
-import ProfilePictureZoom from "./profilePictureZoom";
+import ProfileFollowers from "@/components/profile/profileFollowers";
+import ProfilePictureZoom from "@/components/profile/profilePictureZoom";
+import ProfileFollowing from "@/components/profile/profileFollowing";
+import ProfilePosts from "@/components/cards/profilePosts";
 
 export default async function Page(props: {
   searchParams: Promise<{ user: string }>;
 }) {
-  const { user } = await props.searchParams;
-  const response = await getUserProfile(user);
+  const searchParams = await props.searchParams;
+  const userId = searchParams.user;
+  const response = await getUserProfile(userId);
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
       {response.status === 200 ? (
@@ -29,28 +32,18 @@ export default async function Page(props: {
               <div className="mt-1 flex gap-2 md:mt-4 md:gap-6">
                 <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
                   <h2 className="text-sm font-bold md:text-xl">
-                    {response.data.user.posts
-                      ? response.data.user.posts.length
-                      : 0}
+                    {response.data.user.posts}
                   </h2>
                   <p className="text-md md:text-lg">Posts</p>
                 </div>
-                <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
-                  <h2 className="text-sm font-bold md:text-xl">
-                    {response.data.user.followers
-                      ? response.data.user.followers.length
-                      : 0}
-                  </h2>
-                  <p className="text-md md:text-lg">Followers</p>
-                </div>
-                <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
-                  <h2 className="text-sm font-bold md:text-xl">
-                    {response.data.user.following
-                      ? response.data.user.following.length
-                      : 0}
-                  </h2>
-                  <p className="text-md md:text-lg">Following</p>
-                </div>
+                <ProfileFollowers
+                  userId={userId}
+                  followers={response.data.user.followers}
+                />
+                <ProfileFollowing
+                  userId={userId}
+                  following={response.data.user.following}
+                />
               </div>
               {response.data.user.bio.length > 0 && (
                 <Long_Text_Truncate
@@ -71,7 +64,7 @@ export default async function Page(props: {
             <IoImages className="h-6 w-6 md:h-8 md:w-8" color="white" />
             <h2 className="text-xl font-semibold md:text-2xl">Posts</h2>
           </div>
-          <ProfilePosts posts={response.data.user.posts} />
+          <ProfilePosts userId={userId} />
         </div>
       ) : (
         <div>

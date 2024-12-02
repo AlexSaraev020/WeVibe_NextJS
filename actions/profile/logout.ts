@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const logoutUser = async () => {
   try {
-    const response = await axios.post(`/api/user/logout`);
+    const response = await axios.post(`/api/user/profile/logout`);
     return response;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

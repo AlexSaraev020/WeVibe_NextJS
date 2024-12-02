@@ -10,8 +10,8 @@ import { updateProfile } from "@/actions/profile/updateProfile";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import Textarea from "@/components/forms/formElements/textarea";
-import { useUserImage } from "@/contexts/user/userImageContext";
 import { useAlert } from "@/contexts/alert/alertContext";
+import { useUserNavData } from "@/contexts/user/userNavContext";
 interface EditFormProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
@@ -36,7 +36,7 @@ export default function EditForm({
   const [image, setImage] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const { setMessage, setError } = useAlert();
-  const { setUserImage } = useUserImage();
+  const {setUsername,setUserImage} = useUserNavData();
   const [disable, setDisable] = useState<boolean>(false);
   const router = useRouter();
   const cancelProfileUpdate = async () => {
@@ -60,6 +60,7 @@ export default function EditForm({
           username,
           setMessage,
           setUserImage,
+          setUsername,
           setError,
           setEdit,
           bio,
@@ -195,6 +196,7 @@ export default function EditForm({
 
               <Textarea
                 name="Bio"
+                showLabel
                 id="bio"
                 rows={4}
                 maxLength={200}

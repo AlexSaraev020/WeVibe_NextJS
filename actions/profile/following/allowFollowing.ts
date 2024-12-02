@@ -9,7 +9,7 @@ interface AllowFollowingProps {
 export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) => {
   try {
     const response = await axios.get(
-      `/api/user/allowFollowing?user=${userId}`
+      `/api/user/profile/allowFollowing?user=${userId}`
     );
     if(response.status < 300) {
       setAllow && setAllow(response.data.allow)

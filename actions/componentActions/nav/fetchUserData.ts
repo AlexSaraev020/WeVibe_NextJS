@@ -1,24 +1,24 @@
-import { getUser } from "@/actions/user/getUser";
+import { getUser } from "@/actions/user/searchUser";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface FetchUserWithTimeoutProps {
-  setUserName: (userName: string) => void;
   setUserId: (userId: string) => void;
   setUserImage: (userImage: string) => void;
+  setUsername: (username: string) => void;
   paths: string[];
   path: string;
   router: AppRouterInstance;
 }
 
 export const fetchUserWithTimeout = async ({
-  setUserName,
   setUserId,
+  setUsername,
   setUserImage,
   paths,
   path,
   router,
 }: FetchUserWithTimeoutProps) => {
-  if(!paths.includes(path)) {
+  if (!paths.includes(path)) {
     const fetchUser = async () => {
       const response = await getUser();
       if (response.status >= 400 && !paths.includes(path)) {
@@ -27,13 +27,13 @@ export const fetchUserWithTimeout = async ({
       return response.user;
     };
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Timeout")), 3000)
+      setTimeout(() => reject(new Error("Timeout")), 3000),
     );
     try {
       const result = await Promise.race([fetchUser(), timeout]);
-      setUserName(result.username);
-      setUserId(result._id);
+      setUsername(result.username);
       setUserImage(result.image);
+      setUserId(result._id);
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.message === "Timeout") {
@@ -46,9 +46,9 @@ export const fetchUserWithTimeout = async ({
         console.log("Unknown error:", error);
       }
     }
-  }else{
-    setUserName("");
+  } else {
     setUserId("");
     setUserImage("");
+    setUsername("");
   }
 };

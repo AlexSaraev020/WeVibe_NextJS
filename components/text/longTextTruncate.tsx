@@ -16,7 +16,7 @@ export default function Long_Text_Truncate({
   return (
     <div className={twMerge("w-full", className)}>
       <p
-        className={`break-all transition-all duration-1000 ease-in-out ${
+        className={`break-all text-xs md:text-sm transition-all duration-1000 ease-in-out ${
           truncate ? "max-h-24 overflow-hidden" : "max-h-screen"
         }`}
       >
@@ -25,7 +25,7 @@ export default function Long_Text_Truncate({
       {text.length > 100 && (
         <button
           onClick={() => setTruncate(!truncate)}
-          className="italic text-white/50"
+          className="italic text-xs md:text-sm text-white/50"
         >
           {truncate ? "Read More" : "Read Less"}
         </button>
