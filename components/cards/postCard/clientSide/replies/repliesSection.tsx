@@ -51,7 +51,7 @@ export default function RepliesSection({
         >
           Reply
         </button>
-        {addedReplyCounter > 0 && (
+        {addedReplyCounter && (
           <button
             onClick={() => setShowReplies(!showReplies)}
             className="flex items-end text-xs italic text-white/60 md:text-sm"
