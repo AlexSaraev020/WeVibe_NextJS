@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import PostClientSide from "./postComponents/clientSide";
+import PostClientSide from "./clientSide/clientSide";
 import { PostType } from "@/types/post/postType";
 import Link from "next/link";
-import KebabSection from "./postComponents/kebabSection";
+import KebabSection from "./clientSide/kebabSection";
 
 export default function Post({ post }: { post: PostType }) {
   return (

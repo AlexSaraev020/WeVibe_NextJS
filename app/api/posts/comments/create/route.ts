@@ -1,3 +1,4 @@
+import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
 import { PostModel } from "@/models/posts/post";
@@ -23,6 +24,12 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
+    
+    const validate = validate__Fields__Length({ comment });
+    if (validate) {
+      return NextResponse.json({ message: validate }, { status: 400 });
+    }
+
     const newComment = await CommentsModel.create({
       comment,
       post: postId,

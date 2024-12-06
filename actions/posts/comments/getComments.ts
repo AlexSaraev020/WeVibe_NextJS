@@ -13,6 +13,7 @@ export const getComments = async ({
   try {
     const response = await axios.post("/api/posts/comments/get", { postId });
     if (response.status < 300) {
+      console.log(response.data.comments);
       setLoading(false);
       setComments(response.data.comments);
     } else {

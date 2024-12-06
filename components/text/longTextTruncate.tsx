@@ -14,22 +14,36 @@ export default function Long_Text_Truncate({
   const [truncate, setTruncate] = useState<boolean>(true);
 
   return (
-    <div className={twMerge("w-full", className)}>
+    <div className={twMerge("w-full h-fit", className)}>
       <p
-        className={`break-all text-xs md:text-sm transition-all duration-1000 ease-in-out ${
+        className={`break-all w-full min-h-fit text-xs md:text-sm transition-all duration-1000 ease-in-out ${
           truncate ? "max-h-24 overflow-hidden" : "max-h-screen"
         }`}
       >
-        {text.length > 100 && truncate ? text.slice(0, 100) + "..." : text}
+        {text.length > 100 && truncate ? (
+          <>
+            {text.slice(0, 100)}...
+            <button
+              onClick={() => setTruncate(false)}
+              className="italic text-xs md:text-sm text-white/60 ml-1"
+            >
+              more
+            </button>
+          </>
+        ) : (
+          <>
+            {text}
+            {text.length > 100 && (
+              <button
+                onClick={() => setTruncate(true)}
+                className="italic text-xs md:text-sm text-white/60 ml-1"
+              >
+                less
+              </button>
+            )}
+          </>
+        )}
       </p>
-      {text.length > 100 && (
-        <button
-          onClick={() => setTruncate(!truncate)}
-          className="italic text-xs md:text-sm text-white/50"
-        >
-          {truncate ? "Read More" : "Read Less"}
-        </button>
-      )}
     </div>
   );
 }

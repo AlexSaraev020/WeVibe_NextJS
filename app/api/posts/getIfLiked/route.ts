@@ -40,7 +40,10 @@ export async function POST(req: Request) {
       isLiked = true;
     }
 
-    return NextResponse.json({ isLiked: isLiked , likesNumber: post?.likes.length }, { status: 200 });
+    return NextResponse.json(
+      { isLiked: isLiked, likesNumber: post?.likes.length },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

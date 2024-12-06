@@ -12,6 +12,7 @@ import { twMerge } from "tailwind-merge";
 import Textarea from "@/components/forms/formElements/textarea";
 import { useAlert } from "@/contexts/alert/alertContext";
 import { useUserNavData } from "@/contexts/user/userNavContext";
+import { updateAccount } from "@/actions/profile/updateAccount";
 interface EditFormProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
@@ -55,7 +56,7 @@ export default function EditForm({
 
   const handleSave = async () => {
     {
-      profile &&
+      profile && !account &&
         (await updateProfile({
           username,
           setMessage,
@@ -68,6 +69,16 @@ export default function EditForm({
           currentImage: user.image,
           router,
         }));
+      account && !profile &&(
+        await updateAccount({
+          email,
+          password,
+          router,
+          setEdit,
+          setMessage,
+          setError,
+        })
+      )
     }
   };
   return (

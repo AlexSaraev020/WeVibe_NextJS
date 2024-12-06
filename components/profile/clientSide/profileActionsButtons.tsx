@@ -5,9 +5,9 @@ import { unfollowUser } from "@/actions/profile/following/unfollow";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import EditProfile from "./editProfile";
+import EditProfile from "./editPorifle/editProfile";
 import { UserType } from "@/types/userTypes/user/userType";
-import ShinyButton from "../buttons/shinyButton";
+import ShinyButton from "@/components/buttons/shinyButton";
 
 interface Props {
   user: UserType;

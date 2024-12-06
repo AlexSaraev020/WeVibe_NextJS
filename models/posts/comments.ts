@@ -14,7 +14,7 @@ const CommentsSchema = new Schema<Comment>({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   post: { type: Schema.Types.ObjectId, ref: "Post" },
   comment: { type: String, required: true },
-  replies: [{ type: Schema.Types.ObjectId, default: [], ref: "Comment" }],
+  replies: [{ type: Schema.Types.ObjectId, default: [], ref: "CommentReplies" }],
   likes: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   createdAt: { type: Date, default: Date.now },
 });

@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   await connect();
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     if (!postId) {
       return NextResponse.json(
         { message: "No post id found" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const comments = await CommentsModel.find({ post: postId })
@@ -29,17 +29,24 @@ export async function POST(req: Request) {
       .populate({
         path: "user",
         model: UserModel,
-        select: ["username", "image"],
+        select: ["username", "image", "_id"],
       })
+      .lean()
       .exec();
     if (!comments.length) {
-      return NextResponse.json(
-        { message: "No comments" },
-        { status: 200 }
-      );
+      return NextResponse.json({ message: "No comments" }, { status: 200 });
     }
 
-    return NextResponse.json({ comments: comments }, { status: 200 });
+    const commentsWithLikesCount = comments.map((comment) => ({
+      ...comment,
+      replies: comment.replies.length,
+      likes: comment.likes.length,
+    }));
+
+    return NextResponse.json(
+      { comments: commentsWithLikesCount },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error);
@@ -47,7 +54,7 @@ export async function POST(req: Request) {
     }
     return NextResponse.json(
       { message: "An error occurred" + error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

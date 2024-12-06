@@ -1,5 +1,5 @@
 import React from "react";
-import Post from "@/components/cards/post";
+import Post from "@/components/cards/postCard/post";
 import { getPosts } from "@/actions/posts/getPosts";
 import { PostType } from "@/types/post/postType";
 

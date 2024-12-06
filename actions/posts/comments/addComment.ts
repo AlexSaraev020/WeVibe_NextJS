@@ -1,18 +1,28 @@
 import axios from "axios";
 import { getUser } from "../../user/searchUser";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export const addComment = async (postId: string, comment: string) => {
+interface AddCommentProps {
+  postId: string;
+  comment: string;
+  setComment: (comment: string) => void;
+  setAddedCommentCounter: (updateCounter:(prevCounter: number) => number) => void;
+}
+
+export const addComment = async ({ postId, comment, setComment, setAddedCommentCounter }: AddCommentProps) => {
+  setComment("");
   try {
     const userResponse = await getUser();
     const userId = userResponse.user._id;
-    const url = process.env.NEXT_PUBLIC_API_URL;
-    const response = await axios.put(`${url}/api/posts/comments/create`, {
+    const response = await axios.put(`/api/posts/comments/create`, {
       postId,
       comment,
       userId,
     });
 
-    return response;
+    if (response.status < 300) {
+      setAddedCommentCounter((prevCounter) => prevCounter + 1);
+    }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

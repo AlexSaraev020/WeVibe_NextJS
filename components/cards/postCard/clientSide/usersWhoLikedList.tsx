@@ -1,41 +1,27 @@
 "use client";
 import { UserType } from "@/types/userTypes/user/userType";
 import React, { useEffect, useState } from "react";
+import ProfileCard from "../../profileCard/profileCard";
+import { seeWhoLiked } from "@/actions/posts/handleLike/seeWhoLiked";
 import { AiOutlineLoading } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
-import ProfileCard from "../cards/profileCard";
-import { getAllFollowers } from "@/actions/profile/getAllFollowers";
-import { getAllFollowing } from "@/actions/profile/getAllFollowing";
 
 interface UsersListProps {
   setShowUsersList: (showUsersList: boolean) => void;
-  userId: string;
-  showFollowers?: boolean;
-  showFollowing?: boolean;
+  showUsersList: boolean;
+  postId: string;
 }
 export default function UsersList({
   setShowUsersList,
-  showFollowers,
-  showFollowing,
-  userId,
+  postId,
 }: UsersListProps) {
-  const [users, setUsers] = useState<UserType[]>([]);
+  const [whoLiked, setWhoLiked] = useState<UserType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    {
-      if (showFollowers && !showFollowing) {
-        (async () => {
-          await getAllFollowers({ setUsers, setLoading, userId });
-        })();
-      }
-
-      if (showFollowing && !showFollowers) {
-        (async () => {
-          await getAllFollowing({ setUsers, setLoading, userId });
-        })();
-      }
-    }
-  }, [showFollowers, showFollowing, userId]);
+    (async () => {
+      await seeWhoLiked({ postId, setWhoLiked, setLoading });
+    })();
+  }, [postId]);
 
   const handleClickOutside = () => {
     setShowUsersList(false);
@@ -60,27 +46,20 @@ export default function UsersList({
         >
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
-        <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto p-4 scrollbar-none md:w-11/12">
-          {users.length > 0 ? (
-            users.map((user: UserType) => (
+        <ul className="flex h-full w-full md:w-11/12 flex-col items-center gap-4 overflow-y-auto p-4 scrollbar-none">
+          {whoLiked.length > 0 ? (
+            whoLiked.map((likedBy: UserType) => (
               <ProfileCard
-                onClick={() => setShowUsersList(false)}
-                key={user._id}
-                id={user._id}
-                username={user.username}
-                image={user.image}
+                key={likedBy._id}
+                id={likedBy._id}
+                username={likedBy.username}
+                image={likedBy.image}
               />
             ))
           ) : loading ? (
             <AiOutlineLoading className="animate-spin" />
-          ) : showFollowers ? (
-            <h1 className="text-center text-base text-white">
-              This user has 0 followers
-            </h1>
           ) : (
-            <h1 className="text-center text-base text-white">
-              This user follows 0 people
-            </h1>
+            <p>Nobody liked this post</p>
           )}
         </ul>
       </div>

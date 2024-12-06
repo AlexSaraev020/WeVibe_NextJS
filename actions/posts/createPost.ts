@@ -9,6 +9,7 @@ interface CreatePostProps {
   setError: (erorr: boolean) => void;
   router: AppRouterInstance;
   setShowCreatePost: (showCreatePost: boolean) => void;
+  setDisabled: (disabled: boolean) => void;
 }
 
 export const createPost = async ({
@@ -16,11 +17,13 @@ export const createPost = async ({
   description,
   image,
   router,
+  setDisabled,
   setShowCreatePost,
   setMessage,
   setError,
 }: CreatePostProps) => {
   try {
+    setDisabled(true);
     const response = await axios.post("/api/posts/create", {
       title,
       description,

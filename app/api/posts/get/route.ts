@@ -7,14 +7,18 @@ export async function GET(req: Request) {
   if (req.method !== "GET") {
     return NextResponse.json(
       { message: "Method not allowed" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   await connect();
   try {
     const posts = await PostModel.find({})
       .sort({ createdAt: -1 })
-      .populate({ path: "createdBy", model: UserModel ,select: "username image"})
+      .populate({
+        path: "createdBy",
+        model: UserModel,
+        select: "username image",
+      })
       .select("_id title description image createdAt createdBy comments likes")
       .exec();
     if (!posts.length) {
@@ -26,7 +30,7 @@ export async function GET(req: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { message: "An error occurred", error: error.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });

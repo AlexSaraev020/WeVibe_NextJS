@@ -1,7 +1,7 @@
 import { getUsersByQuery } from "@/actions/user/searchUser";
 import { UserType } from "@/types/userTypes/user/userType";
 import React from "react";
-import ProfileCard from "@/components/cards/profileCard";
+import ProfileCard from "@/components/cards/profileCard/profileCard";
 
 export default async function Page(
   props: {

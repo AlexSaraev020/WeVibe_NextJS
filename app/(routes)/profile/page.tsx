@@ -1,12 +1,12 @@
 import React from "react";
 import { IoImages } from "react-icons/io5";
 import { getUserProfile } from "@/actions/user/getUserProfile";
-import ProfileActionsButtons from "@/components/profile/profileActionsButtons";
+import ProfileActionsButtons from "@/components/profile/clientSide/profileActionsButtons";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
-import ProfileFollowers from "@/components/profile/profileFollowers";
-import ProfilePictureZoom from "@/components/profile/profilePictureZoom";
-import ProfileFollowing from "@/components/profile/profileFollowing";
-import ProfilePosts from "@/components/cards/profilePosts";
+import ProfileFollowers from "@/components/profile/clientSide/profileInformation/profileFollowers";
+import ProfilePictureZoom from "@/components/profile/clientSide/profileInformation/profilePictureZoom";
+import ProfileFollowing from "@/components/profile/clientSide/profileInformation/profileFollowing";
+import ProfilePosts from "@/components/profile/clientSide/profilePosts";
 
 export default async function Page(props: {
   searchParams: Promise<{ user: string }>;

@@ -5,9 +5,11 @@ interface ValidateFieldsLengthProps {
   title?: string;
   bio?: string;
   description?: string;
+  comment?: string;
 }
 export const validate__Fields__Length = ({
   username,
+  comment,
   description,
   email,
   password,
@@ -26,6 +28,8 @@ export const validate__Fields__Length = ({
   const MAX_BIO_LENGTH = 160;
   const MIN_DESCRIPTION_LENGTH = 0;
   const MAX_DESCRIPTION_LENGTH = 300;
+  const MAX_COMMENT_LENGTH = 2000;
+  const MIN_COMMENT_LENGTH = 1;
 
   if (
     (username && username.length < MIN_USERNAME_LENGTH) ||
@@ -40,7 +44,10 @@ export const validate__Fields__Length = ({
   ) {
     return `Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters.`;
   }
-  if (email && (email.length < MIN_EMAIL_LENGTH || email.length > MAX_EMAIL_LENGTH)) {
+  if (
+    email &&
+    (email.length < MIN_EMAIL_LENGTH || email.length > MAX_EMAIL_LENGTH)
+  ) {
     return `Email must be between ${MIN_EMAIL_LENGTH} and ${MAX_EMAIL_LENGTH} characters.`;
   }
   if (
@@ -49,11 +56,7 @@ export const validate__Fields__Length = ({
   ) {
     return `Title must be between ${MIN_TITLE_LENGTH} and ${MAX_TITLE_LENGTH} characters.`;
   }
-  if (
-    bio &&
-    (bio.length < MIN_BIO_LENGTH ||
-      bio.length > MAX_BIO_LENGTH)
-  ) {
+  if (bio && (bio.length < MIN_BIO_LENGTH || bio.length > MAX_BIO_LENGTH)) {
     return `Bio must be between ${MIN_BIO_LENGTH} and ${MAX_BIO_LENGTH} characters.`;
   }
   if (
@@ -62,6 +65,12 @@ export const validate__Fields__Length = ({
       description.length > MAX_DESCRIPTION_LENGTH)
   ) {
     return `Description must be between ${MIN_DESCRIPTION_LENGTH} and ${MAX_DESCRIPTION_LENGTH} characters.`;
+  }
+  if (
+    comment &&
+    (comment.length < MIN_COMMENT_LENGTH || comment.length > MAX_COMMENT_LENGTH)
+  ) {
+    return `Comment must be between ${MIN_COMMENT_LENGTH} and ${MAX_COMMENT_LENGTH} characters.`;
   }
 
   return null;

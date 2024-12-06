@@ -4,12 +4,10 @@ import { FaRegComment } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns";
 import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
-import CommentsSection from "./comments";
-import { getComments } from "@/actions/posts/comments/getComments";
-import { CommentType } from "@/types/post/postType";
+import CommentsSection from "./comments/comments";
 import { handleLike } from "@/actions/posts/handleLike/handleLike";
 import { getLikes } from "@/actions/posts/handleLike/get_If_Liked";
-import UsersList from "../usersWhoLikedList";
+import UsersList from "./usersWhoLikedList";
 
 interface PostBottomSideProps {
   description: string;

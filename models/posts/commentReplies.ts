@@ -4,16 +4,18 @@ export interface CommentReplies extends Document {
   _id: Types.ObjectId;
   commentId: Types.ObjectId;
   postId: Types.ObjectId;
-  userId: Types.ObjectId;
-  reply: string;
+  user: Types.ObjectId;
+  content: string;
+  likes: Types.ObjectId[];
   createdAt: Date;
 }
 
 export const CommentRepliesSchema = new Schema<CommentReplies>({
-  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  user: { type: Schema.Types.ObjectId, ref: "User" },
   commentId: { type: Schema.Types.ObjectId, ref: "Comment" },
   postId: { type: Schema.Types.ObjectId, ref: "Post" },
-  reply: { type: String, required: true },
+  likes: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
+  content: { type: String, required: true, maxlength: 2000 },
   createdAt: { type: Date, default: Date.now },
 });
 

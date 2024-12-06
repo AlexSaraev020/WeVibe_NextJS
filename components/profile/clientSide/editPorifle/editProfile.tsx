@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import EditForm from "../forms/editProfileForm/editForm";
+import EditForm from "@/components/forms/editProfileForm/editForm";
 import { UserType } from "@/types/userTypes/user/userType";
-import Logout from "../nav/navcomponents/prompts/logout";
+import Logout from "./logout";
 
 interface EditProfileProps {
   user: UserType;

@@ -21,6 +21,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const [description, setDescription] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [imageCover, setImageCover] = useState<boolean>(true);
+  const [disabled, setDisabled] = useState<boolean>(false);
   const router = useRouter();
   const { setMessage, setError } = useAlert();
   const cancelCreatePost = async () => {
@@ -41,6 +42,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     e.preventDefault();
     await createPost({
       title,
+      setDisabled,
       setShowCreatePost,
       description,
       router,
@@ -86,6 +88,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                   }}
                   onClientUploadComplete={(res) => {
                     setImage(res[0].url);
+                    setDisabled(false);
                     setMessage("Image uploaded");
                   }}
                   onUploadError={(error: Error) => {
@@ -142,14 +145,14 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
         </div>
         <div className="flex w-full items-center justify-start gap-3">
           <ShinyButton
-            disabled={image.length > 0 ? false : true}
+            disabled={disabled}
             bottomLineCollor={twMerge(
-              image.length > 0
+              !disabled
                 ? ""
                 : "bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0",
             )}
             topLineColor={twMerge(
-              image.length > 0
+              !disabled
                 ? ""
                 : "bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0",
             )}

@@ -1,6 +1,6 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
+import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { CommentsModel } from "@/models/posts/comments";
-import { LikesModel } from "@/models/posts/postLikes";
 import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 
@@ -37,8 +37,8 @@ export async function DELETE(req: Request) {
       );
     }
     await PostModel.findByIdAndDelete(postId);
-    await LikesModel.deleteMany({ post: postId });
     await CommentsModel.deleteMany({ post: postId });
+    await CommentRepliesModel.deleteMany({ postId: postId });
     return NextResponse.json({ message: "Post deleted" }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
