@@ -1,25 +1,23 @@
 import axios from "axios";
 
-interface HandleLikeCommentProps {
-  commentId: string;
-  postId: string;
+interface HandleLikeReplyProps {
+  _id: string;
   setLikes: (updateLikes: (prevLikes: number) => number) => void;
   liked: boolean | undefined;
   setLiked: (liked: boolean | undefined) => void;
 }
-export const handleLikeComment = async ({
-  commentId,
-  postId,
+
+export const handleLikeReply = async ({
+  _id,
   setLikes,
   setLiked,
   liked,
-}: HandleLikeCommentProps) => {
+}: HandleLikeReplyProps) => {
+  setLiked(!liked);
+  setLikes((prevLikes: number) => (!liked ? prevLikes + 1 : prevLikes - 1));
   try {
-    setLiked(!liked);
-    setLikes((prevLikes: number) => (!liked ? prevLikes + 1 : prevLikes - 1));
-    await axios.put(`/api/posts/comments/handleLikeComment`, {
-      commentId,
-      postId,
+    await axios.put("/api/posts/commentReplies/handleLikeReply", {
+      _id,
     });
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

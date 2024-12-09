@@ -10,10 +10,12 @@ export async function GET(req: NextRequest) {
     );
   }
   try {
-    const query = req.nextUrl.searchParams.get("q");
+    let query = req.nextUrl.searchParams.get("q");
     if (!query) {
       return NextResponse.json({ message: "Query not found" }, { status: 404 });
     }
+
+    query = query.trim();
     await connect();
 
     const users = await UserModel.find({ username: { $regex: query , $options: "i" } })

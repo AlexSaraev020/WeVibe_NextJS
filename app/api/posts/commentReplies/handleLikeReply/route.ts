@@ -1,6 +1,6 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
-import { CommentsModel } from "@/models/posts/comments";
+import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
@@ -29,22 +29,13 @@ export async function PUT(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { commentId, postId } = body;
-    if (!commentId || !postId) {
-      return NextResponse.json(
-        { message: "No comment id or post id found" },
-        { status: 400 },
-      );
+    const { _id } = body;
+    if (!_id) {
+      return NextResponse.json({ message: "No id found" }, { status: 400 });
     }
-    const comment = await CommentsModel.findOne({
-      _id: commentId,
-      post: postId,
-    }).exec();
-    if (!comment) {
-      return NextResponse.json(
-        { message: "Comment not found" },
-        { status: 404 },
-      );
+    const reply = await CommentRepliesModel.findOne({ _id }).exec();
+    if (!reply) {
+      return NextResponse.json({ message: "Reply not found" }, { status: 404 });
     }
     const isLoggedInUserIdObject = new Types.ObjectId(loggedUser);
     if (!isLoggedInUserIdObject) {
@@ -53,20 +44,20 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
-    if (comment.likes.includes(isLoggedInUserIdObject)) {
-      await CommentsModel.updateOne(
-        { _id: commentId, post: postId },
+    const isLiked = reply.likes.includes(isLoggedInUserIdObject)
+    if (isLiked) {
+      await CommentRepliesModel.updateOne(
+        { _id: _id },
         { $pull: { likes: isLoggedInUserIdObject } },
-        { new: true },
-      );
-      return NextResponse.json({ message: "Comment unliked" }, { status: 200 });
+      )
+      return NextResponse.json({ message: "Reply unliked" }, { status: 200 });
     } else {
-      await CommentsModel.updateOne(
-        { _id: commentId, post: postId },
+      await CommentRepliesModel.updateOne(
+        { _id: _id },
         { $addToSet: { likes: isLoggedInUserIdObject } },
         { new: true },
       );
-      return NextResponse.json({ message: "Comment liked" }, { status: 200 });
+      return NextResponse.json({ message: "Reply liked" }, { status: 200 });
     }
   } catch (error: unknown) {
     if (error instanceof Error) {

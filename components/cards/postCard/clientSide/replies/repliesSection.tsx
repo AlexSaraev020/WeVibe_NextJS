@@ -23,7 +23,9 @@ export default function RepliesSection({
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [replies, setReplies] = useState<RepliesType[]>([]);
   const [reply, setReply] = useState<string>("");
-  const [addedReplyCounter, setAddedReplyCounter] = useState<number>(commentContent.replies);
+  const [addedReplyCounter, setAddedReplyCounter] = useState<number>(
+    commentContent.replies,
+  );
   const handleSubmitReply = async () => {
     await replyComment({
       postId,
@@ -41,7 +43,7 @@ export default function RepliesSection({
         await getReplies({ postId, commentId: commentContent._id, setReplies });
       })();
     }
-  }, [addedReplyCounter, showReplies, commentContent._id,handleSubmitReply]);
+  }, [addedReplyCounter, showReplies, commentContent._id]);
   return (
     <div className="flex w-full flex-col items-end">
       <div className="flex w-11/12 items-center justify-start gap-4">
@@ -51,7 +53,7 @@ export default function RepliesSection({
         >
           Reply
         </button>
-        {addedReplyCounter && (
+        {addedReplyCounter > 0 && (
           <button
             onClick={() => setShowReplies(!showReplies)}
             className="flex items-end text-xs italic text-white/60 md:text-sm"
@@ -65,7 +67,7 @@ export default function RepliesSection({
         <div className="mt-1 flex w-11/12 items-center justify-start gap-2">
           <Textarea
             name="reply comment"
-            className="py-0 md:py-0.5"
+            className="py-0 md:py-[0.2rem]"
             id="reply comment"
             value={reply}
             placeHolder="Reply..."
@@ -79,14 +81,15 @@ export default function RepliesSection({
           />
           <button
             onClick={handleSubmitReply}
-            className="group flex h-10 items-center justify-center transition-all duration-500 hover:scale-110"
+            className="group flex h-6 items-center justify-center transition-all duration-500 hover:scale-110"
           >
             <LuSend className="h-5 w-6 animate-appear transition-all duration-500 group-hover:text-postBackground/70" />
           </button>
         </div>
       )}
       {addedReplyCounter > 0 && showReplies && (
-        <ul className="w-11/12">
+        <ul className="w-11/12 pt-2
+        ">
           {replies.map((reply: RepliesType) => (
             <ReplyCard reply={reply} key={reply._id} />
           ))}

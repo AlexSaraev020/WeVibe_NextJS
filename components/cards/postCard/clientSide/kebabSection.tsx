@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { allowDelete } from "@/actions/posts/deletion/alllowDelete";
@@ -18,6 +18,8 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [allow, setAllow] = useState<boolean | undefined>(false);
   const router = useRouter();
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (isOpen && userId) {
       (async () => {
@@ -28,6 +30,21 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
   const handleDelete = async () => {
     await deletePost({ postId, createdBy: userId, imageUrl, router });
   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
   return (
     <>
       <button
@@ -37,7 +54,7 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
         <GoKebabHorizontal className="text-2xl text-gray-400 md:text-3xl" />
       </button>
       {isOpen && (
-        <div className="absolute right-4 top-16 z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base">
+        <div ref={menuRef} className="absolute right-4 top-16 z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base">
           {loading ? (
             <AiOutlineLoading className="animate-spin" />
           ) : (

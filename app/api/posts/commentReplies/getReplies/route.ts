@@ -29,6 +29,7 @@ export async function POST(req: Request) {
         model: UserModel,
         select: ["username", "image", "_id"],
       })
+      .lean()
       .exec();
     if (!replies.length) {
       return NextResponse.json(
@@ -36,7 +37,11 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-    return NextResponse.json({ replies: replies }, { status: 200 });
+    const formattedReplies = replies.map((reply) => ({
+      ...reply,
+      likes: reply.likes.length,
+    }))
+    return NextResponse.json({ replies: formattedReplies }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

@@ -1,18 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { CommentType } from "@/types/post/comments/commentsType";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { GoKebabHorizontal, GoStar, GoStarFill } from "react-icons/go";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
-import { handleLikeComment } from "@/actions/posts/comments/handleLikeComment";
-import { getIfLiked } from "@/actions/posts/comments/get_if_liked";
-import RepliesSection from "../replies/repliesSection";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
+import { handleLikeReply } from "@/actions/posts/comments/replies/handleLikeReply";
+import { getIfLikedReply } from "@/actions/posts/comments/replies/getIfLikedReply";
 
 interface ReplyCardProps {
-  reply: RepliesType
+  reply: RepliesType;
 }
 export default function ReplyCard({ reply }: ReplyCardProps) {
   const [likes, setLikes] = useState<number>(reply.likes);
@@ -20,7 +18,7 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
 
   useEffect(() => {
     (async () => {
-
+      await getIfLikedReply({ _id: reply._id, setLiked });
     })();
   }, []);
   const handleDate = (date: string) => {
@@ -28,10 +26,19 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
     const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
     return timeAgo;
   };
-  
+
+  const handleLike = async () => {
+    await handleLikeReply({
+      _id: reply._id,
+      setLikes,
+      setLiked,
+      liked,
+    });
+  };
+
   return (
     <>
-      {liked === undefined ? (
+      {liked !== undefined ? (
         <div className="flex h-fit w-full animate-fadeIn flex-col items-start gap-2 rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
           <div className="flex w-full gap-2">
             <Link
@@ -46,7 +53,7 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
                 height={50}
               />
             </Link>
-            <div className="flex w-full justify-between">
+            <div className="flex w-full items-start justify-between">
               <div className="relative flex flex-1 flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <Link
@@ -60,29 +67,26 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
                   </h6>
                 </div>
                 {reply.content.length > 0 && (
-                  <Long_Text_Truncate
-                    className="w-full"
-                    text={reply.content}
-                  />
+                  <Long_Text_Truncate className="w-full" text={reply.content} />
                 )}
               </div>
 
-              <div className="relative flex h-full w-8 flex-col items-center justify-center">
-                <button className="absolute top-0 flex h-10 w-full items-center justify-center">
+              <div className="relative flex h-full w-8 flex-col items-center justify-start">
+                <button className="flex h-6 w-full items-center justify-center">
                   <GoKebabHorizontal className="h-5 w-6 animate-appear transition-all duration-500" />
                 </button>
                 <button
-                  className="absolute top-5 flex h-10 w-full items-center justify-center"
-                  onClick={() => {}}
+                  className="flex h-6  w-full items-center justify-center"
+                  onClick={handleLike}
                   type="button"
                 >
                   {liked ? (
-                    <GoStarFill className="h-5 w-6 animate-appear fill-sky-500 transition-all duration-500" />
+                    <GoStarFill className="h-5 w-6  animate-appear fill-sky-500 transition-all duration-500" />
                   ) : (
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button className="absolute top-14 flex h-10 w-full items-start justify-center text-xs font-bold">
+                <button className="flex  h-6 w-full items-start justify-center text-xs font-bold">
                   {likes}
                 </button>
               </div>

@@ -24,6 +24,13 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
+
+    if (!comment.trim()) {
+      return NextResponse.json(
+        { message: "Comment cannot start with a space or be empty" },
+        { status: 400 },
+      );
+    }
     
     const validate = validate__Fields__Length({ comment });
     if (validate) {

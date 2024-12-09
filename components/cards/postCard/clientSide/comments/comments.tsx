@@ -2,17 +2,20 @@
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { addComment } from "@/actions/posts/comments/addComment";
-import { CommentType } from "@/types/post/postType";
 import Comment from "./comment";
 import { getComments } from "@/actions/posts/comments/getComments";
 import { AiOutlineLoading } from "react-icons/ai";
 import Textarea from "@/components/forms/formElements/textarea";
 import { LuSend } from "react-icons/lu";
+import { CommentType } from "@/types/post/comments/commentsType";
+import { useAlert } from "@/contexts/alert/alertContext";
 
 interface CommentsSectionProps {
   postId: string;
   setShowComments: (showComments: boolean) => void;
-  setAddedCommentCounter: (updateCounter:(prevCounter: number) => number) => void;
+  setAddedCommentCounter: (
+    updateCounter: (prevCounter: number) => number,
+  ) => void;
   addedCommentCounter: number;
   showComments: boolean;
 }
@@ -27,6 +30,7 @@ export default function CommentsSection({
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<CommentType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { setMessage } = useAlert();
   useEffect(() => {
     const fetchComments = async () => {
       if (showComments) {
@@ -46,6 +50,10 @@ export default function CommentsSection({
   };
   const handleSubmitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!comment.trim()) {
+      setMessage("Comment cannot start with a space or be empty");
+      return;
+    }
     await addComment({ postId, comment, setComment, setAddedCommentCounter });
   };
   return (
@@ -68,14 +76,14 @@ export default function CommentsSection({
         >
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
-        <ul className="flex h-full w-full  flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-none">
+        <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-none">
           {comments && comments.length > 0 ? (
             comments.map((commentContent) => (
               <li
-                className="flex w-full flex-col items-center h-fit justify-center px-2"
+                className="flex h-fit w-full flex-col items-center justify-center px-2"
                 key={commentContent._id}
               >
-                <Comment  postId={postId} commentContent={commentContent} />
+                <Comment postId={postId} commentContent={commentContent} />
               </li>
             ))
           ) : (
@@ -106,7 +114,6 @@ export default function CommentsSection({
             minLength={1}
             maxLength={2000}
             ariaLabel="Comment"
-          
           />
           <button
             type="submit"

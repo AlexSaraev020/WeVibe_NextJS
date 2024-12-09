@@ -37,14 +37,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "No comments" }, { status: 200 });
     }
 
-    const commentsWithLikesCount = comments.map((comment) => ({
+    const formattedComments = comments.map((comment) => ({
       ...comment,
       replies: comment.replies.length,
       likes: comment.likes.length,
     }));
 
     return NextResponse.json(
-      { comments: commentsWithLikesCount },
+      { comments: formattedComments },
       { status: 200 },
     );
   } catch (error: unknown) {
