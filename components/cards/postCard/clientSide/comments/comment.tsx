@@ -9,12 +9,16 @@ import Long_Text_Truncate from "@/components/text/longTextTruncate";
 import { handleLikeComment } from "@/actions/posts/comments/handleLikeComment";
 import { getIfLiked } from "@/actions/posts/comments/getIfLiked";
 import RepliesSection from "../replies/repliesSection";
+import KebabSection from "../kebabSection";
 
 interface CommentProps {
   commentContent: CommentType;
   postId: string;
+  setAddedCommentCounter: (
+    updateCounter: (prevCounter: number) => number,
+  ) => void;
 }
-export default function Comment({ commentContent, postId }: CommentProps) {
+export default function Comment({ commentContent, postId, setAddedCommentCounter }: CommentProps) {
   const [likes, setLikes] = useState<number>(commentContent.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
 
@@ -77,9 +81,13 @@ export default function Comment({ commentContent, postId }: CommentProps) {
               </div>
 
               <div className="relative flex h-full w-8 flex-col items-center justify-center">
-                <button className="flex h-6 w-full items-center justify-center">
-                  <GoKebabHorizontal className="h-5 w-6 animate-appear transition-all duration-500" />
-                </button>
+                <KebabSection
+                  postId={postId}
+                  setAddedCommentCounter={setAddedCommentCounter}
+                  type="comment"
+                  commentId={commentContent._id}
+                  userId={commentContent.user._id}
+                />
                 <button
                   className="flex h-6 w-full items-center justify-center"
                   onClick={handleLike}
@@ -91,7 +99,7 @@ export default function Comment({ commentContent, postId }: CommentProps) {
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button className=" flex h-6 w-full items-start justify-center text-xs font-bold">
+                <button className="flex h-6 w-full items-start justify-center text-xs font-bold">
                   {likes}
                 </button>
               </div>

@@ -8,23 +8,30 @@ import KebabSection from "./clientSide/kebabSection";
 export default function Post({ post }: { post: PostType }) {
   return (
     <div className="relative mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
-      <KebabSection imageUrl={post.image} postId={post._id} userId={post.createdBy._id} />
-      <div className="flex w-full animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
-        <Link
-          href={`/profile?user=${post.createdBy._id}`}
-          className="flex items-center justify-center text-sm font-bold md:text-lg"
-        >
-          <Image
-            src={post.createdBy.image}
-            alt={post.createdBy.username}
-            className="h-9 w-9 rounded-full p-1 md:h-14 md:w-14 object-cover md:p-3"
-            width={400}
-            height={400}
-          />
+      <div className="flex w-full justify-between">
+        <div className="flex w-fit animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
+          <Link
+            href={`/profile?user=${post.createdBy._id}`}
+            className="flex items-center justify-center text-sm font-bold md:text-lg"
+          >
+            <Image
+              src={post.createdBy.image}
+              alt={post.createdBy.username}
+              className="h-9 w-9 rounded-full object-cover p-1 md:h-14 md:w-14 md:p-3"
+              width={400}
+              height={400}
+            />
 
-          {post.createdBy.username}
-        </Link>
-        <p className="ml-2 text-sm text-gray-400 md:text-lg">{post.title}</p>
+            {post.createdBy.username}
+          </Link>
+          <p className="ml-2 text-sm text-gray-400 md:text-lg">{post.title}</p>
+        </div>
+        <KebabSection
+          type="post"
+          imageUrl={post.image}
+          postId={post._id}
+          userId={post.createdBy._id}
+        />
       </div>
       <div className="relative w-full animate-fadeIn bg-zinc-950 transition-all duration-500 md:p-0">
         <Image

@@ -58,7 +58,7 @@ export default function RepliesSection({
             onClick={() => setShowReplies(!showReplies)}
             className="flex items-end text-xs italic text-white/60 md:text-sm"
           >
-            show replies
+            {showReplies ? "Hide replies" : "Show replies"}
             <MdKeyboardArrowDown className="h-4 w-4" />
           </button>
         )}
@@ -88,8 +88,7 @@ export default function RepliesSection({
         </div>
       )}
       {addedReplyCounter > 0 && showReplies && (
-        <ul className="w-11/12 pt-2
-        ">
+        <ul className="w-11/12 pt-2 flex flex-col gap-2">
           {replies.map((reply: RepliesType) => (
             <ReplyCard reply={reply} key={reply._id} />
           ))}

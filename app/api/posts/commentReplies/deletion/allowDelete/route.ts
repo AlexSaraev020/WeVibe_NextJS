@@ -1,6 +1,6 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
-import { PostModel } from "@/models/posts/post";
+import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -15,27 +15,33 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId } = body;
-    if (!postId) {
+    const { _id } = body;
+    if (!_id) {
       return NextResponse.json(
-        { message: "No post id found" },
+        { message: "No reply id or comment id found" },
         { status: 400 },
       );
     }
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
     await connect();
-    const post = await PostModel.findById({ _id: postId }).exec();
-    const isAllowed = post?.createdBy._id.equals(loggedUser);
+    const reply = await CommentRepliesModel.findOne({ _id }).exec();
+    if (!reply) {
+      return NextResponse.json({ message: "Reply not found" }, { status: 404 });
+    }
+    const isAllowed = reply.user.toString() === isLoggedIn.toString();
     return NextResponse.json({ allow: isAllowed }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return NextResponse.json({ message: error.message }, { status: 500 });
+      return NextResponse.json(
+        { message: "An error occurred", error: error.message },
+        { status: 500 },
+      );
     }
     return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }

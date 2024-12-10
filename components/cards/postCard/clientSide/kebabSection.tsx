@@ -7,28 +7,72 @@ import { allowDelete } from "@/actions/posts/deletion/alllowDelete";
 import { deletePost } from "@/actions/posts/deletion/delete";
 import { useRouter } from "next/navigation";
 import { AiOutlineLoading } from "react-icons/ai";
+import { KebabSectionCombinedProps } from "@/types/post/kebabSection";
+import { allowDeleteComment } from "@/actions/posts/comments/deletion/allowDeleteComment";
+import { deleteComment } from "@/actions/posts/comments/deletion/deleteComment";
+import { allowDeleteReply } from "@/actions/posts/comments/replies/deletion/allowDeleteRply";
 
-interface Props {
-  userId: string;
-  postId: string;
-  imageUrl: string;
-}
-export default function KebabSection({ userId, postId, imageUrl }: Props) {
+export default function KebabSection(props: KebabSectionCombinedProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [allow, setAllow] = useState<boolean | undefined>(false);
+  const [allow, setAllow] = useState<boolean>(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (isOpen && userId) {
-      (async () => {
-        await allowDelete({ userId, setAllow, setLoading });
-      })();
+    switch (props.type) {
+      case "post":
+        if (isOpen) {
+          (async () => {
+            await allowDelete({ postId: props.postId, setAllow, setLoading });
+          })();
+        }
+        break;
+      case "comment":
+        if (isOpen) {
+          (async () => {
+            await allowDeleteComment({
+              commentId: props.commentId,
+              setAllow,
+              setLoading,
+            });
+          })();
+        }
+        break;
+      case "reply":
+        if (isOpen) {
+          (async () => {
+            await allowDeleteReply({
+              _id: props._id,
+              setAllow,
+              setLoading,
+            });
+          })();
+        }
+        break;
     }
-  }, [userId, isOpen]);
+  }, [isOpen]);
   const handleDelete = async () => {
-    await deletePost({ postId, createdBy: userId, imageUrl, router });
+    switch (props.type) {
+      case "post":
+        await deletePost({
+          postId: props.postId,
+          createdBy: props.userId,
+          imageUrl: props.imageUrl,
+          router,
+        });
+        break;
+      case "comment":
+        await deleteComment({
+          commentId: props.commentId,
+          postId: props.postId,
+          setAddedCommentCounter: props.setAddedCommentCounter,
+        });
+        break;
+      case "reply":
+        console.log("reply");
+        break;
+    }
   };
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,12 +93,15 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute right-4 top-3 z-20 rounded-full p-1"
+        className="z-20 rounded-full p-1"
       >
-        <GoKebabHorizontal className="text-2xl text-gray-400 md:text-3xl" />
+        <GoKebabHorizontal className={`h-6 w-6 text-white md:text-3xl`} />
       </button>
       {isOpen && (
-        <div ref={menuRef} className="absolute right-4 top-16 z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base">
+        <div
+          ref={menuRef}
+          className={`absolute ${props.type === "post" ? "right-4 top-16" : "right-0 top-8"} z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base`}
+        >
           {loading ? (
             <AiOutlineLoading className="animate-spin" />
           ) : (
@@ -63,16 +110,21 @@ export default function KebabSection({ userId, postId, imageUrl }: Props) {
                 onClick={handleDelete}
                 className="z-50 flex items-center gap-1 hover:text-gray-100"
               >
-                <h2>Delete</h2> <FaRegTrashAlt className="h-4 w-4" />
+                <h2
+                  className={`${props.type === "post" ? "text-xs md:text-base" : ""}`}
+                >
+                  Delete
+                </h2>{" "}
+                <FaRegTrashAlt className="h-3 w-3 md:h-4 md:w-4" />
               </button>
             )
           )}
           {!loading && (
             <Link
-              href={`/profile?user=${userId}`}
-              className="hover:text-gray-100"
+              href={`/profile?user=${props.userId}`}
+              className={`${props.type === "post" ? "text-xs md:text-base" : ""} hover:text-gray-100`}
             >
-              Go to profile
+              Profile
             </Link>
           )}
         </div>

@@ -8,6 +8,7 @@ import Long_Text_Truncate from "@/components/text/longTextTruncate";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { handleLikeReply } from "@/actions/posts/comments/replies/handleLikeReply";
 import { getIfLikedReply } from "@/actions/posts/comments/replies/getIfLikedReply";
+import KebabSection from "../kebabSection";
 
 interface ReplyCardProps {
   reply: RepliesType;
@@ -72,9 +73,7 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
               </div>
 
               <div className="relative flex h-full w-8 flex-col items-center justify-start">
-                <button className="flex h-6 w-full items-center justify-center">
-                  <GoKebabHorizontal className="h-5 w-6 animate-appear transition-all duration-500" />
-                </button>
+                <KebabSection type="reply" userId={reply.user._id} _id={reply._id} />
                 <button
                   className="flex h-6  w-full items-center justify-center"
                   onClick={handleLike}

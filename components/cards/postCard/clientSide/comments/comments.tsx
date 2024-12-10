@@ -83,7 +83,7 @@ export default function CommentsSection({
                 className="flex h-fit w-full flex-col items-center justify-center px-2"
                 key={commentContent._id}
               >
-                <Comment postId={postId} commentContent={commentContent} />
+                <Comment setAddedCommentCounter={setAddedCommentCounter} postId={postId} commentContent={commentContent} />
               </li>
             ))
           ) : (

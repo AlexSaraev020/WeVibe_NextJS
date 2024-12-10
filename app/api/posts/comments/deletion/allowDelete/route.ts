@@ -37,17 +37,12 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-    const isAllowed = comment.user.toString() === loggedUser;
-    if (isAllowed) {
-      return NextResponse.json(
-        { message: "You can delete this comment", allow: isAllowed },
-        { status: 200 },
-      );
-    }
+    const isAllowed = comment.user.toString() === loggedUser.toString();
+    console.log(isAllowed);
     return NextResponse.json(
       {
-        message: "You are not allowed to delete this comment",
         allow: isAllowed,
+        message: `You ${isAllowed ? "can" : "cannot"} delete this comment`,
       },
       { status: 200 },
     );

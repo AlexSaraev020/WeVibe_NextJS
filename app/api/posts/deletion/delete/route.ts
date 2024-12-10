@@ -38,7 +38,10 @@ export async function DELETE(req: Request) {
       );
     }
     await PostModel.findByIdAndDelete(postId);
-    await UserModel.updateMany({}, { $pull: { posts: postId } });
+    await UserModel.updateMany(
+      { _id: loggedUser  },
+      { $pull: { posts: postId } },
+    );
     await CommentsModel.deleteMany({ post: postId });
     await CommentRepliesModel.deleteMany({ postId: postId });
     return NextResponse.json({ message: "Post deleted" }, { status: 200 });

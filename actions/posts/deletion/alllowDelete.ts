@@ -1,14 +1,14 @@
 import axios from "axios";
 interface AllowDeleteProps {
-  userId: string;
+  postId: string;
   setAllow: (allow: boolean) => void;
   setLoading: (loading: boolean) => void;
 }
 
-export async function allowDelete({ userId, setAllow , setLoading }: AllowDeleteProps) {
+export async function allowDelete({ postId, setAllow , setLoading }: AllowDeleteProps) {
   try {
     const response = await axios.post(`/api/posts/deletion/allowDelete`, {
-      createdBy: userId,
+      postId
     });
     if (response.status < 300) {
       setLoading(false);
