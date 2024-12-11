@@ -18,6 +18,7 @@ export const getReplies = async ({ postId, commentId, setReplies }: GetRepliesPr
     return [];
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
+      setReplies([]);
       return error.response.data;
     }
     console.error("Error adding comment:", error);

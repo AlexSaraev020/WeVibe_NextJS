@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
     const replies = await CommentRepliesModel.find({ commentId, postId })
       .sort({ createdAt: -1 })
-      .select("-__v -commentId -postId")
+      .select("-__v -postId")
       .populate({
         path: "user",
         model: UserModel,

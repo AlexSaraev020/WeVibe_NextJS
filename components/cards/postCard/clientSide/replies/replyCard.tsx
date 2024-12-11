@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { GoKebabHorizontal, GoStar, GoStarFill } from "react-icons/go";
+import { GoStar, GoStarFill } from "react-icons/go";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { handleLikeReply } from "@/actions/posts/comments/replies/handleLikeReply";
@@ -12,8 +12,11 @@ import KebabSection from "../kebabSection";
 
 interface ReplyCardProps {
   reply: RepliesType;
+  setAddedReplyCounter: (
+    updateCounter: (prevCounter: number) => number,
+  ) => void;
 }
-export default function ReplyCard({ reply }: ReplyCardProps) {
+export default function ReplyCard({ reply,setAddedReplyCounter }: ReplyCardProps) {
   const [likes, setLikes] = useState<number>(reply.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
 
@@ -73,7 +76,7 @@ export default function ReplyCard({ reply }: ReplyCardProps) {
               </div>
 
               <div className="relative flex h-full w-8 flex-col items-center justify-start">
-                <KebabSection type="reply" userId={reply.user._id} _id={reply._id} />
+                <KebabSection setAddedReplyCounter={setAddedReplyCounter} type="reply" commentId={reply.commentId} userId={reply.user._id} _id={reply._id} />
                 <button
                   className="flex h-6  w-full items-center justify-center"
                   onClick={handleLike}

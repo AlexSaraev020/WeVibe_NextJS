@@ -88,9 +88,9 @@ export default function RepliesSection({
         </div>
       )}
       {addedReplyCounter > 0 && showReplies && (
-        <ul className="w-11/12 pt-2 flex flex-col gap-2">
+        <ul className="flex w-11/12 flex-col gap-2 pt-2">
           {replies.map((reply: RepliesType) => (
-            <ReplyCard reply={reply} key={reply._id} />
+            <ReplyCard setAddedReplyCounter={setAddedReplyCounter} reply={reply} key={reply._id} />
           ))}
         </ul>
       )}

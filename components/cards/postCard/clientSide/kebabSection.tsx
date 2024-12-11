@@ -11,6 +11,7 @@ import { KebabSectionCombinedProps } from "@/types/post/kebabSection";
 import { allowDeleteComment } from "@/actions/posts/comments/deletion/allowDeleteComment";
 import { deleteComment } from "@/actions/posts/comments/deletion/deleteComment";
 import { allowDeleteReply } from "@/actions/posts/comments/replies/deletion/allowDeleteRply";
+import { deleteReply } from "@/actions/posts/comments/replies/deletion/deleteReply";
 
 export default function KebabSection(props: KebabSectionCombinedProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -70,7 +71,11 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
         });
         break;
       case "reply":
-        console.log("reply");
+        await deleteReply({
+          replyId: props._id,
+          commentId: props.commentId,
+          setAddedReplyCounter: props.setAddedReplyCounter,
+        });
         break;
     }
   };

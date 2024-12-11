@@ -5,5 +5,6 @@ export interface RepliesType {
   content: string;
   user: UserType;
   createdAt: string;
+  commentId: string;
   likes: number;
 }
