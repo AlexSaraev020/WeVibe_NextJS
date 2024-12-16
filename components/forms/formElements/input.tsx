@@ -82,7 +82,7 @@ export default function FormInput({
           <button
             type="button"
             onClick={() => setHidePass(!hidePass)}
-            className="absolute right-3 top-1/2 -translate-y-1/2"
+            className="absolute  h-full w-6 md:w-8 right-0 top-1/2 -translate-y-1/2"
           >
             {hidePass ? (
               <GoEye className="h-3 w-3 text-postBackground/80 md:h-5 md:w-5" />

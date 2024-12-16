@@ -7,6 +7,7 @@ import ProfileFollowers from "@/components/profile/clientSide/profileInformation
 import ProfilePictureZoom from "@/components/profile/clientSide/profileInformation/profilePictureZoom";
 import ProfileFollowing from "@/components/profile/clientSide/profileInformation/profileFollowing";
 import ProfilePosts from "@/components/profile/clientSide/profilePosts";
+import { UserType } from "@/types/userTypes/user/userType";
 
 export default async function Page(props: {
   searchParams: Promise<{ user: string }>;
@@ -14,50 +15,51 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   const userId = searchParams.user;
   const response = await getUserProfile(userId);
+  const user = response.data.user as UserType
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
       {response.status === 200 ? (
         <div className="mt-10 flex h-full w-11/12 flex-col items-center justify-center gap-10 pb-4 md:w-full">
           <div className="flex w-full items-start justify-center gap-4 p-4 md:w-4/12">
             <div className="w-fit">
-              <ProfilePictureZoom image={response.data.user.image} />
+              <ProfilePictureZoom image={user.image.url} />
             </div>
             <div className="mt-4 flex flex-col">
               <div className="flex items-center gap-4 md:gap-8">
                 <h1 className="truncate text-lg font-semibold md:text-3xl">
-                  {response.data.user.username}
+                  {user.username}
                 </h1>
-                <ProfileActionsButtons user={response.data.user} />
+                <ProfileActionsButtons user={user} />
               </div>
               <div className="mt-1 flex gap-2 md:mt-4 md:gap-6">
                 <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
                   <h2 className="text-sm font-bold md:text-xl">
-                    {response.data.user.posts}
+                    {user.posts}
                   </h2>
                   <p className="text-md md:text-lg">Posts</p>
                 </div>
                 <ProfileFollowers
                   userId={userId}
-                  followers={response.data.user.followers}
+                  followers={user.followers}
                 />
                 <ProfileFollowing
                   userId={userId}
-                  following={response.data.user.following}
+                  following={user.following}
                 />
               </div>
-              {response.data.user.bio.length > 0 && (
+              {user.bio.length > 0 && (
                 <Long_Text_Truncate
                   className="hidden text-white/50 md:block"
-                  text={response.data.user.bio}
+                  text={user.bio}
                 />
               )}
             </div>
           </div>
 
-          {response.data.user.bio.length > 0 && (
+          {user.bio.length > 0 && (
             <Long_Text_Truncate
               className="-mt-10 block w-11/12 text-white/20 sm:w-8/12 md:hidden"
-              text={response.data.user.bio}
+              text={user.bio}
             />
           )}
           <div className="flex items-center justify-center gap-4">

@@ -25,7 +25,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
             >
               <Image
                 className="relative z-10 h-40 w-full object-cover md:h-80"
-                src={post.image}
+                src={post.image.url}
                 alt="image"
                 priority
                 width={1080}

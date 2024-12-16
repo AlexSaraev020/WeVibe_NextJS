@@ -29,11 +29,11 @@ export default function Alert() {
     }
   }, [message]);
   return (
-    <>
+    <div className="fixed z-50 bottom-2 flex w-full items-center justify-center md:justify-end">
       {message && message?.length > 0 && (
         <div
           className={twMerge(
-            "fixed z-50 bottom-2 flex min-w-60 max-w-80 animate-fadeIn flex-col items-center justify-center gap-2 rounded-xl border-2 bg-transparent p-2 transition-all duration-500 md:bottom-5 md:right-5 md:py-4",
+            " z-50 flex min-w-60 max-w-80 animate-fadeIn flex-col items-center justify-center gap-2 rounded-xl border-2 bg-transparent p-2 transition-all duration-500 md:py-4",
             error
               ? "border-red-500 border-red-500/80 text-red-100 shadow-red-500"
               : "border-sky-500 border-sky-500/80 text-sky-100 shadow-sky-500",
@@ -56,6 +56,6 @@ export default function Alert() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

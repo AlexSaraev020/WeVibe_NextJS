@@ -1,3 +1,4 @@
+import { UserType } from "@/types/userTypes/user/userType";
 import axios from "axios";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
@@ -7,7 +8,7 @@ export const getUserProfile = async (userId: string) => {
       `${url}/api/user/getUserProfile?user=${userId}`
     );
 
-    return response;
+    return response
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

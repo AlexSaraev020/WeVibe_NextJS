@@ -52,7 +52,7 @@ export default function Comment({ commentContent, postId, setAddedCommentCounter
               href={`/profile?user=${commentContent.user._id}`}
             >
               <Image
-                src={commentContent.user.image}
+                src={commentContent.user.image.url}
                 alt="Profile"
                 className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
                 width={50}

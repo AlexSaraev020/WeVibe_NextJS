@@ -5,12 +5,12 @@ import { NextResponse } from "next/server";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 
 export async function POST(req: Request) {
+  
+  if (req.method !== "POST") {
+    return NextResponse.json({ message: "Method not allowed" });
+  }
   try {
     await connect();
-
-    if (req.method !== "POST") {
-      return NextResponse.json({ message: "Method not allowed" });
-    }
     const body = await req.json();
 
     const { username, email, password } = body;

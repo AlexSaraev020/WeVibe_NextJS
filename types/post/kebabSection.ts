@@ -1,3 +1,5 @@
+import { ImageType } from "../image/imageType";
+
 export interface KebabSectionProps {
   type: "post" | "comment" | "reply";
 }
@@ -6,7 +8,7 @@ export type PostKebabSectionProps = KebabSectionProps & {
   type: "post";
   userId: string;
   postId: string;
-  imageUrl: string;
+  image:ImageType;
 };
 
 export type CommentKebabSectionProps = KebabSectionProps & {

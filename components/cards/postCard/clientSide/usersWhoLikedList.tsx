@@ -53,7 +53,7 @@ export default function UsersList({
                 key={likedBy._id}
                 id={likedBy._id}
                 username={likedBy.username}
-                image={likedBy.image}
+                image={likedBy.image.url}
               />
             ))
           ) : loading ? (

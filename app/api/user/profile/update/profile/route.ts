@@ -4,8 +4,8 @@ import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  if (req.method !== "PUT") {
+export async function PATCH(req: Request) {
+  if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },

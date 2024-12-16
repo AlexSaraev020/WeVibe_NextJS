@@ -1,17 +1,19 @@
 import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { deleteImage } from "./deleteImage";
+import { ImageType } from "@/types/image/imageType";
 
 interface DeletePostProps {
   postId: string;
   createdBy: string;
-  imageUrl: string;
+  image: ImageType;
   router:AppRouterInstance
 }
 
 export const deletePost = async ({
   postId,
   createdBy,
-  imageUrl,
+  image,
   router
 }: DeletePostProps) => {
   try {
@@ -22,11 +24,7 @@ export const deletePost = async ({
       },
     });
     if (response.status < 300) {
-      await axios.delete(`api/uploadthing`, {
-        data: {
-          url: imageUrl,
-        },
-      });
+      await deleteImage(image);
       router.refresh();
       return response.data.message;
     }

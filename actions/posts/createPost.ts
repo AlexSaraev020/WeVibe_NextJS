@@ -1,10 +1,11 @@
+import { ImageType } from "@/types/image/imageType";
 import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface CreatePostProps {
   title: string;
   description: string;
-  image: string;
+  image: ImageType | undefined;
   setMessage: (message: string | undefined) => void;
   setError: (erorr: boolean) => void;
   router: AppRouterInstance;

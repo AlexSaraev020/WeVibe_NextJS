@@ -1,16 +1,18 @@
+import { ImageType } from "@/types/image/imageType";
 import axios from "axios";
 import { set } from "mongoose";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { deleteImage } from "../posts/deletion/deleteImage";
 
 interface UpdateProfileProps {
   username: string;
   bio: string;
-  image: string | null;
-  currentImage: string;
+  image: ImageType | undefined;
+  currentImage: ImageType;
   router: AppRouterInstance;
   setEdit: (edit: boolean) => void;
   setMessage: (message: string | undefined) => void;
-  setUserImage: (userImage: string) => void;
+  setUserImage: (userImage: ImageType) => void;
   setUsername: (username: string) => void;
   setError: (error: boolean) => void;
 }
@@ -27,7 +29,7 @@ export const updateProfile = async ({
   setEdit,
 }: UpdateProfileProps) => {
   try {
-    const response = await axios.put("/api/user/profile/update/profile", {
+    const response = await axios.patch("/api/user/profile/update/profile", {
       username,
       bio,
       image,
@@ -42,15 +44,11 @@ export const updateProfile = async ({
     }
     if (
       response.data.imageUpdated === true &&
-      currentImage !==
-        "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe"
+      currentImage.url !== "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp" && 
+      currentImage.fileId !== "675fef71e375273f6052bf73"
     ) {
       setUserImage(response.data.image);
-      await axios.delete(`api/uploadthing`, {
-        data: {
-          url: currentImage,
-        },
-      });
+      await deleteImage(currentImage);
 
       router.push("/home");
       setMessage(response.data.message);

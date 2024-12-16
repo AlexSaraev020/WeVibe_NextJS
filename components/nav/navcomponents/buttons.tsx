@@ -1,6 +1,5 @@
 import { IoSearch } from "react-icons/io5";
 import { FaCirclePlus } from "react-icons/fa6";
-import { IoLogOut } from "react-icons/io5";
 import Image, { StaticImageData } from "next/image";
 import { toggleFunctionsProps } from "@/actions/componentActions/nav/toggleFunctions";
 

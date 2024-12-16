@@ -6,7 +6,10 @@ export interface User extends Document {
   email: string;
   password: string;
   bio: string;
-  image: string;
+  image: {
+    url: string;
+    fileId: string;
+  };
   following: Types.ObjectId[];
   followers: Types.ObjectId[];
   posts: Types.ObjectId[];
@@ -17,11 +20,15 @@ const UserSchema = new Schema<User>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  bio: { type: String , default: "" },
+  bio: { type: String, default: "" },
   image: {
-    type: String,
-    default:
-      "https://utfs.io/f/0Ow274erzkuprXsskPX5iHvEWP0IfbBAOy328zVgFMk5Lcxe",
+    url: {
+      type: String,
+      required: true,
+      default:
+        "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp",
+    },
+    fileId: { type: String, required: true, default: "675fef71e375273f6052bf73" },
   },
   following: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   followers: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],

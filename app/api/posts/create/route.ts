@@ -12,7 +12,7 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    await connect();
+
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -37,12 +37,17 @@ export async function POST(req: Request) {
         { status: 401 },
       );
     }
+    await connect();
     const newPost = await PostModel.create({
       title,
       description,
-      image,
+      image: {
+        url: image.url,
+        fileId: image.fileId,
+      },
       createdBy: userId,
     });
+    console.log(newPost);
 
     if (!newPost) {
       return NextResponse.json(
@@ -56,7 +61,10 @@ export async function POST(req: Request) {
       { $push: { posts: newPost._id } },
     );
 
-    return NextResponse.json({ message:"Post created successfully!" }, { status: 201 });
+    return NextResponse.json(
+      { message: "Post created successfully!" },
+      { status: 201 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(
@@ -64,6 +72,6 @@ export async function POST(req: Request) {
         { status: 500 },
       );
     }
-    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
+    return NextResponse.json({ message: "An error occurred", error }, { status: 500 });
   }
 }

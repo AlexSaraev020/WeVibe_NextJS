@@ -23,7 +23,7 @@ export default function Nav() {
   );
   const path = usePathname();
   const router = useRouter();
-  const { userImage, username, setUserImage,setUsername } = useUserNavData();
+  const { userImage, username, setUserImage, setUsername } = useUserNavData();
   const [showCreatePost, setShowCreatePost] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>("");
@@ -34,14 +34,16 @@ export default function Nav() {
       setShowCreatePost(false);
       setShowSearch(false);
     }
-    fetchUserWithTimeout({
-      setUserId,
-      setUsername,
-      setUserImage,
-      paths,
-      path,
-      router,
-    });
+    (async () => {
+      await fetchUserWithTimeout({
+        setUserId,
+        setUsername,
+        setUserImage,
+        paths,
+        path,
+        router,
+      });
+    })();
   }, [router, path, paths]);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function Nav() {
     handleSearch: handleSearch,
     handleProfile: handleProfile,
     userName: isLoaded ? username : "Profile",
-    profilePicture: userImage ? userImage : ProfilePlaceholder,
+    profilePicture: userImage.url ? userImage.url : ProfilePlaceholder,
   });
 
   useEffect(() => {

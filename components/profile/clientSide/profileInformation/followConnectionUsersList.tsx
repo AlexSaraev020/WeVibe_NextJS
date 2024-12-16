@@ -68,7 +68,7 @@ export default function UsersList({
                 key={user._id}
                 id={user._id}
                 username={user.username}
-                image={user.image}
+                image={user.image.url}
               />
             ))
           ) : loading ? (

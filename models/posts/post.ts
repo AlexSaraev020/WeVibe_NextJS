@@ -1,9 +1,13 @@
+import { ImageType } from "@/types/image/imageType";
 import { Document, model, Model, models, Schema, Types } from "mongoose";
 export interface Post extends Document {
   _id: Types.ObjectId;
   title: string;
   description: string;
-  image: string;
+  image:{
+    url: string;
+    fileId: string
+  };
   createdAt: Date;
   createdBy: Types.ObjectId;
   comments: Types.ObjectId[];
@@ -14,12 +18,8 @@ const PostSchema = new Schema<Post>({
   title: { type: String, required: true, maxlength: 100 },
   description: { type: String, default: "", maxlength: 500 },
   image: {
-    type: String,
-    required: true,
-    validate: {
-      validator: (v) => /^https?:\/\/.+/.test(v),
-      message: "Invalid URL format",
-    },
+    url: { type: String, required: true },
+    fileId: { type: String , required: true },
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: {

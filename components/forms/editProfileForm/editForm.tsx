@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ShinyButton from "@/components/buttons/shinyButton";
 import { IoClose } from "react-icons/io5";
-import { UploadDropzone } from "@/utils/uploadthing";
-import axios from "axios";
 import { updateProfile } from "@/actions/profile/updateProfile";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -13,6 +11,9 @@ import Textarea from "@/components/forms/formElements/textarea";
 import { useAlert } from "@/contexts/alert/alertContext";
 import { useUserNavData } from "@/contexts/user/userNavContext";
 import { updateAccount } from "@/actions/profile/updateAccount";
+import { deleteImage } from "@/actions/posts/deletion/deleteImage";
+import { ImageType } from "@/types/image/imageType";
+import Upload from "@/components/uploadImage/upload";
 interface EditFormProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
@@ -34,19 +35,17 @@ export default function EditForm({
   const [email, setEmail] = useState<string>(user.email);
   const [password, setPassword] = useState<string>("");
   const [bio, setBio] = useState<string>(user.bio);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<ImageType | undefined>(undefined);
   const [progress, setProgress] = useState<number>(0);
   const { setMessage, setError } = useAlert();
-  const {setUsername,setUserImage} = useUserNavData();
+  const { setUsername, setUserImage } = useUserNavData();
   const [disable, setDisable] = useState<boolean>(false);
   const router = useRouter();
   const cancelProfileUpdate = async () => {
     try {
       if (image) {
-        await axios.delete("api/uploadthing", {
-          data: { url: image },
-        });
-        setImage("");
+        await deleteImage(image);
+        setImage(undefined);
       }
       setEdit(false);
     } catch (error) {
@@ -56,7 +55,8 @@ export default function EditForm({
 
   const handleSave = async () => {
     {
-      profile && !account &&
+      profile &&
+        !account &&
         (await updateProfile({
           username,
           setMessage,
@@ -65,20 +65,20 @@ export default function EditForm({
           setError,
           setEdit,
           bio,
-          image: image && image?.length > 0 ? image : user.image,
+          image: image ? image : undefined,
           currentImage: user.image,
           router,
         }));
-      account && !profile &&(
-        await updateAccount({
+      account &&
+        !profile &&
+        (await updateAccount({
           email,
           password,
           router,
           setEdit,
           setMessage,
           setError,
-        })
-      )
+        }));
     }
   };
   return (
@@ -93,7 +93,7 @@ export default function EditForm({
               "absolute h-10 w-16 rounded-full bg-postBackground/50 transition-all duration-500 md:h-12 md:w-20",
               !account ? "-translate-x-1/2" : "translate-x-1/2",
             )}
-          />{" "}
+          />
           <button
             type="button"
             className={twMerge(
@@ -123,54 +123,26 @@ export default function EditForm({
         {profile && (
           <>
             <div className="relative flex w-11/12 items-center justify-center">
-              <UploadDropzone
-                config={{
-                  mode: "auto",
-                }}
-                appearance={{
-                  container: {
-                    borderRadius: "50%",
-                  },
-                  button: {
-                    display: "none",
-                  },
-                  uploadIcon: {
-                    display: "none",
-                  },
-                  label: {
-                    display: "none",
-                  },
-                  allowedContent: {
-                    display: "none",
-                  },
-                }}
-                onClientUploadComplete={(res) => {
-                  setImage(res[0].url);
-                  setDisable(false);
-                  setMessage("Image uploaded")
-                }}
-                onUploadError={(error: Error) => {
-                  setMessage(error.message);
-                }}
-                onUploadProgress={(progress) => {
-                  setProgress(progress);
-                }}
-                onUploadBegin={() => {
-                  setDisable(true);
-                }}
-                className="h-22 w-22 absolute z-30 rounded-full border-none transition-all duration-500 hover:cursor-pointer md:h-44 md:w-44"
-                endpoint="imageUploader"
+              {/* profile image upload */}
+              <Upload
+                profile
+                setImage={setImage}
+                setMessage={setMessage}
+                setProgress={setProgress}
+                setDisable={setDisable}
+                image={image}
               />
+
               <div className="relative h-20 w-20 md:h-40 md:w-40">
                 <Image
-                  src={image ? image : user.image}
+                  src={image ? image.url : user.image.url}
                   width={100}
                   height={100}
                   alt="profile"
                   className="absolute z-20 h-full w-full rounded-full object-contain"
                 />
                 <Image
-                  src={image ? image : user.image}
+                  src={image ? image.url : user.image.url}
                   width={100}
                   height={100}
                   alt="profile"

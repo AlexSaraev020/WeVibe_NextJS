@@ -59,7 +59,7 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
         await deletePost({
           postId: props.postId,
           createdBy: props.userId,
-          imageUrl: props.imageUrl,
+          image: props.image,
           router,
         });
         break;

@@ -15,7 +15,7 @@ export default function Post({ post }: { post: PostType }) {
             className="flex items-center justify-center text-sm font-bold md:text-lg"
           >
             <Image
-              src={post.createdBy.image}
+              src={post.createdBy.image.url}
               alt={post.createdBy.username}
               className="h-9 w-9 rounded-full object-cover p-1 md:h-14 md:w-14 md:p-3"
               width={400}
@@ -28,14 +28,14 @@ export default function Post({ post }: { post: PostType }) {
         </div>
         <KebabSection
           type="post"
-          imageUrl={post.image}
+          image={post.image}
           postId={post._id}
           userId={post.createdBy._id}
         />
       </div>
       <div className="relative w-full animate-fadeIn bg-zinc-950 transition-all duration-500 md:p-0">
         <Image
-          src={post.image}
+          src={post.image.url}
           priority
           alt="Image"
           className="relative max-h-[20rem] object-contain md:max-h-[40rem]"
@@ -43,7 +43,7 @@ export default function Post({ post }: { post: PostType }) {
           height={1080}
         />
         <Image
-          src={post.image}
+          src={post.image.url}
           alt="ImageBackground"
           className="absolute inset-0 -z-10 max-h-[20rem] opacity-20 blur-sm md:max-h-[40rem]"
           width={1080}

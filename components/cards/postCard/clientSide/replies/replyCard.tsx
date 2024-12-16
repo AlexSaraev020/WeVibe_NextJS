@@ -50,7 +50,7 @@ export default function ReplyCard({ reply,setAddedReplyCounter }: ReplyCardProps
               href={`/profile?user=${reply.user._id}`}
             >
               <Image
-                src={reply.user.image}
+                src={reply.user.image.url}
                 alt="Profile"
                 className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
                 width={50}

@@ -1,9 +1,10 @@
 import { getUser } from "@/actions/user/searchUser";
+import { ImageType } from "@/types/image/imageType";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface FetchUserWithTimeoutProps {
   setUserId: (userId: string) => void;
-  setUserImage: (userImage: string) => void;
+  setUserImage: (userImage: ImageType) => void;
   setUsername: (username: string) => void;
   paths: string[];
   path: string;
@@ -48,7 +49,7 @@ export const fetchUserWithTimeout = async ({
     }
   } else {
     setUserId("");
-    setUserImage("");
+    setUserImage({} as ImageType);
     setUsername("");
   }
 };

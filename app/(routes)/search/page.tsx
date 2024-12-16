@@ -20,7 +20,7 @@ export default async function Page(
               key={user._id}
               id={user._id}
               username={user.username}
-              image={user.image}
+              image={user.image.url}
               bio={user.bio}
             />
           ))
