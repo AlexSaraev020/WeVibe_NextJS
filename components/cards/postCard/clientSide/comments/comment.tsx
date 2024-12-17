@@ -10,6 +10,7 @@ import { handleLikeComment } from "@/actions/posts/comments/handleLikeComment";
 import { getIfLiked } from "@/actions/posts/comments/getIfLiked";
 import RepliesSection from "../replies/repliesSection";
 import KebabSection from "../kebabSection";
+import UsersList from "../usersWhoLikedList";
 
 interface CommentProps {
   commentContent: CommentType;
@@ -18,9 +19,14 @@ interface CommentProps {
     updateCounter: (prevCounter: number) => number,
   ) => void;
 }
-export default function Comment({ commentContent, postId, setAddedCommentCounter }: CommentProps) {
+export default function Comment({
+  commentContent,
+  postId,
+  setAddedCommentCounter,
+}: CommentProps) {
   const [likes, setLikes] = useState<number>(commentContent.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
+  const [showUsersList, setShowUsersList] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -44,8 +50,16 @@ export default function Comment({ commentContent, postId, setAddedCommentCounter
 
   return (
     <>
+      {showUsersList && (
+        <UsersList
+          setShowUsersList={setShowUsersList}
+          _id={commentContent._id}
+          type="comment"
+          showUsersList={showUsersList}
+        />
+      )}
       {liked !== undefined ? (
-        <div className="flex h-fit w-full animate-fadeIn flex-col items-start rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
+        <div className="flex h-fit w-full flex-col items-start rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
           <div className="flex w-full gap-2">
             <Link
               className="mt-1 min-w-fit max-w-fit"
@@ -99,7 +113,7 @@ export default function Comment({ commentContent, postId, setAddedCommentCounter
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button className="flex h-6 w-full items-start justify-center text-xs font-bold">
+                <button onClick={() => setShowUsersList(true)} className="flex h-6 w-full items-start justify-center text-xs font-bold">
                   {likes}
                 </button>
               </div>

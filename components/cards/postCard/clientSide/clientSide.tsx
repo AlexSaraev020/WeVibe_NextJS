@@ -52,8 +52,7 @@ export default function PostClientSide({
     })();
   }, [postId]);
   const handleLikeOnClick = async () => {
-    
-    await handleLike({ postId , setLike,setLikes, like });
+    await handleLike({ postId, setLike, setLikes, like });
   };
   const handleTruncate = () => {
     setTruncate(!truncate);
@@ -61,7 +60,14 @@ export default function PostClientSide({
 
   return (
     <>
-      {showUsersList && <UsersList postId={postId} showUsersList={showUsersList} setShowUsersList={setShowUsersList} />}
+      {showUsersList && (
+        <UsersList
+          type="post"
+          _id={postId}
+          showUsersList={showUsersList}
+          setShowUsersList={setShowUsersList}
+        />
+      )}
       {showComments && (
         <CommentsSection
           addedCommentCounter={addedCommentCounter}
@@ -106,7 +112,10 @@ export default function PostClientSide({
               </button>
             )}
           </div>
-          <div onClick={() => setShowUsersList(!showUsersList)} className="w-full cursor-pointer">
+          <div
+            onClick={() => setShowUsersList(!showUsersList)}
+            className="w-full cursor-pointer"
+          >
             {likes > 0 ? (
               <h2 className="md:text-md text-xs text-zinc-300/90">
                 {like

@@ -1,21 +1,27 @@
 import { UserType } from "@/types/userTypes/user/userType";
 import axios from "axios";
-
-interface SeeWhoLikedProps {
-  postId: string;
+interface GetWhoLikedCommentProps {
+  commentId: string;
   setUserList: (userList: UserType[]) => void;
   setLoading: (loading: boolean) => void;
 }
-export const seeWhoLiked = async ({ postId , setUserList , setLoading }: SeeWhoLikedProps) => {
+export const getWhoLikedComment = async ({
+  commentId,
+  setUserList,
+  setLoading,
+}: GetWhoLikedCommentProps) => {
   try {
-    const response = await axios.post(`/api/posts/seePeopleWhoLiked`, {
-      postId,
-    });
+    const response = await axios.post(
+      "/api/posts/comments/getWhoLikedComment",
+      {
+        commentId,
+      },
+    );
     if (response.status < 300) {
       setLoading(false);
-      setUserList(response.data.peopleWhoLiked.likes);
+      setUserList(response.data.comment.likes);
     }
-    return response;
+    return;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

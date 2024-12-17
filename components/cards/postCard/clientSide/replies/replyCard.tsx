@@ -9,6 +9,7 @@ import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { handleLikeReply } from "@/actions/posts/comments/replies/handleLikeReply";
 import { getIfLikedReply } from "@/actions/posts/comments/replies/getIfLikedReply";
 import KebabSection from "../kebabSection";
+import UsersList from "../usersWhoLikedList";
 
 interface ReplyCardProps {
   reply: RepliesType;
@@ -16,9 +17,13 @@ interface ReplyCardProps {
     updateCounter: (prevCounter: number) => number,
   ) => void;
 }
-export default function ReplyCard({ reply,setAddedReplyCounter }: ReplyCardProps) {
+export default function ReplyCard({
+  reply,
+  setAddedReplyCounter,
+}: ReplyCardProps) {
   const [likes, setLikes] = useState<number>(reply.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
+  const [showUsersList, setShowUsersList] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +47,14 @@ export default function ReplyCard({ reply,setAddedReplyCounter }: ReplyCardProps
 
   return (
     <>
+      {showUsersList && (
+        <UsersList
+          setShowUsersList={setShowUsersList}
+          _id={reply._id}
+          type="reply"
+          showUsersList={showUsersList}
+        />
+      )}
       {liked !== undefined ? (
         <div className="flex h-fit w-full animate-fadeIn flex-col items-start gap-2 rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
           <div className="flex w-full gap-2">
@@ -76,19 +89,25 @@ export default function ReplyCard({ reply,setAddedReplyCounter }: ReplyCardProps
               </div>
 
               <div className="relative flex h-full w-8 flex-col items-center justify-start">
-                <KebabSection setAddedReplyCounter={setAddedReplyCounter} type="reply" commentId={reply.commentId} userId={reply.user._id} _id={reply._id} />
+                <KebabSection
+                  setAddedReplyCounter={setAddedReplyCounter}
+                  type="reply"
+                  commentId={reply.commentId}
+                  userId={reply.user._id}
+                  _id={reply._id}
+                />
                 <button
-                  className="flex h-6  w-full items-center justify-center"
+                  className="flex h-6 w-full items-center justify-center"
                   onClick={handleLike}
                   type="button"
                 >
                   {liked ? (
-                    <GoStarFill className="h-5 w-6  animate-appear fill-sky-500 transition-all duration-500" />
+                    <GoStarFill className="h-5 w-6 animate-appear fill-sky-500 transition-all duration-500" />
                   ) : (
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button className="flex  h-6 w-full items-start justify-center text-xs font-bold">
+                <button onClick={() => setShowUsersList(true)} className="flex h-6 w-full items-start justify-center text-xs font-bold">
                   {likes}
                 </button>
               </div>

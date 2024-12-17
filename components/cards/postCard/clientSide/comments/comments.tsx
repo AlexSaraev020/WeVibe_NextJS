@@ -59,16 +59,14 @@ export default function CommentsSection({
   return (
     <div
       onClick={handleClickOutside}
-      className="fixed inset-0 z-50 flex h-[100dvh] w-full items-end justify-center bg-black/60 md:items-center"
+      className="fixed inset-0 z-50 flex w-full items-end justify-center bg-black/60 md:items-center"
     >
       <div
         onClick={handleClickInside}
-        className="absolute z-50 flex h-5/6 w-full animate-fadeIn flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 shadow-glow shadow-postBackground/50 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:shadow-glow md:shadow-postBackground/50"
+        className="absolute z-50 flex h-5/6 w-full flex-col items-center justify-center gap-6 rounded-t-xl border-t-2 border-postBackground/50 bg-black/90 p-2 shadow-glow shadow-postBackground/50 transition-all duration-500 md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:shadow-glow md:shadow-postBackground/50"
       >
-        <h2>
-          <span className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text text-center text-xl font-extrabold text-transparent md:text-3xl">
-            Comments
-          </span>
+        <h2 className="bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text text-center text-xl font-extrabold text-transparent md:text-3xl">
+          Comments
         </h2>
         <button
           className="absolute right-2 top-2 rounded-full p-1 md:p-0"
@@ -83,7 +81,11 @@ export default function CommentsSection({
                 className="flex h-fit w-full flex-col items-center justify-center px-2"
                 key={commentContent._id}
               >
-                <Comment setAddedCommentCounter={setAddedCommentCounter} postId={postId} commentContent={commentContent} />
+                <Comment
+                  setAddedCommentCounter={setAddedCommentCounter}
+                  postId={postId}
+                  commentContent={commentContent}
+                />
               </li>
             ))
           ) : (
