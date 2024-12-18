@@ -18,7 +18,7 @@ export default async function Page(props: {
   const user = response.data.user as UserType
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
-      {response.status === 200 ? (
+      {user ? (
         <div className="mt-10 flex h-full w-11/12 flex-col items-center justify-center gap-10 pb-4 md:w-full">
           <div className="flex w-full items-start justify-center gap-4 p-4 md:w-4/12">
             <div className="w-fit">

@@ -2,7 +2,7 @@
 import { allowFollowing } from "@/actions/profile/following/allowFollowing";
 import { followUser } from "@/actions/profile/following/follow";
 import { unfollowUser } from "@/actions/profile/following/unfollow";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import EditProfile from "./editPorifle/editProfile";
@@ -66,7 +66,7 @@ export default function ProfileActionsButtons({ user }: Props) {
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
           className="w-16 bg-postBackground/20 text-xs font-semibold text-sky-200 hover:shadow-lg hover:shadow-postBackground/30 md:w-24 md:text-lg"
-          text={"Follow"}
+          text="Follow"
           background="bg-sky-900 py-2 md:py-1"
         />
       )}
@@ -76,7 +76,7 @@ export default function ProfileActionsButtons({ user }: Props) {
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           className="w-16 bg-neutral-700 text-xs font-semibold text-zinc-400 hover:shadow-lg hover:shadow-neutral-700 md:w-24 md:text-lg"
-          text={"Unfollow"}
+          text="Unfollow"
           type="button"
           background="bg-neutral-800 py-2 md:py-1"
         />
@@ -87,7 +87,7 @@ export default function ProfileActionsButtons({ user }: Props) {
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           className="w-16 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700 md:w-24 md:text-lg"
-          text={"Edit"}
+          text="Edit"
           background="bg-zinc-800 py-2 md:py-1"
           type="button"
         />

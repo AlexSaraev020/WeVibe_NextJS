@@ -21,11 +21,13 @@ interface EditFormProps {
   account?: boolean;
   setLogout: (logout: boolean) => void;
   setAccount: (account: boolean) => void;
+  setDeleteAccount: (deleteAccount: boolean) => void;
 }
 
 export default function EditForm({
   user,
   setEdit,
+  setDeleteAccount,
   setLogout,
   setAccount,
   profile,
@@ -243,7 +245,7 @@ export default function EditForm({
             onClick={handleSave}
             background="bg-gradient-to-tr from-black via-neutral-950 py-2 md:py-1 to-black"
             className="text-sm font-semibold text-sky-100 shadow-2xl hover:shadow-postBackground/30 md:w-full md:text-lg"
-            text={"Save"}
+            text="Save"
           />
           <ShinyButton
             disabled={disable}
@@ -252,7 +254,7 @@ export default function EditForm({
             topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
             className="text-sm font-semibold shadow-2xl hover:shadow-white/30 md:w-full md:text-lg"
             background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"
-            text={"Cancel"}
+            text="Cancel"
             type="button"
           />
 
@@ -263,17 +265,17 @@ export default function EditForm({
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
             background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"
-            text={"Logout"}
+            text="Logout"
           />
           {account && (
             <ShinyButton
               type="button"
-              onClick={handleSave}
+              onClick={() => setDeleteAccount(true)}
               bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
               topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
               background="bg-gradient-to-tr from-black py-2 via-neutral-950 to-black"
               className="col-span-3 text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
-              text={"Delete Account"}
+              text="Delete Account"
             />
           )}
         </div>

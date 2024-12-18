@@ -148,7 +148,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 ? "pointer-events-none text-neutral-500 hover:shadow-neutral-700"
                 : "text-sky-100",
             )}
-            text={"Create"}
+            text="Create"
             background="bg-black py-2 md:py-1"
             type="submit"
           />

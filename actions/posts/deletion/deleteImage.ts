@@ -3,10 +3,10 @@ import axios from "axios";
 
 export const deleteImage = async (image: ImageType) => {
   try {
-    const response = await axios.delete("/api/posts/deleteImage", {
-      data:{
-        fileId: image.fileId
-      }
+    await axios.delete("/api/posts/deleteImage", {
+      data: {
+        fileId: image.fileId,
+      },
     });
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

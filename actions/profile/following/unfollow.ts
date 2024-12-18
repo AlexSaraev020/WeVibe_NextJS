@@ -10,9 +10,8 @@ export const unfollowUser = async ({ query,router }: UnfollowUserProps) => {
     const response = await axios.post(`/api/user/profile/unfollow`, { query });
     if (response.status < 300) {
       router.refresh();
-      return response;
     }
-    return;
+    return response;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

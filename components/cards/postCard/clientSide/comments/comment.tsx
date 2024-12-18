@@ -113,7 +113,10 @@ export default function Comment({
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button onClick={() => setShowUsersList(true)} className="flex h-6 w-full items-start justify-center text-xs font-bold">
+                <button
+                  onClick={() => setShowUsersList(true)}
+                  className="flex h-6 w-full items-start justify-center text-xs font-bold"
+                >
                   {likes}
                 </button>
               </div>

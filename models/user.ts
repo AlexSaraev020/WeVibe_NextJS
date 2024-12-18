@@ -2,6 +2,7 @@ import { Document, model, Model, models, Schema, Types } from "mongoose";
 
 export interface User extends Document {
   _id: Types.ObjectId;
+  isAdmin: boolean;
   username: string;
   email: string;
   password: string;
@@ -17,6 +18,7 @@ export interface User extends Document {
 }
 
 const UserSchema = new Schema<User>({
+  isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -25,10 +27,13 @@ const UserSchema = new Schema<User>({
     url: {
       type: String,
       required: true,
-      default:
-        "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp",
+      default: "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp",
     },
-    fileId: { type: String, required: true, default: "675fef71e375273f6052bf73" },
+    fileId: {
+      type: String,
+      required: true,
+      default: "675fef71e375273f6052bf73",
+    },
   },
   following: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
   followers: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],
