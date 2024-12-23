@@ -3,8 +3,8 @@ import { UserModel } from "@/models/user";
 import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  if (req.method !== "GET") {
+export async function POST(req: Request) {
+  if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
@@ -12,8 +12,21 @@ export async function GET(req: Request) {
   }
   await connect();
   try {
-    const posts = await PostModel.find({})
+    const body = await req.json();
+    if (!body) {
+      return NextResponse.json({ message: "Body not found" }, { status: 400 });
+    }
+    const { skip, limit } = body;
+    if (skip == null || limit == null) {
+      return NextResponse.json(
+        { message: "Missing skip or limit" },
+        { status: 400 },
+      );
+    }
+    const posts = await PostModel.find()
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: "createdBy",
         model: UserModel,
@@ -21,11 +34,16 @@ export async function GET(req: Request) {
       })
       .select("_id title description image createdAt createdBy comments likes")
       .exec();
-    if (!posts.length) {
-      return NextResponse.json({ message: "Posts not found" }, { status: 404 });
-    }
 
-    return NextResponse.json({ posts: posts }, { status: 200 });
+    if (!posts.length) {
+      return NextResponse.json(
+        { message: "No more posts found" },
+        { status: 200 },
+      );
+    }
+    const totalCommentsCount = await PostModel.countDocuments();
+    const hasMore = totalCommentsCount >= skip + limit;
+    return NextResponse.json({ posts: posts, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

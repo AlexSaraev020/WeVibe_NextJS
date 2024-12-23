@@ -3,32 +3,37 @@ import axios from "axios";
 interface GetCommentsProps {
   postId: string;
   setLoading: (loading: boolean) => void;
-  setComments: (comments: CommentType[]) => void;
+  setHasMore: (hasMore: boolean) => void;
+  setSkip:(updateSkip: (prevSkip: number) => number) => void;
+  skip: number;
+  limit: number;
 }
 export const getComments = async ({
   postId,
+  skip,
+  setHasMore,
+  limit,
+  setSkip,
   setLoading,
-  setComments,
 }: GetCommentsProps) => {
   try {
-    const response = await axios.post("/api/posts/comments/get", { postId });
-    if (response.status < 300) {
-      console.log(response.data.comments);
+    const response = await axios.post("/api/posts/comments/get", {
+      postId,
+      skip,
+      limit,
+    });
+    if (response.status < 300 && Array.isArray(response.data.comments)) {
       setLoading(false);
-      setComments(response.data.comments);
-    } else {
-      setLoading(false);
-      setComments([] as CommentType[]);
+      setSkip((prevSkip) => prevSkip + limit);
+      setHasMore(response.data.hasMore);
+      return response.data.comments as CommentType[];
     }
-    return response;
+    setHasMore(false);
+    return [];
   } catch (error: unknown) {
     setLoading(false);
-    setComments([] as CommentType[]);
+    setHasMore(false);
     if (axios.isAxiosError(error) && error.response) {
-      if (error.response.status === 204) {
-        setComments([] as CommentType[]);
-        return;
-      }
       return error.response.data;
     }
     console.error("Error fetching comments:", error);

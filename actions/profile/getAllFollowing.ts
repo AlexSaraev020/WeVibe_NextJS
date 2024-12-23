@@ -1,24 +1,26 @@
-import { UserType } from "@/types/userTypes/user/userType";
 import axios from "axios";
 
 interface GetFollowersProps {
-  setUsers: (followers: UserType[]) => void;
   setLoading: (loading: boolean) => void;
   userId: string;
+  skip: number;
+  limit: number;
 }
 
 export const getAllFollowing = async ({
-  setUsers,
   setLoading,
+  skip,
+  limit,
   userId,
 }: GetFollowersProps) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       `/api/user/profile/getAllFollowingUsers?user=${userId}`,
+      { skip, limit },
     );
     if (response.status < 300) {
-      setUsers(response.data.userProfileFollowing.following);
       setLoading(false);
+      return response.data.userProfileFollowingSliced;
     }
     return [];
   } catch (error: unknown) {

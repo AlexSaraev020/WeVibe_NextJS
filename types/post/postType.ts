@@ -19,3 +19,5 @@ export interface PostType {
   comments: CommentType[];
 }
 
+
+export { CommentType };

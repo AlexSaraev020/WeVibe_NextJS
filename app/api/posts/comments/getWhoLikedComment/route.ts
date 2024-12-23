@@ -15,15 +15,15 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { commentId } = body;
-    if (!commentId) {
+    const { commentId, skip, limit } = body;
+    if (!commentId || skip == null || limit == null) {
       return NextResponse.json(
         { message: "No comment id found" },
         { status: 400 },
       );
     }
     await connect();
-    const comment = await CommentsModel.findById({ _id: commentId })
+    const whoLikedComment = await CommentsModel.findById({ _id: commentId })
       .select("likes")
       .populate({
         path: "likes",
@@ -31,13 +31,24 @@ export async function POST(req: Request) {
         select: ["username", "image", "_id"],
       })
       .exec();
-    if (!comment) {
+    if (!whoLikedComment) {
       return NextResponse.json(
         { message: "People who liked not found" },
         { status: 400 },
       );
     }
-    return NextResponse.json({ comment , message: "People who liked found" }, { status: 200 });
+    const whoLikedCommentSliced = whoLikedComment.likes.slice(
+      skip,
+      skip + limit,
+    );
+    const totalWhoLikedComment = await CommentsModel.countDocuments({
+      _id: commentId,
+    });
+    const hasMore = totalWhoLikedComment >= skip + limit;
+    return NextResponse.json(
+      { likes:whoLikedCommentSliced, message: "People who liked found", hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

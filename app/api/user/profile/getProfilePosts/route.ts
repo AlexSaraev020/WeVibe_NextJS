@@ -4,8 +4,8 @@ import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  if (req.method !== "GET") {
+export async function POST(req: NextRequest) {
+  if (req.method !== "POST") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
@@ -17,6 +17,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
+      );
+    }
+    const body = await req.json();
+    if (!body) {
+      return NextResponse.json({ message: "Body not found" }, { status: 400 });
+    }
+    const { skip, limit } = body;
+    if (skip == null || limit == null) {
+      return NextResponse.json(
+        { message: "Skip or limit not found" },
+        { status: 400 },
       );
     }
     await connect();
@@ -33,21 +44,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const userProfilePosts = await UserModel.findOne({ _id: userProfileId })
-      .select("posts")
-      .populate({
-        path: "posts",
-        model: PostModel,
-      })
+    const userProfilePosts = await PostModel.find({
+      createdBy: userProfileId,
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .exec();
     if (!userProfilePosts) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-
-    return NextResponse.json(
-      { posts: userProfilePosts.posts },
-      { status: 200 },
-    );
+    return NextResponse.json({ posts: userProfilePosts }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

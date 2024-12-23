@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 import ProfileCard from "@/components/cards/profileCard/profileCard";
 import { getAllFollowers } from "@/actions/profile/getAllFollowers";
 import { getAllFollowing } from "@/actions/profile/getAllFollowing";
+import { useInView } from "react-intersection-observer";
 
 interface UsersListProps {
   setShowUsersList: (showUsersList: boolean) => void;
@@ -21,21 +22,56 @@ export default function UsersList({
 }: UsersListProps) {
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    {
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [skip, setSkip] = useState(0);
+  const { ref, inView } = useInView();
+  const fetchUsersByType = async ({
+      skip,
+      limit,
+    }: {
+      skip: number;
+      limit: number;
+    }) => {
       if (showFollowers && !showFollowing) {
-        (async () => {
-          await getAllFollowers({ setUsers, setLoading, userId });
-        })();
+        return await getAllFollowers({ setLoading, userId ,skip ,limit: 8});
       }
 
       if (showFollowing && !showFollowers) {
-        (async () => {
-          await getAllFollowing({ setUsers, setLoading, userId });
-        })();
+        return await getAllFollowing({ setLoading, userId , skip ,limit: 8});
       }
-    }
-  }, [showFollowers, showFollowing, userId]);
+    };
+
+    const loadMoreUsers = async () => {
+      if (loadingUsers || !hasMore) return;
+      setLoadingUsers(true);
+  
+      const newUsers = await fetchUsersByType({ skip, limit: 3 });
+      console.log(newUsers);
+      if (!Array.isArray(newUsers)) {
+        console.error("Unexpected response:", newUsers);
+        setLoadingUsers(false);
+        return;
+      }
+  
+      if (newUsers.length < 3) {
+        setHasMore(false);
+      }
+  
+      setUsers((prev) => [...prev, ...newUsers]);
+      setSkip((prev) => prev + 3);
+      setLoadingUsers(false);
+    };
+
+  useEffect(() => {
+      loadMoreUsers();
+    }, [showFollowers, showFollowing, userId]);
+  
+    useEffect(() => {
+      if (inView) {
+        loadMoreUsers();
+      }
+    }, [inView]);
 
   const handleClickOutside = () => {
     setShowUsersList(false);
@@ -81,6 +117,12 @@ export default function UsersList({
             <h1 className="text-center text-base text-white">
               This user follows 0 people
             </h1>
+          )}
+          <div className="h-1" ref={ref} />
+          {!loading && loadingUsers && (
+            <div>
+              <AiOutlineLoading className="animate-spin" />
+            </div>
           )}
         </ul>
       </div>

@@ -1,5 +1,4 @@
 import { connect } from "@/db/mongo/db";
-import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -18,6 +17,7 @@ export async function GET(req: NextRequest) {
         { status: 404 },
       );
     }
+    console.log(userId);
     await connect();
     const user = await UserModel.findOne({ _id: userId })
       .select("-password -__v")

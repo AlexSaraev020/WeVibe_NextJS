@@ -17,8 +17,8 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId } = body;
-    if (!postId) {
+    const { postId, skip, limit } = body;
+    if (!postId || skip == null || limit == null) {
       return NextResponse.json(
         { message: "No post id found" },
         { status: 400 },
@@ -26,6 +26,8 @@ export async function POST(req: Request) {
     }
     const comments = await CommentsModel.find({ post: postId })
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: "user",
         model: UserModel,
@@ -34,7 +36,7 @@ export async function POST(req: Request) {
       .lean()
       .exec();
     if (!comments.length) {
-      return NextResponse.json({ message: "No comments" }, { status: 200 });
+      return NextResponse.json({ message: "No comments" }, { status: 404 });
     }
 
     const formattedComments = comments.map((comment) => ({
@@ -42,11 +44,13 @@ export async function POST(req: Request) {
       replies: comment.replies.length,
       likes: comment.likes.length,
     }));
-
-    return NextResponse.json(
-      { comments: formattedComments },
-      { status: 200 },
-    );
+    const totalCommentsCount = await CommentsModel.countDocuments({ post: postId });
+    const hasMore = totalCommentsCount >= skip + limit;
+    console.log("skip", skip);
+    console.log("formattedComments", formattedComments.length);
+    console.log("totalCommentsCount", totalCommentsCount);
+    console.log("hasMore", hasMore);
+    return NextResponse.json({ comments: formattedComments, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error);

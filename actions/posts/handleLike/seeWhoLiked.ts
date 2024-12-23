@@ -3,20 +3,37 @@ import axios from "axios";
 
 interface SeeWhoLikedProps {
   postId: string;
-  setUserList: (userList: UserType[]) => void;
+  skip: number;
+  limit: number;
   setLoading: (loading: boolean) => void;
+  setHasMore: (hasMore: boolean) => void;
+  setSkip: (updateSkip: (prevSkip: number) => number) => void;
 }
-export const seeWhoLiked = async ({ postId , setUserList , setLoading }: SeeWhoLikedProps) => {
+export const seeWhoLiked = async ({
+  postId,
+  setHasMore,
+  setLoading,
+  setSkip,
+  skip,
+  limit,
+}: SeeWhoLikedProps) => {
   try {
     const response = await axios.post(`/api/posts/seePeopleWhoLiked`, {
       postId,
+      skip,
+      limit,
     });
-    if (response.status < 300) {
+    if (response.status < 300 && Array.isArray(response.data.peopleWhoLikedSliced)) {
       setLoading(false);
-      setUserList(response.data.peopleWhoLiked.likes);
+      setSkip((prevSkip) => prevSkip + limit);
+      setHasMore(response.data.hasMore);
+      return response.data.peopleWhoLikedSliced as UserType[];
     }
-    return response;
+    setHasMore(false);
+    return [];
   } catch (error: unknown) {
+    setLoading(false);
+    setHasMore(false);
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     }

@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId } = body;
-    if (!postId) {
+    const { postId, skip, limit } = body;
+    if (!postId || skip == null || limit == null) {
       return NextResponse.json(
         { message: "No post id found" },
         { status: 400 },
@@ -37,7 +37,13 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-    return NextResponse.json({ peopleWhoLiked }, { status: 200 });
+    const peopleWhoLikedSliced = peopleWhoLiked.likes.slice(skip, skip + limit);
+    const totalCommentsCount = await PostModel.countDocuments({ _id: postId });
+    const hasMore = totalCommentsCount >= skip + limit;
+    return NextResponse.json(
+      { peopleWhoLikedSliced, hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getUser } from "../../user/searchUser";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface AddCommentProps {
   postId: string;

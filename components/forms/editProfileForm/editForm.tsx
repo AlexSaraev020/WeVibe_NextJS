@@ -1,3 +1,4 @@
+"use client";
 import FormInput from "@/components/forms/formElements/input";
 import { UserType } from "@/types/userTypes/user/userType";
 import React, { useState } from "react";
@@ -37,7 +38,7 @@ export default function EditForm({
   const [email, setEmail] = useState<string>(user.email);
   const [password, setPassword] = useState<string>("");
   const [bio, setBio] = useState<string>(user.bio);
-  const [image, setImage] = useState<ImageType | undefined>(undefined);
+  const [image, setImage] = useState<ImageType | undefined>(user.image);
   const [progress, setProgress] = useState<number>(0);
   const { setMessage, setError } = useAlert();
   const { setUsername, setUserImage } = useUserNavData();
@@ -125,7 +126,6 @@ export default function EditForm({
         {profile && (
           <>
             <div className="relative flex w-11/12 items-center justify-center">
-              {/* profile image upload */}
               <Upload
                 profile
                 setImage={setImage}

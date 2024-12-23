@@ -71,7 +71,6 @@ export async function PUT(req: Request) {
       content: reply,
     });
     
-    console.log("here1");
     if (!newReply) {
       return NextResponse.json(
         { message: "Reply not created" },

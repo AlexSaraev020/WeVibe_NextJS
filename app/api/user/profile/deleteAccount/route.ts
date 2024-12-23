@@ -95,7 +95,6 @@ export async function DELETE(req: NextRequest) {
       { session },
     );
     const userImageToBeDeleted = await UserModel.findOne({ _id: userId });
-    console.log(userImageToBeDeleted?.image);
     if (
       userImageToBeDeleted &&
       userImageToBeDeleted?.image.fileId !== "675fef71e375273f6052bf73"

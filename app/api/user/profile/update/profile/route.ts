@@ -72,6 +72,7 @@ export async function PATCH(req: Request) {
       );
     }
     await loggedUser.save();
+
     return NextResponse.json(
       {
         message: "User updated successfully",

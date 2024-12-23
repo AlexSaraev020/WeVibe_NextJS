@@ -7,7 +7,7 @@ import KebabSection from "./clientSide/kebabSection";
 
 export default function Post({ post }: { post: PostType }) {
   return (
-    <div className="relative mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
+    <div className="relative mb-4 md:mb-10 xl:mb-20 flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 transition-all duration-500 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
       <div className="flex w-full justify-between">
         <div className="flex w-fit animate-fadeIn items-center py-2 transition-all duration-500 md:p-0">
           <Link
@@ -44,6 +44,7 @@ export default function Post({ post }: { post: PostType }) {
         />
         <Image
           src={post.image.url}
+          priority
           alt="ImageBackground"
           className="absolute inset-0 -z-10 max-h-[20rem] opacity-20 blur-sm md:max-h-[40rem]"
           width={1080}

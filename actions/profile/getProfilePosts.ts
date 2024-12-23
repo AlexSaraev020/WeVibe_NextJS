@@ -2,17 +2,26 @@ import { PostType } from "@/types/post/postType";
 import axios from "axios";
 
 interface GetProfilePostsProps {
-    userId: string;
-    setPosts: (posts: PostType[]) => void
+  userId: string;
+  setLoading: (loading: boolean) => void;
+  skip: number;
+  limit: number;
 }
 
-export const getProfilePosts = async ({ userId, setPosts }: GetProfilePostsProps) => {
+export const getProfilePosts = async ({
+  userId,
+  setLoading,
+  skip,
+  limit,
+}: GetProfilePostsProps) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       `/api/user/profile/getProfilePosts?user=${userId}`,
+      { skip, limit },
     );
     if (response.status < 300) {
-      setPosts(response.data.posts);
+      setLoading(false);
+      return response.data.posts
     }
     return [];
   } catch (error: unknown) {

@@ -12,11 +12,13 @@ import { allowDeleteComment } from "@/actions/posts/comments/deletion/allowDelet
 import { deleteComment } from "@/actions/posts/comments/deletion/deleteComment";
 import { allowDeleteReply } from "@/actions/posts/comments/replies/deletion/allowDeleteRply";
 import { deleteReply } from "@/actions/posts/comments/replies/deletion/deleteReply";
+import { DeletePostPrompt } from "./replies/deletePostPrompt";
 
 export default function KebabSection(props: KebabSectionCombinedProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [allow, setAllow] = useState<boolean>(false);
+  const [showDeletePostPrompt,setShowDeletePostPrompt] = useState<boolean>(false);
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,6 +98,7 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
   }, [isOpen]);
   return (
     <>
+    {showDeletePostPrompt && <DeletePostPrompt handleDelete={handleDelete} setShowDeletePostPrompt={setShowDeletePostPrompt}/>}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="z-20 rounded-full p-1"
@@ -112,7 +115,8 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
           ) : (
             allow && (
               <button
-                onClick={handleDelete}
+                onClick={() => setShowDeletePostPrompt(true)}
+                type="button"
                 className="z-50 flex items-center gap-1 hover:text-gray-100"
               >
                 <h2

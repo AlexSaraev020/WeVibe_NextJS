@@ -16,12 +16,18 @@ export default function EditProfile({ user, setEdit, edit }: EditProfileProps) {
   const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
 
   useEffect(() => {
-    document.documentElement.style.overflow = edit || logout ? "hidden" : "auto";
+    document.documentElement.style.overflow =
+      edit || logout ? "hidden" : "auto";
     document.body.style.overflow = edit || logout ? "hidden" : "auto";
-  }, [edit , logout]);
+  }, [edit, logout]);
   return (
     <>
-    {deleteAccount && <DeleteAccount searchedUserId={user._id} setDeleteAccount={setDeleteAccount} />}
+      {deleteAccount && (
+        <DeleteAccount
+          searchedUserId={user._id}
+          setDeleteAccount={setDeleteAccount}
+        />
+      )}
       {logout && <Logout setShowLogoutPrompt={setLogout} />}
       <div className="fixed inset-0 z-40 flex w-full animate-appear flex-col items-center justify-center bg-black/60 transition-all duration-500">
         {account ? (
