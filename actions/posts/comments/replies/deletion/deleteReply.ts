@@ -1,28 +1,24 @@
+import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import axios from "axios";
 
 interface DeleteReplyProps {
   replyId: string;
   commentId: string;
-  setAddedReplyCounter: (
-    updateCounter: (prevCounter: number) => number,
+  setReplies: (
+    updateReplies: (prevReplies: RepliesType[]) => RepliesType[],
   ) => void;
 }
 export const deleteReply = async ({
   replyId,
   commentId,
-  setAddedReplyCounter,
+  setReplies,
 }: DeleteReplyProps) => {
   try {
-    const response = await axios.patch(
-      `/api/posts/commentReplies/deletion/delete`,
-      {
-        replyId,
-        commentId,
-      },
-    );
-    if (response.status < 300) {
-        setAddedReplyCounter((prevCounter) => prevCounter - 1);
-    }
+    await axios.patch(`/api/posts/commentReplies/deletion/delete`, {
+      replyId,
+      commentId,
+    });
+    setReplies((prev) => prev.filter((reply) => reply._id !== replyId));
     return;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

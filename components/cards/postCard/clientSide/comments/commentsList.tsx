@@ -13,10 +13,6 @@ interface CommentsListProps {
   setComments: (
     updateComments: (prevComments: CommentType[]) => CommentType[],
   ) => void;
-  addedCommentCounter: number;
-  setAddedCommentCounter: (
-    updateCounter: (prevCounter: number) => number,
-  ) => void;
 }
 
 export default function CommentsList({
@@ -24,8 +20,6 @@ export default function CommentsList({
   comments,
   setComments,
   showComments,
-  addedCommentCounter,
-  setAddedCommentCounter,
 }: CommentsListProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [skip, setSkip] = useState<number>(0);
@@ -36,7 +30,7 @@ export default function CommentsList({
     if (inView) {
       loadMoreComments();
     }
-  }, [inView, skip, showComments,addedCommentCounter]);
+  }, [inView, skip, showComments]);
 
   const loadMoreComments = useCallback(async () => {
     if (!hasMore) return;
@@ -56,24 +50,24 @@ export default function CommentsList({
       setComments((prev) => [...prev, ...newComments]);
     }
     setLoading(false);
-  }, [loading, hasMore, postId, skip]);
+  }, [hasMore, postId, skip]);
 
   return (
     <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-none">
       {comments.length ? (
-        comments.map((commentContent, index) => (
-            <li
-              className="flex h-fit w-full flex-col items-center justify-center px-2"
-              key={`comment-${commentContent._id}-${index}-${commentContent.createdAt}`}
-            >
-              <Comment
-                commentContent={commentContent}
-                postId={postId}
-                setAddedCommentCounter={setAddedCommentCounter}
-              />
-            </li>
-          ))
-      ):(
+        comments.map((commentContent: CommentType) => (
+          <li
+            className="flex h-fit w-full flex-col items-center justify-center px-0 md:px-2"
+            key={commentContent._id}
+          >
+            <Comment
+              commentContent={commentContent}
+              postId={postId}
+              setComments={setComments}
+            />
+          </li>
+        ))
+      ) : (
         <li className="flex w-full items-center justify-center">
           <h3 className="text-lg text-gray-400">No comments</h3>
         </li>

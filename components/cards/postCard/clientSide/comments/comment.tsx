@@ -15,14 +15,14 @@ import UsersList from "../usersWhoLikedList";
 interface CommentProps {
   commentContent: CommentType;
   postId: string;
-  setAddedCommentCounter: (
-    updateCounter: (prevCounter: number) => number,
+  setComments: (
+    updateComments: (prevComments: CommentType[]) => CommentType[],
   ) => void;
 }
 export default function Comment({
   commentContent,
   postId,
-  setAddedCommentCounter,
+  setComments,
 }: CommentProps) {
   const [likes, setLikes] = useState<number>(commentContent.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
@@ -32,11 +32,17 @@ export default function Comment({
     (async () => {
       await getIfLiked({ commentId: commentContent._id, postId, setLiked });
     })();
-  }, []);
+  }, [commentContent._id, postId]);
   const handleDate = (date: string) => {
-    const convertedDate = new Date(date);
-    const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
-    return timeAgo;
+    const diff = Math.floor(
+      (new Date().getTime() - new Date(date).getTime()) / 1000,
+    );
+    if (diff < 60) return `${diff}s`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d`;
+    if (diff < 31536000) return `${Math.floor(diff / 604800)}w`;
+    return `${Math.floor(diff / 31536000)}y`;
   };
   const handleLike = async () => {
     await handleLikeComment({
@@ -97,7 +103,7 @@ export default function Comment({
               <div className="relative flex h-full w-8 flex-col items-center justify-center">
                 <KebabSection
                   postId={postId}
-                  setAddedCommentCounter={setAddedCommentCounter}
+                  setComments={setComments}
                   type="comment"
                   commentId={commentContent._id}
                   userId={commentContent.user._id}

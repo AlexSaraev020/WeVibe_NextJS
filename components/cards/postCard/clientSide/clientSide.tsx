@@ -6,7 +6,6 @@ import { GoStarFill } from "react-icons/go";
 import { GoStar } from "react-icons/go";
 import CommentsSection from "./comments/comments";
 import { handleLike } from "@/actions/posts/handleLike/handleLike";
-import { getLikes } from "@/actions/posts/handleLike/get_If_Liked";
 import UsersList from "./usersWhoLikedList";
 
 interface PostBottomSideProps {
@@ -14,22 +13,25 @@ interface PostBottomSideProps {
   date: string;
   postId: string;
   commentsNumber: number;
-  likesNumber: number;
+  setLikes: (updateLikes: (prevLikes: number) => number) => void;
+  like: boolean | undefined;
+  likes: number;
+  setLike: (like: boolean | undefined) => void;
 }
 
 export default function PostClientSide({
   postId,
-  likesNumber,
   description,
   date,
+  like,
+  likes,
+  setLikes,
+  setLike,
   commentsNumber,
 }: PostBottomSideProps) {
-  const [like, setLike] = useState<boolean>(false);
   const [truncate, setTruncate] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(false);
-  const [addedCommentCounter, setAddedCommentCounter] = useState<number>(0);
   const [timeAgo, setTimeAgo] = useState<string | null>(null);
-  const [likes, setLikes] = useState<number>(likesNumber);
   const [showUsersList, setShowUsersList] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,15 +44,12 @@ export default function PostClientSide({
       setTimeAgo("Invalid date");
     }
   }, [date]);
+
   useEffect(() => {
     document.body.style.overflow = showComments ? "hidden" : "auto";
     document.documentElement.style.overflow = showComments ? "hidden" : "auto";
   }, [showComments]);
-  useEffect(() => {
-    (async () => {
-      await getLikes({ postId, setLike, setLikes });
-    })();
-  }, [postId]);
+
   const handleLikeOnClick = async () => {
     await handleLike({ postId, setLike, setLikes, like });
   };
@@ -70,8 +69,6 @@ export default function PostClientSide({
       )}
       {showComments && (
         <CommentsSection
-          addedCommentCounter={addedCommentCounter}
-          setAddedCommentCounter={setAddedCommentCounter}
           postId={postId}
           showComments={showComments}
           setShowComments={setShowComments}

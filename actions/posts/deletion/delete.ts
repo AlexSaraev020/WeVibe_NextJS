@@ -2,19 +2,20 @@ import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { deleteImage } from "./deleteImage";
 import { ImageType } from "@/types/image/imageType";
+import { PostType } from "@/types/post/postType";
 
 interface DeletePostProps {
   postId: string;
   createdBy: string;
   image: ImageType;
-  router:AppRouterInstance
+  setPosts: (updatePosts: (prevPosts: PostType[]) => PostType[]) => void;
 }
 
 export const deletePost = async ({
   postId,
   createdBy,
   image,
-  router
+  setPosts,
 }: DeletePostProps) => {
   try {
     const response = await axios.delete(`/api/posts/deletion/delete`, {
@@ -23,9 +24,9 @@ export const deletePost = async ({
         createdBy,
       },
     });
+    setPosts((prev) => prev.filter((post) => post._id !== postId));
     if (response.status < 300) {
       await deleteImage(image);
-      router.refresh();
       return response.data.message;
     }
     return response.data.message;

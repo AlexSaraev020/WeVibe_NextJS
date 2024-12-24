@@ -35,12 +35,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Reply not found" }, { status: 404 });
     }
     const whoLikedReplySliced = whoLikedReply.likes.slice(skip, skip + limit);
-    const totalWhoLikedReply = await CommentRepliesModel.countDocuments({
-      _id: replyId,
-    });
-    const hasMore = totalWhoLikedReply >= skip + limit;
+    const totalWhoLikedReply = whoLikedReply.likes.length;
+    const hasMore = totalWhoLikedReply > skip + limit;
     return NextResponse.json(
-      { likes:whoLikedReplySliced, message: "People who liked found", hasMore },
+      { users:whoLikedReplySliced, message: "People who liked found", hasMore },
       { status: 200 },
     );
   } catch (error: unknown) {

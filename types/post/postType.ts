@@ -15,9 +15,6 @@ export interface PostType {
       fileId: string;
     }
   };
-  likes: [];
+  likes: number;
   comments: CommentType[];
 }
-
-
-export { CommentType };

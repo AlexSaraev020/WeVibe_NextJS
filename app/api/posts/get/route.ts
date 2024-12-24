@@ -33,6 +33,7 @@ export async function POST(req: Request) {
         select: "username image",
       })
       .select("_id title description image createdAt createdBy comments likes")
+      .lean()
       .exec();
 
     if (!posts.length) {
@@ -41,9 +42,14 @@ export async function POST(req: Request) {
         { status: 200 },
       );
     }
+    const likesNumberPosts = posts.map((post) => ({
+      ...post,
+      likes: post.likes.length,
+    }));
+    
     const totalCommentsCount = await PostModel.countDocuments();
-    const hasMore = totalCommentsCount >= skip + limit;
-    return NextResponse.json({ posts: posts, hasMore }, { status: 200 });
+    const hasMore = totalCommentsCount > skip + limit;
+    return NextResponse.json({ posts: likesNumberPosts, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

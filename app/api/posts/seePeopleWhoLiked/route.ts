@@ -38,10 +38,11 @@ export async function POST(req: Request) {
       );
     }
     const peopleWhoLikedSliced = peopleWhoLiked.likes.slice(skip, skip + limit);
-    const totalCommentsCount = await PostModel.countDocuments({ _id: postId });
-    const hasMore = totalCommentsCount >= skip + limit;
+    const totalUsersWhoLiked = peopleWhoLiked.likes.length;
+    const hasMore = totalUsersWhoLiked > skip + limit;
+    
     return NextResponse.json(
-      { peopleWhoLikedSliced, hasMore },
+      { users: peopleWhoLikedSliced, hasMore },
       { status: 200 },
     );
   } catch (error: unknown) {

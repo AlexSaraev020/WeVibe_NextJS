@@ -23,11 +23,14 @@ export const seeWhoLiked = async ({
       skip,
       limit,
     });
-    if (response.status < 300 && Array.isArray(response.data.peopleWhoLikedSliced)) {
+    console.log("users", response.data.users);
+    console.log("hasMore", response.data.hasMore);
+    
+    if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
       setSkip((prevSkip) => prevSkip + limit);
       setHasMore(response.data.hasMore);
-      return response.data.peopleWhoLikedSliced as UserType[];
+      return response.data.users as UserType[];
     }
     setHasMore(false);
     return [];

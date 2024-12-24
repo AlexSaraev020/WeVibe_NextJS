@@ -12,8 +12,6 @@ export const PostList = () => {
   const [skip, setSkip] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
-  
-  
     useEffect(() => {
       if (inView) {
         loadMorePosts();
@@ -31,9 +29,9 @@ export const PostList = () => {
 
   return (
     <ul className="flex h-full flex-col items-start justify-start py-5 md:w-10/12 lg:w-6/12">
-      {posts.map((post: PostType, index) => (
-        <li key={`post-${post._id}-${post.title}-${index}`}>
-          <Post post={post} />
+      {posts.map((post: PostType) => (
+        <li key={post._id} className="w-full">
+          <Post setPosts={setPosts} post={post} />
         </li>
       ))}
       {hasMore && (

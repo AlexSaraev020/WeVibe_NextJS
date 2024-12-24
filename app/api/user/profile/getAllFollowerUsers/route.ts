@@ -18,20 +18,23 @@ export async function POST(req: NextRequest) {
         { status: 401 },
       );
     }
-    const body  = await req.json();
+    const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const {skip, limit} = body;
+    const { skip, limit } = body;
     if (skip == null || limit == null) {
-      return NextResponse.json({ message: "Skip or limit not found" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Skip or limit not found" },
+        { status: 400 },
+      );
     }
     await connect();
     const userLogged = await UserModel.findOne({ _id: userId }).exec();
     if (!userLogged) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    
+
     const userProfileId = req.nextUrl.searchParams.get("user");
     if (!userProfileId) {
       return NextResponse.json(
@@ -50,8 +53,13 @@ export async function POST(req: NextRequest) {
     if (!userProfileFollowers) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    const userProfileFollowersSliced = userProfileFollowers.followers.slice(skip, skip + limit);
-    return NextResponse.json({ userProfileFollowersSliced }, { status: 200 });
+    const userProfileFollowersSliced = userProfileFollowers.followers.slice(
+      skip,
+      skip + limit,
+    );
+    const totalFollowersUser = userProfileFollowers.followers.length;
+    const hasMore = totalFollowersUser > skip + limit;
+    return NextResponse.json({ users: userProfileFollowersSliced, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

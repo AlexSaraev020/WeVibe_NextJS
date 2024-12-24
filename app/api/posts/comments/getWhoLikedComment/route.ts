@@ -41,12 +41,11 @@ export async function POST(req: Request) {
       skip,
       skip + limit,
     );
-    const totalWhoLikedComment = await CommentsModel.countDocuments({
-      _id: commentId,
-    });
-    const hasMore = totalWhoLikedComment >= skip + limit;
+    const totalWhoLikedComment = whoLikedComment.likes.length;
+    const hasMore = totalWhoLikedComment > skip + limit;
+
     return NextResponse.json(
-      { likes:whoLikedCommentSliced, message: "People who liked found", hasMore },
+      { users:whoLikedCommentSliced, message: "People who liked found", hasMore },
       { status: 200 },
     );
   } catch (error: unknown) {

@@ -1,14 +1,15 @@
 import axios from "axios";
 import { getUser } from "../../user/searchUser";
+import { CommentType } from "@/types/post/postType";
 
 interface AddCommentProps {
   postId: string;
   comment: string;
+  setComments: (updateComments: (prevComments: CommentType[]) => CommentType[]) => void;
   setComment: (comment: string) => void;
-  setAddedCommentCounter: (updateCounter:(prevCounter: number) => number) => void;
 }
 
-export const addComment = async ({ postId, comment, setComment, setAddedCommentCounter }: AddCommentProps) => {
+export const addComment = async ({ postId, comment, setComment ,setComments }: AddCommentProps) => {
   setComment("");
   try {
     const userResponse = await getUser();
@@ -19,8 +20,9 @@ export const addComment = async ({ postId, comment, setComment, setAddedCommentC
       userId,
     });
 
-    if (response.status < 300) {
-      setAddedCommentCounter((prevCounter) => prevCounter + 1);
+    if (response.status < 300 ) {
+      console.log("response.data.comment", response.data.comment);
+      setComments((prev) => [response.data.comment, ...prev]);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

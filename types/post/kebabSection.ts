@@ -1,4 +1,7 @@
 import { ImageType } from "../image/imageType";
+import { CommentType } from "./comments/commentsType";
+import { RepliesType } from "./comments/replies/repliesType";
+import { PostType } from "./postType";
 
 export interface KebabSectionProps {
   type: "post" | "comment" | "reply";
@@ -9,6 +12,7 @@ export type PostKebabSectionProps = KebabSectionProps & {
   userId: string;
   postId: string;
   image:ImageType;
+  setPosts:(updatePosts: (prevPosts: PostType[]) => PostType[]) => void;
 };
 
 export type CommentKebabSectionProps = KebabSectionProps & {
@@ -16,9 +20,7 @@ export type CommentKebabSectionProps = KebabSectionProps & {
   userId: string;
   commentId: string;
   postId: string;
-  setAddedCommentCounter: (
-    updateCounter: (prevCounter: number) => number,
-  ) => void;
+  setComments:(updateComments: (prevComments: CommentType[]) => CommentType[]) => void;
 };
 
 export type ReplyKebabSectionProps = KebabSectionProps & {
@@ -26,9 +28,7 @@ export type ReplyKebabSectionProps = KebabSectionProps & {
   userId: string;
   commentId: string;
   _id: string;
-  setAddedReplyCounter: (
-    updateCounter: (prevCounter: number) => number,
-  ) => void;
+  setReplies:(updateReplies: (prevReplies: RepliesType[]) => RepliesType[]) => void;
 };
 
 export type KebabSectionCombinedProps =

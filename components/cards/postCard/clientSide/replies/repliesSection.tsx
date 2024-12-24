@@ -1,11 +1,12 @@
 import { replyComment } from "@/actions/posts/comments/replies/reply";
 import Textarea from "@/components/forms/formElements/textarea";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { LuSend } from "react-icons/lu";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import ReplyCard from "./replyCard";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { getReplies } from "@/actions/posts/comments/replies/getReplies";
+import RepliesList from "./repliesList";
 
 interface RepliesSectionProps {
   commentContent: {
@@ -20,30 +21,56 @@ export default function RepliesSection({
   postId,
 }: RepliesSectionProps) {
   const [showReplyField, setShowReplyField] = useState<boolean>(false);
+  const [repliesNumber, setRepliesNumber] = useState<number>(
+    commentContent.replies,
+  );
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [replies, setReplies] = useState<RepliesType[]>([]);
   const [reply, setReply] = useState<string>("");
-  const [addedReplyCounter, setAddedReplyCounter] = useState<number>(
-    commentContent.replies,
-  );
+  const [skip, setSkip] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(0);
+
   const handleSubmitReply = async () => {
     await replyComment({
       postId,
       commentId: commentContent._id,
       reply,
-      setAddedReplyCounter,
       setReply,
       setShowReplyField,
+      setRepliesNumber,
+      setReplies,
     });
   };
 
-  useEffect(() => {
-    if (showReplies && addedReplyCounter > 0) {
-      (async () => {
-        await getReplies({ postId, commentId: commentContent._id, setReplies });
-      })();
+  const loadMoreReplies = useCallback(async () => {
+    if (!hasMore) return;
+    setLoading(true);
+    const newReplies = await getReplies({
+      postId,
+      commentId: commentContent._id,
+      skip,
+      limit: 6,
+      setLoading,
+      setHasMore,
+      setSkip,
+    });
+    if (newReplies.length < 6) {
+      setHasMore(false);
     }
-  }, [addedReplyCounter, showReplies, commentContent._id]);
+    if (Array.isArray(newReplies)) {
+      setReplies((prev) => [...prev, ...newReplies]);
+    }
+    setLoading(false);
+  }, [loading, hasMore, postId, skip, commentContent._id, replies]);
+
+  useEffect(() => {
+    if (showReplies) {
+      loadMoreReplies();
+    }
+  }, [page, showReplies]);
+
   return (
     <div className="flex w-full flex-col items-end">
       <div className="flex w-11/12 items-center justify-start gap-4">
@@ -53,9 +80,12 @@ export default function RepliesSection({
         >
           Reply
         </button>
-        {addedReplyCounter > 0 && (
+        {repliesNumber > 0 && (
           <button
-            onClick={() => setShowReplies(!showReplies)}
+            onClick={() => {
+              setShowReplies(!showReplies);
+              setPage(0);
+            }}
             className="flex items-end text-xs italic text-white/60 md:text-sm"
           >
             {showReplies ? "Hide replies" : "Show replies"}
@@ -87,17 +117,17 @@ export default function RepliesSection({
           </button>
         </div>
       )}
-      {addedReplyCounter > 0 && showReplies && (
-        <ul className="flex w-11/12 flex-col gap-2 pt-2">
-          {replies.map((reply: RepliesType) => (
-            <ReplyCard
-              setAddedReplyCounter={setAddedReplyCounter}
-              reply={reply}
-              key={reply._id}
-            />
-          ))}
-        </ul>
-      )}
+
+      <div className="flex w-full items-center justify-center">
+        <RepliesList
+          hasMore={hasMore}
+          setPage={setPage}
+          replies={replies}
+          showReplies={showReplies}
+          commentContent={commentContent}
+          setReplies={setReplies}
+        />
+      </div>
     </div>
   );
 }

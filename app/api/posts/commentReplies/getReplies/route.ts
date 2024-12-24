@@ -14,15 +14,17 @@ export async function POST(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { commentId, postId } = body;
-    if (!commentId || !postId) {
+    const { commentId, postId, skip, limit } = body;
+    if (!commentId || !postId || skip == null || limit == null) {
       return NextResponse.json(
-        { message: "Missing commentId or postId" },
+        { message: "The body is invalid" },
         { status: 400 },
       );
     }
     const replies = await CommentRepliesModel.find({ commentId, postId })
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .select("-__v -postId")
       .populate({
         path: "user",
@@ -40,8 +42,13 @@ export async function POST(req: Request) {
     const formattedReplies = replies.map((reply) => ({
       ...reply,
       likes: reply.likes.length,
-    }))
-    return NextResponse.json({ replies: formattedReplies }, { status: 200 });
+    }));
+    const totalRepliesCount = await CommentRepliesModel.countDocuments({
+      postId,
+      commentId,
+    });
+    const hasMore = totalRepliesCount > skip + limit;
+    return NextResponse.json({ replies: formattedReplies, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

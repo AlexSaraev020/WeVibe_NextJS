@@ -1,10 +1,10 @@
-import { CommentType } from "@/types/post/postType";
+import { CommentType } from "@/types/post/comments/commentsType";
 import axios from "axios";
 interface GetCommentsProps {
   postId: string;
   setLoading: (loading: boolean) => void;
   setHasMore: (hasMore: boolean) => void;
-  setSkip:(updateSkip: (prevSkip: number) => number) => void;
+  setSkip: (updateSkip: (prevSkip: number) => number) => void;
   skip: number;
   limit: number;
 }

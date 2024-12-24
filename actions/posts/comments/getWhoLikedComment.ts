@@ -26,14 +26,13 @@ export const getWhoLikedComment = async ({
         limit,
       },
     );
-    if (
-      response.status < 300 &&
-      Array.isArray(response.data.likes)
-    ) {
+    console.log("users", response.data.users);
+    console.log("hasMore", response.data.hasMore);
+    if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
       setSkip((prevSkip) => prevSkip + limit);
       setHasMore(response.data.hasMore);
-      return response.data.likes as UserType[];
+      return response.data.users as UserType[];
     }
     setHasMore(false);
     return;

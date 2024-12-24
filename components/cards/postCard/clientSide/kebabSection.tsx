@@ -19,7 +19,6 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [allow, setAllow] = useState<boolean>(false);
   const [showDeletePostPrompt,setShowDeletePostPrompt] = useState<boolean>(false);
-  const router = useRouter();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -62,21 +61,21 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
           postId: props.postId,
           createdBy: props.userId,
           image: props.image,
-          router,
+          setPosts: props.setPosts,
         });
         break;
       case "comment":
         await deleteComment({
           commentId: props.commentId,
           postId: props.postId,
-          setAddedCommentCounter: props.setAddedCommentCounter,
+          setComments: props.setComments,
         });
         break;
       case "reply":
         await deleteReply({
           replyId: props._id,
           commentId: props.commentId,
-          setAddedReplyCounter: props.setAddedReplyCounter,
+          setReplies: props.setReplies,
         });
         break;
     }

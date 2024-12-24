@@ -2,6 +2,7 @@ import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
 import { PostModel } from "@/models/posts/post";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request) {
@@ -48,8 +49,14 @@ export async function PUT(req: Request) {
       { new: true },
     );
 
+    const populatedNewComment = await CommentsModel.populate(newComment, {
+      path: "user",
+      model: UserModel,
+      select: ["username", "image", "_id"],
+    });
+
     return NextResponse.json(
-      { message: "Comment added successfully", comment: newComment },
+      { message: "Comment added successfully", comment: populatedNewComment },
       { status: 200 },
     );
   } catch (error: unknown) {

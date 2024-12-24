@@ -1,27 +1,31 @@
+import { CommentType } from "@/types/post/comments/commentsType";
 import axios from "axios";
-interface DeleteCommentProps{
-    commentId: string
-    postId: string
-    setAddedCommentCounter: (
-        updateCounter: (prevCounter: number) => number,
-      ) => void;
+interface DeleteCommentProps {
+  commentId: string;
+  postId: string;
+  setComments: (
+    updateComments: (prevComments: CommentType[]) => CommentType[],
+  ) => void;
 }
 
-export const deleteComment = async({commentId, postId, setAddedCommentCounter}: DeleteCommentProps) =>{
-    try {
-        const response = await axios.patch(`/api/posts/comments/deletion/delete`,{
-            commentId,
-            postId
-        });
-        if(response.status < 300){
-            setAddedCommentCounter((prevCounter) => prevCounter - 1);
-        }
-        return;
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-            return error.response.data;
-        }
-        console.error("Error following:", error);
-        
+export const deleteComment = async ({
+  commentId,
+  postId,
+  setComments,
+}: DeleteCommentProps) => {
+  try {
+    await axios.patch(`/api/posts/comments/deletion/delete`, {
+      commentId,
+      postId,
+    });
+
+    setComments((prev) => prev.filter((comment) => comment._id !== commentId));
+
+    return;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
     }
-}
+    console.error("Error following:", error);
+  }
+};

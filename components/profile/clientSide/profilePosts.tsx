@@ -16,7 +16,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
 
   const loadMorePosts = async () => {
     if (loadingPosts || !hasMore) return;

@@ -44,13 +44,15 @@ export async function POST(req: Request) {
       replies: comment.replies.length,
       likes: comment.likes.length,
     }));
-    const totalCommentsCount = await CommentsModel.countDocuments({ post: postId });
-    const hasMore = totalCommentsCount >= skip + limit;
-    console.log("skip", skip);
-    console.log("formattedComments", formattedComments.length);
-    console.log("totalCommentsCount", totalCommentsCount);
-    console.log("hasMore", hasMore);
-    return NextResponse.json({ comments: formattedComments, hasMore }, { status: 200 });
+    const totalCommentsCount = await CommentsModel.countDocuments({
+      post: postId,
+    });
+    const hasMore = totalCommentsCount > skip + limit;
+
+    return NextResponse.json(
+      { comments: formattedComments, hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error);

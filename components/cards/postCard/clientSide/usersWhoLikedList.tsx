@@ -26,6 +26,21 @@ export default function UsersList({
   const [hasMore, setHasMore] = useState(true);
   const [skip, setSkip] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
+
+  useEffect(() => {
+    if (inView) {
+      loadMoreUsers();
+    }
+  }, [inView, skip, showUsersList]);
+
+  useEffect(() => {
+    if (!showUsersList) {
+      setUserList([]);
+      setSkip(0);
+      setHasMore(true);
+      setLoading(false);
+    }
+  }, [showUsersList]);
   const fetchUsersByType = async ({
     skip,
     limit,
@@ -67,26 +82,18 @@ export default function UsersList({
   };
 
   const loadMoreUsers = useCallback(async () => {
-    console.log("called");
     if (!hasMore) return;
     setLoading(true);
-    const newUsers = await fetchUsersByType({ skip, limit: 3 });
-    console.log("newUsers", newUsers);
+    const newUsers = await fetchUsersByType({ skip, limit: 5 });
 
-    if (newUsers && newUsers.length < 3) {
+    if (newUsers && newUsers.length < 5) {
       setHasMore(false);
     }
     if (Array.isArray(newUsers)) {
       setUserList((prev) => [...prev, ...newUsers]);
     }
     setLoading(false);
-  }, [loading, hasMore, _id, skip]);
-
-  useEffect(() => {
-    if (inView) {
-      loadMoreUsers();
-    }
-  }, [inView, skip, showUsersList, _id, type]);
+  }, [loading, hasMore, skip]);
 
   const handleClickOutside = () => {
     setShowUsersList(false);
@@ -116,13 +123,17 @@ export default function UsersList({
         </h2>
         <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto p-4 scrollbar-none md:w-11/12">
           {userList.length > 0 ? (
-            userList.map((likedBy: UserType, index) => (
-              <ProfileCard
-                key={likedBy._id + index}
-                id={likedBy._id}
-                username={likedBy.username}
-                image={likedBy.image.url}
-              />
+            userList.map((likedBy: UserType) => (
+              <li
+                key={likedBy._id}
+                className="flex h-fit w-full flex-col items-center justify-center px-0 md:px-2"
+              >
+                <ProfileCard
+                  id={likedBy._id}
+                  username={likedBy.username}
+                  image={likedBy.image.url}
+                />
+              </li>
             ))
           ) : (
             <p>Nobody liked this post</p>

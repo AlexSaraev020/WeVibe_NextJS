@@ -11,23 +11,17 @@ import { CommentType } from "@/types/post/postType";
 interface CommentsSectionProps {
   postId: string;
   setShowComments: (showComments: boolean) => void;
-  setAddedCommentCounter: (
-    updateCounter: (prevCounter: number) => number,
-  ) => void;
-  addedCommentCounter: number;
   showComments: boolean;
 }
 
 export default function CommentsSection({
   postId,
   setShowComments,
-  setAddedCommentCounter,
-  addedCommentCounter,
   showComments,
 }: CommentsSectionProps) {
   const [comment, setComment] = useState<string>("");
   const { setMessage } = useAlert();
-const [comments, setComments] = useState<CommentType[]>([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const handleClickOutside = () => {
     setShowComments(false);
   };
@@ -41,7 +35,7 @@ const [comments, setComments] = useState<CommentType[]>([]);
       setMessage("Comment cannot start with a space or be empty");
       return;
     }
-    await addComment({ postId, comment, setComment, setAddedCommentCounter });
+    await addComment({ postId, comment, setComment, setComments });
   };
   return (
     <div
@@ -66,8 +60,6 @@ const [comments, setComments] = useState<CommentType[]>([]);
           setComments={setComments}
           postId={postId}
           showComments={showComments}
-          addedCommentCounter={addedCommentCounter}
-          setAddedCommentCounter={setAddedCommentCounter}
         />
         <form
           onSubmit={handleSubmitComment}

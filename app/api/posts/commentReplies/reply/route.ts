@@ -57,20 +57,19 @@ export async function PUT(req: Request) {
       );
     }
 
-    
     const validate = validate__Fields__Length({ comment: reply });
-    
+
     if (validate) {
       return NextResponse.json({ message: validate }, { status: 400 });
     }
-    
+
     const newReply = await CommentRepliesModel.create({
       commentId: commentId,
       postId: postId,
       user: isLoggedIn,
       content: reply,
     });
-    
+
     if (!newReply) {
       return NextResponse.json(
         { message: "Reply not created" },
@@ -83,9 +82,14 @@ export async function PUT(req: Request) {
       { $push: { replies: newReply._id } },
       { new: true },
     );
+    const populatedNewReply = await CommentRepliesModel.populate(newReply, {
+      path: "user",
+      model: UserModel,
+      select: ["username", "image", "_id"],
+    });
 
     return NextResponse.json(
-      { message: "Reply created successfully" },
+      { message: "Reply created successfully", reply: populatedNewReply },
       { status: 201 },
     );
   } catch (error: unknown) {

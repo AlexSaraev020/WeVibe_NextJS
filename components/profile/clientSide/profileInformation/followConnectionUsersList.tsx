@@ -1,6 +1,6 @@
 "use client";
 import { UserType } from "@/types/userTypes/user/userType";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { IoClose } from "react-icons/io5";
 import ProfileCard from "@/components/cards/profileCard/profileCard";
@@ -22,56 +22,58 @@ export default function UsersList({
 }: UsersListProps) {
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [skip, setSkip] = useState(0);
-  const { ref, inView } = useInView();
+  const [skip, setSkip] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const fetchUsersByType = async ({
-      skip,
-      limit,
-    }: {
-      skip: number;
-      limit: number;
-    }) => {
-      if (showFollowers && !showFollowing) {
-        return await getAllFollowers({ setLoading, userId ,skip ,limit: 8});
-      }
+    skip,
+    limit,
+  }: {
+    skip: number;
+    limit: number;
+  }) => {
+    if (showFollowers && !showFollowing) {
+      return await getAllFollowers({
+        setLoading,
+        userId,
+        skip,
+        limit,
+        setHasMore,
+        setSkip,
+      });
+    }
 
-      if (showFollowing && !showFollowers) {
-        return await getAllFollowing({ setLoading, userId , skip ,limit: 8});
-      }
-    };
+    if (showFollowing && !showFollowers) {
+      return await getAllFollowing({
+        setLoading,
+        userId,
+        skip,
+        limit,
+        setHasMore,
+        setSkip,
+      });
+    }
+  };
 
-    const loadMoreUsers = async () => {
-      if (loadingUsers || !hasMore) return;
-      setLoadingUsers(true);
-  
-      const newUsers = await fetchUsersByType({ skip, limit: 3 });
-      console.log(newUsers);
-      if (!Array.isArray(newUsers)) {
-        console.error("Unexpected response:", newUsers);
-        setLoadingUsers(false);
-        return;
-      }
-  
-      if (newUsers.length < 3) {
-        setHasMore(false);
-      }
-  
+  const loadMoreUsers = useCallback(async () => {
+    if (!hasMore) return;
+    setLoading(true);
+
+    const newUsers = await fetchUsersByType({ skip, limit: 8 });
+    if (newUsers.length < 8) {
+      setHasMore(false);
+    }
+    if (Array.isArray(newUsers)) {
       setUsers((prev) => [...prev, ...newUsers]);
-      setSkip((prev) => prev + 3);
-      setLoadingUsers(false);
-    };
+    }
+    setLoading(false);
+  }, [loading, hasMore, skip]);
 
   useEffect(() => {
+    if (inView) {
       loadMoreUsers();
-    }, [showFollowers, showFollowing, userId]);
-  
-    useEffect(() => {
-      if (inView) {
-        loadMoreUsers();
-      }
-    }, [inView]);
+    }
+  }, [inView]);
 
   const handleClickOutside = () => {
     setShowUsersList(false);
@@ -107,8 +109,6 @@ export default function UsersList({
                 image={user.image.url}
               />
             ))
-          ) : loading ? (
-            <AiOutlineLoading className="animate-spin" />
           ) : showFollowers ? (
             <h1 className="text-center text-base text-white">
               This user has 0 followers
@@ -118,10 +118,12 @@ export default function UsersList({
               This user follows 0 people
             </h1>
           )}
-          <div className="h-1" ref={ref} />
-          {!loading && loadingUsers && (
-            <div>
-              <AiOutlineLoading className="animate-spin" />
+          {hasMore && (
+            <div
+              ref={ref}
+              className="flex w-full items-center justify-center pb-24 md:pb-8"
+            >
+              {loading && <AiOutlineLoading className="h-8 w-8 animate-spin" />}
             </div>
           )}
         </ul>

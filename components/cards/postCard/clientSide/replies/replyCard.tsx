@@ -13,14 +13,11 @@ import UsersList from "../usersWhoLikedList";
 
 interface ReplyCardProps {
   reply: RepliesType;
-  setAddedReplyCounter: (
-    updateCounter: (prevCounter: number) => number,
+  setReplies: (
+    updateReplies: (prevReplies: RepliesType[]) => RepliesType[],
   ) => void;
 }
-export default function ReplyCard({
-  reply,
-  setAddedReplyCounter,
-}: ReplyCardProps) {
+export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
   const [likes, setLikes] = useState<number>(reply.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
   const [showUsersList, setShowUsersList] = useState<boolean>(false);
@@ -31,9 +28,15 @@ export default function ReplyCard({
     })();
   }, []);
   const handleDate = (date: string) => {
-    const convertedDate = new Date(date);
-    const timeAgo = formatDistanceToNow(convertedDate, { addSuffix: true });
-    return timeAgo;
+    const diff = Math.floor(
+      (new Date().getTime() - new Date(date).getTime()) / 1000,
+    );
+    if (diff < 60) return `${diff}s`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d`;
+    if (diff < 31536000) return `${Math.floor(diff / 604800)}w`;
+    return `${Math.floor(diff / 31536000)}y`;
   };
 
   const handleLike = async () => {
@@ -56,7 +59,7 @@ export default function ReplyCard({
         />
       )}
       {liked !== undefined ? (
-        <div className="flex h-fit w-full animate-fadeIn flex-col items-start gap-2 rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
+        <div className="flex w-full flex-col items-start gap-2 rounded-xl border-2 border-black p-2 shadow-zinc-600 transition-all duration-500 hover:border-postBackground/50 hover:shadow-glow-sm hover:shadow-postBackground/50 lg:w-11/12">
           <div className="flex w-full gap-2">
             <Link
               className="mt-1 min-w-fit max-w-fit"
@@ -90,7 +93,7 @@ export default function ReplyCard({
 
               <div className="relative flex h-full w-8 flex-col items-center justify-start">
                 <KebabSection
-                  setAddedReplyCounter={setAddedReplyCounter}
+                  setReplies={setReplies}
                   type="reply"
                   commentId={reply.commentId}
                   userId={reply.user._id}
@@ -107,7 +110,10 @@ export default function ReplyCard({
                     <GoStar className="h-5 w-6 animate-appear transition-all duration-500" />
                   )}
                 </button>
-                <button onClick={() => setShowUsersList(true)} className="flex h-6 w-full items-start justify-center text-xs font-bold">
+                <button
+                  onClick={() => setShowUsersList(true)}
+                  className="flex h-6 w-full items-start justify-center text-xs font-bold"
+                >
                   {likes}
                 </button>
               </div>

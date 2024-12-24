@@ -27,11 +27,11 @@ export const getWhoLikedReply = async ({
         limit,
       },
     );
-    if (response.status < 300 && Array.isArray(response.data.likes)) {
+    if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
       setSkip((prevSkip) => prevSkip + limit);
       setHasMore(response.data.hasMore);
-      return response.data.likes as UserType[];
+      return response.data.users as UserType[];
     }
     return;
   } catch (error: unknown) {

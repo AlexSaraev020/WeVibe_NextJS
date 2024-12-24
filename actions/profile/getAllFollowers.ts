@@ -1,3 +1,4 @@
+import { UserType } from "@/types/userTypes/user/userType";
 import axios from "axios";
 
 interface GetFollowersProps {
@@ -5,10 +6,14 @@ interface GetFollowersProps {
   skip: number;
   limit: number;
   userId: string;
+  setHasMore: (hasMore: boolean) => void;
+  setSkip: (updateSkip: (prevSkip: number) => number) => void;
 }
 
 export const getAllFollowers = async ({
   skip,
+  setHasMore,
+  setSkip,
   limit,
   setLoading,
   userId,
@@ -18,9 +23,11 @@ export const getAllFollowers = async ({
       `/api/user/profile/getAllFollowerUsers?user=${userId}`,
       { skip, limit },
     );
-    if (response.status < 300) {
+    if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
-      return response.data.userProfileFollowersSliced;
+      setSkip((prevSkip) => prevSkip + limit);
+      setHasMore(response.data.hasMore);
+      return response.data.users as UserType[];
     }
     return [];
   } catch (error: unknown) {
