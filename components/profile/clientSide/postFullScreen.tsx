@@ -24,8 +24,15 @@ export default function PostFullScreen({
       onClick={handleClickOutside}
       className="fixed inset-0 z-50 flex w-full items-end justify-center bg-black/60 md:items-center"
     >
-      <div onClick={handleClickInside} className="w-6/12 h-fit bg-black">
-        <Post post={post} setPosts={setPosts} setShowPostFullScreen={setShowPostFullScreen} />
+      <div
+        onClick={handleClickInside}
+        className="h-fit w-full border-t-2 border-postBackground/50 bg-black shadow-glow shadow-postBackground/50 md:w-6/12 md:border-none md:shadow-none"
+      >
+        <Post
+          post={post}
+          setPosts={setPosts}
+          setShowPostFullScreen={setShowPostFullScreen}
+        />
       </div>
     </div>
   );

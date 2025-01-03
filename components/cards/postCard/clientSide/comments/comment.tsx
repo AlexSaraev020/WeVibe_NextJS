@@ -86,7 +86,9 @@ export default function Comment({
                     href={`/profile?user=${commentContent.user._id}`}
                     className="text-xs font-bold md:text-lg"
                   >
-                    {commentContent.user.username}
+                    {commentContent.user.username.length > 25
+                      ? commentContent.user.username.slice(0, 25) + "..."
+                      : commentContent.user.username}
                   </Link>
                   <h6 className="text-xs font-medium text-zinc-300">
                     {handleDate(commentContent.createdAt)}

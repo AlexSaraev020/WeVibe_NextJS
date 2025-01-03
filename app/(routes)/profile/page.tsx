@@ -20,11 +20,14 @@ export default async function Page(props: {
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
       {user ? (
-        <div className="mt-10 flex h-full flex-col items-center justify-center gap-2 md:gap-10 pb-4 px-1 w-full">
-          <div className="flex w-auto mx-auto flex-col items-center justify-center">
-            <div aria-label="profile" className="flex w-full items-center justify-center gap-4 p-4">
+        <div className="mt-10 flex h-full w-full flex-col items-center justify-center gap-2 px-1 pb-4 md:gap-10">
+          <div className="mx-auto flex w-auto flex-col items-center justify-center">
+            <div
+              aria-label="profile"
+              className="flex w-full items-center justify-center gap-4 p-4"
+            >
               <div aria-label="profile picture" className="w-fit">
-                <ProfilePictureZoom />
+                <ProfilePictureZoom userImage={user.image} />
               </div>
               <div className="mt-4 flex flex-col">
                 <div className="flex items-center gap-4 md:gap-8">
@@ -55,7 +58,10 @@ export default async function Page(props: {
                 </div>
               </div>
             </div>
-            <div aria-label="bio" className="mt-3 mx-5 flex max-w-xs md:max-w-md flex-col md:mt-0">
+            <div
+              aria-label="bio"
+              className="mx-5 mt-3 flex max-w-xs flex-col md:mt-0 md:max-w-md"
+            >
               {user.bio.length > 0 && (
                 <Long_Text_Truncate className="text-white/50" text={user.bio} />
               )}

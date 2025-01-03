@@ -2,12 +2,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import { useUserNavData } from "@/contexts/user/userNavContext";
 import defaultImage from "@/public/placeholders/profilePlaceholder.png"
-
-export default function ProfilePictureZoom() {
+import { ImageType } from "@/types/image/imageType";
+interface ProfilePictureZoomProps {
+  userImage: ImageType;
+}
+export default function ProfilePictureZoom({ userImage }: ProfilePictureZoomProps) {
   const [zoom, setZoom] = useState<boolean>(true);
-  const { userImage } = useUserNavData();
   return (
     <div
       onClick={() => setZoom(!zoom)}

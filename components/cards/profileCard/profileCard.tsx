@@ -38,14 +38,14 @@ export default function ProfileCard({
         />
 
         <div className="flex flex-1 flex-col justify-center">
-          <h2 className="text-sm md:text-base">{username}</h2>
+          <h2 className="text-sm md:text-base">{username.length > 30 ? username.slice(0, 30) + "..." : username}</h2>
           <p
             className={twMerge(
               "w-11/12 text-xs md:text-sm text-zinc-400/70",
               bio && bio?.length > 20 ? "line-clamp-1" : "",
             )}
           >
-            {bio}
+            {bio && bio?.length > 30 ? bio.slice(0, 30) + "..." : bio}
           </p>
         </div>
       </div>
