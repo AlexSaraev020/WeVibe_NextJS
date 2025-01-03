@@ -42,14 +42,14 @@ export async function POST(req: Request) {
         { status: 200 },
       );
     }
-    const likesNumberPosts = posts.map((post) => ({
+    const postsWithLikesNumber = posts.map((post) => ({
       ...post,
       likes: post.likes.length,
     }));
     
-    const totalCommentsCount = await PostModel.countDocuments();
-    const hasMore = totalCommentsCount > skip + limit;
-    return NextResponse.json({ posts: likesNumberPosts, hasMore }, { status: 200 });
+    const totalPostsCount = await PostModel.countDocuments();
+    const hasMore = totalPostsCount > skip + limit;
+    return NextResponse.json({ posts: postsWithLikesNumber, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

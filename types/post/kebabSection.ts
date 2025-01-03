@@ -10,6 +10,7 @@ export interface KebabSectionProps {
 export type PostKebabSectionProps = KebabSectionProps & {
   type: "post";
   userId: string;
+  setShowPostFullScreen?: (showPostFullScreen: boolean) => void;
   postId: string;
   image:ImageType;
   setPosts:(updatePosts: (prevPosts: PostType[]) => PostType[]) => void;

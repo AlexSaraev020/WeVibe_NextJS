@@ -3,6 +3,7 @@ import axios from "axios";
 
 export const deleteImage = async (image: ImageType) => {
   try {
+    if (image.fileId === "default") return;
     await axios.delete("/api/posts/deleteImage", {
       data: {
         fileId: image.fileId,

@@ -1,4 +1,5 @@
 import { ImageType } from "@/types/image/imageType";
+import { PostType } from "@/types/post/postType";
 import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -11,9 +12,11 @@ interface CreatePostProps {
   router: AppRouterInstance;
   setShowCreatePost: (showCreatePost: boolean) => void;
   setDisabled: (disabled: boolean) => void;
+  setPosts: (updatePosts: (prevPosts: PostType[]) => PostType[]) => void;
 }
 
 export const createPost = async ({
+  setPosts,
   title,
   description,
   image,
@@ -34,7 +37,7 @@ export const createPost = async ({
       setError(false);
       setMessage(response.data.message);
       setShowCreatePost(false);
-      router.refresh();
+      setPosts((prevPosts) => [response.data.post, ...prevPosts]);
     }
     return null;
   } catch (error: unknown) {

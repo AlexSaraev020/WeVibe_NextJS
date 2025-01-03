@@ -58,6 +58,7 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
     switch (props.type) {
       case "post":
         await deletePost({
+          setShowPostFullScreen: props.setShowPostFullScreen,
           postId: props.postId,
           createdBy: props.userId,
           image: props.image,

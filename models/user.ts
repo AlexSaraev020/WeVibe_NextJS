@@ -27,12 +27,12 @@ const UserSchema = new Schema<User>({
     url: {
       type: String,
       required: true,
-      default: "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp",
+      default: "https://ik.imagekit.io/xkk8kgegl/defaultuser.webp?updatedAt=1735907399967",
     },
     fileId: {
       type: String,
       required: true,
-      default: "675fef71e375273f6052bf73",
+      default: "default",
     },
   },
   following: [{ type: Schema.Types.ObjectId, default: [], ref: "User" }],

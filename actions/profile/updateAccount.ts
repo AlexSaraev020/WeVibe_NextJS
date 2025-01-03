@@ -27,7 +27,6 @@ export const updateAccount = async ({
       setError(false);
       setEdit(false);
       setMessage(response.data.message);
-      router.push("/home");
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

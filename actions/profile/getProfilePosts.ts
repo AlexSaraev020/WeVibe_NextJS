@@ -6,11 +6,15 @@ interface GetProfilePostsProps {
   setLoading: (loading: boolean) => void;
   skip: number;
   limit: number;
+  setSkip: (updateSkip: (prevSkip: number) => number) => void;
+  setHasMore: (hasMore: boolean) => void;
 }
 
 export const getProfilePosts = async ({
   userId,
   setLoading,
+  setSkip,
+  setHasMore,
   skip,
   limit,
 }: GetProfilePostsProps) => {
@@ -19,9 +23,11 @@ export const getProfilePosts = async ({
       `/api/user/profile/getProfilePosts?user=${userId}`,
       { skip, limit },
     );
-    if (response.status < 300) {
+    if (response.status < 300 && Array.isArray(response.data.posts)) {
       setLoading(false);
-      return response.data.posts
+      setSkip((prevSkip) => prevSkip + limit);
+      setHasMore(response.data.hasMore);
+      return response.data.posts as PostType[];
     }
     return [];
   } catch (error: unknown) {

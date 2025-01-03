@@ -12,12 +12,14 @@ import { useAlert } from "@/contexts/alert/alertContext";
 import Upload from "@/components/uploadImage/upload";
 import { ImageType } from "@/types/image/imageType";
 import { deleteImage } from "@/actions/posts/deletion/deleteImage";
+import { usePostsNav } from "@/contexts/posts/postsNavContext";
 
 interface CreatePostProps {
   setShowCreatePost: (showCreatePost: boolean) => void;
 }
 
 export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
+  const {setPosts} = usePostsNav();
   const [image, setImage] = useState<ImageType | undefined>(undefined);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -42,6 +44,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createPost({
+      setPosts,
       title,
       setDisabled,
       setShowCreatePost,
@@ -57,7 +60,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
     <div className="fixed inset-0 z-50 flex h-[100dvh] w-full items-center justify-center bg-black/60">
       <form
         onSubmit={handleCreatePost}
-        className="flex w-11/12 animate-fadeIn flex-col gap-6 rounded-xl border-2 border-sky-600 bg-black/90 p-6 shadow-glow shadow-sky-500 transition-all duration-1000 ease-in-out hover:bg-black/70 md:w-4/12"
+        className="flex w-11/12 animate-fadeIn flex-col gap-6 rounded-xl border-2 border-postBackground/50 bg-black/90 p-6 shadow-glow shadow-postBackground/50 transition-all duration-1000 ease-in-out md:w-4/12"
       >
         <h2 className="neon-text bg-gradient-to-r from-sky-200 via-sky-400 to-sky-200 bg-clip-text py-1 text-center text-2xl font-extrabold text-transparent md:text-5xl">
           Create Post
@@ -79,6 +82,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
             ) : (
               <>
                 <Upload
+                setError={setError}
                   setImage={setImage}
                   setMessage={setMessage}
                   setProgress={setProgress}
@@ -89,7 +93,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
                 {!image && (
                   <div className="mb-4 h-1 w-full rounded-full bg-zinc-700 md:h-2">
                     <div
-                      className={`h-1 rounded-full bg-sky-600 shadow-glow-sm md:h-2 w-[${progress}%] shadow-sky-500 transition-all duration-500`}
+                      className={`h-1 rounded-full bg-postBackground/50 shadow-glow-sm md:h-2 w-[${progress}%] shadow-sky-500 transition-all duration-500`}
                       style={{ width: `${progress}%` }}
                     />
                   </div>

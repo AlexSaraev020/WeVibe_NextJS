@@ -67,7 +67,7 @@ export default function FormInput({
         <input
           aria-label={ariaLabel}
           autoComplete={autoComplete}
-          className={`${className} w-full rounded-md border-2 border-zinc-600 bg-black px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base`}
+          className={`${className} w-full rounded-md border-2 border-zinc-600 bg-transparent px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base`}
           type={password ? (hidePass ? "text" : "password") : type}
           name={name}
           id={id}

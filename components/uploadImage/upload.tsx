@@ -14,6 +14,7 @@ interface UploadProps {
   setImage: React.Dispatch<React.SetStateAction<ImageType | undefined>>;
   setDisable?: React.Dispatch<React.SetStateAction<boolean>>;
   setMessage: (message: string | undefined) => void;
+  setError?: (error: boolean) => void;
   image: ImageType | undefined;
   profile?: boolean;
   setProgress: React.Dispatch<React.SetStateAction<number>>;
@@ -25,9 +26,7 @@ export default function Upload(props: UploadProps) {
 
   const authenticator = async () => {
     try {
-      const response = await axios.get(
-        "/api/auth/uploadImageAuth",
-      );
+      const response = await axios.get("/api/auth/uploadImageAuth");
 
       if (response.status >= 400) {
         throw new Error(response.data.message);
@@ -51,6 +50,18 @@ export default function Upload(props: UploadProps) {
     props.setMessage(error.message);
   };
 
+  const validateAndResetFile = (file: File) => {
+    const isValid = file.size < 2000000;
+    if (!isValid) {
+      props.setMessage("File is too large (max 2MB)");
+      props.setError && props.setError(true);
+      if (imageUploadRef.current) {
+        imageUploadRef.current.value = "";
+      }
+    }
+    return isValid;
+  };
+
   return (
     <ImageKitProvider
       publicKey={publicKey}
@@ -68,13 +79,15 @@ export default function Upload(props: UploadProps) {
         onError={handleError}
         style={{ display: "none" }}
         ref={imageUploadRef}
-        validateFile={(file) => file.size < 2000000}
+        validateFile={validateAndResetFile}
       />
       <div
         onClick={() => imageUploadRef.current?.click()}
         className={twMerge(
           "flex cursor-pointer items-center justify-center transition-all duration-500 hover:scale-105 md:h-80",
-          props.profile ? "absolute z-50 h-20 w-20 md:h-40 md:w-40 rounded-full" : "h-40 md:h-80",
+          props.profile
+            ? "absolute z-50 h-20 w-20 rounded-full md:h-40 md:w-40"
+            : "h-40 md:h-80",
         )}
       >
         {props.profile ? (

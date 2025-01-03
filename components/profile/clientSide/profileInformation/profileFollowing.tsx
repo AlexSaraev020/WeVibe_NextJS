@@ -22,8 +22,8 @@ export default function ProfileFollowing({
         />
       )}
       <div onClick={() => setShowUsersList(true)} className="flex cursor-pointer flex-col items-center justify-center md:flex-row md:gap-2">
-        <h2 className="text-sm font-bold md:text-xl">{following}</h2>
-        <p className="text-md md:text-lg">Following</p>
+        <h2 className="text-xs font-bold md:text-base">{following}</h2>
+        <p className="text-xs md:text-base">Following</p>
       </div>
     </>
   );

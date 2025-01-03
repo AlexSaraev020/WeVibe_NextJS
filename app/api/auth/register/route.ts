@@ -12,7 +12,6 @@ export async function POST(req: Request) {
   try {
     await connect();
     const body = await req.json();
-
     const { username, email, password } = body;
     if (!username || !email || !password) {
       return NextResponse.json(
@@ -52,7 +51,6 @@ export async function POST(req: Request) {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
     const newUser = await UserModel.create({
       username,
       email,

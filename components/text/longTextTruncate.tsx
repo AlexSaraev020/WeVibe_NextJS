@@ -25,7 +25,7 @@ export default function Long_Text_Truncate({
             {text.slice(0, 100)}...
             <button
               onClick={() => setTruncate(false)}
-              className="italic text-xs md:text-sm text-white/60 ml-1"
+              className="italic text-xs md:text-sm text-white/60 ml-4"
             >
               more
             </button>
@@ -36,7 +36,7 @@ export default function Long_Text_Truncate({
             {text.length > 100 && (
               <button
                 onClick={() => setTruncate(true)}
-                className="italic text-xs md:text-sm text-white/60 ml-1"
+                className="italic text-xs md:text-sm text-white/60 ml-4"
               >
                 less
               </button>

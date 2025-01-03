@@ -118,7 +118,6 @@ export async function DELETE(req: NextRequest) {
         { status: 500 },
       );
     }
-    console.log(imagesToBeDeleted);
     return NextResponse.json(
       { message: "Account deleted successfully", imagesToBeDeleted },
       { status: 200 },

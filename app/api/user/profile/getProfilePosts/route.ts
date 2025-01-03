@@ -44,17 +44,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const searchedUser = await UserModel.findOne({ _id: userProfileId }).exec();
+    if (!searchedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
     const userProfilePosts = await PostModel.find({
       createdBy: userProfileId,
     })
       .sort({ createdAt: -1 })
+      .populate({
+        path: "createdBy",
+        select: "username image",
+      })
       .skip(skip)
       .limit(limit)
       .exec();
     if (!userProfilePosts) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    return NextResponse.json({ posts: userProfilePosts }, { status: 200 });
+    const totalProfilePosts = searchedUser.posts.length;
+    const hasMore = totalProfilePosts > skip + limit;
+    return NextResponse.json(
+      { posts: userProfilePosts, hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

@@ -61,8 +61,24 @@ export async function POST(req: Request) {
       { $push: { posts: newPost._id } },
     );
 
+    const post = await PostModel.findById(newPost._id)
+      .populate({
+        path: "createdBy",
+        model: UserModel,
+        select: "username image",
+      })
+      .select("_id title description image createdAt createdBy comments likes")
+      .exec();
+
+    if (!post) {
+      return NextResponse.json(
+        { message: "Post not found" },
+        { status: 404 },
+      );
+    }
+
     return NextResponse.json(
-      { message: "Post created successfully!" },
+      { message: "Post created successfully!" ,post},
       { status: 201 },
     );
   } catch (error: unknown) {

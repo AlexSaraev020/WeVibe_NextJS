@@ -16,7 +16,6 @@ export const getWhoLikedComment = async ({
   setSkip,
   setLoading,
 }: GetWhoLikedCommentProps) => {
-  console.log("called");
   try {
     const response = await axios.post(
       "/api/posts/comments/getWhoLikedComment",
@@ -26,8 +25,6 @@ export const getWhoLikedComment = async ({
         limit,
       },
     );
-    console.log("users", response.data.users);
-    console.log("hasMore", response.data.hasMore);
     if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
       setSkip((prevSkip) => prevSkip + limit);

@@ -50,7 +50,7 @@ export default function Textarea({
         </label>
       )}
       <textarea
-        className={`${className} w-full resize-none rounded-md border-2 border-zinc-600 bg-black px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 scrollbar-none focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base`}
+        className={`${className} w-full resize-none rounded-md border-2 border-zinc-600 bg-transparent px-2 text-sm placeholder-zinc-500 shadow-none transition-all duration-500 scrollbar-none focus:border-2 focus:border-postBackground/50 focus:shadow-glow focus:shadow-postBackground/50 focus:outline-none md:py-2 md:text-base`}
         name={name}
         id={id}
         rows={rows}

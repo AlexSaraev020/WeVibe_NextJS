@@ -38,7 +38,8 @@ export default function EditForm({
   const [email, setEmail] = useState<string>(user.email);
   const [password, setPassword] = useState<string>("");
   const [bio, setBio] = useState<string>(user.bio);
-  const [image, setImage] = useState<ImageType | undefined>(user.image);
+  const {userImage} = useUserNavData();
+  const [image, setImage] = useState<ImageType | undefined>(userImage);
   const [progress, setProgress] = useState<number>(0);
   const { setMessage, setError } = useAlert();
   const { setUsername, setUserImage } = useUserNavData();
@@ -128,6 +129,7 @@ export default function EditForm({
             <div className="relative flex w-11/12 items-center justify-center">
               <Upload
                 profile
+                setError={setError}
                 setImage={setImage}
                 setMessage={setMessage}
                 setProgress={setProgress}
@@ -184,7 +186,7 @@ export default function EditForm({
                 showLabel
                 id="bio"
                 rows={4}
-                maxLength={200}
+                maxLength={160}
                 minLength={0}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setBio(e.target.value)

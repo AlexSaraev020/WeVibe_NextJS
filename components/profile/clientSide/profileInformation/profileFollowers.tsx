@@ -12,10 +12,10 @@ export default function ProfileFollowers({ followers , userId }: ProfileFollower
     <>
     {showUsersList && <UsersList setShowUsersList={setShowUsersList} showFollowers userId={userId} />}
     <div onClick={() => setShowUsersList(true)} className="flex cursor-pointer flex-col items-center justify-center md:flex-row md:gap-2">
-      <h2 className="text-sm font-bold md:text-xl">
+      <h2 className="text-xs font-bold md:text-base">
         {followers}
       </h2>
-      <p className="text-md md:text-lg">Followers</p>
+      <p className="text-xs md:text-base">Followers</p>
     </div>
     </>
   );

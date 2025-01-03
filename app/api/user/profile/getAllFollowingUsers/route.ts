@@ -59,7 +59,6 @@ export async function POST(req: NextRequest) {
     );
     const totalFollowersUser = userProfileFollowing.following.length;
     const hasMore = totalFollowersUser > skip + limit;
-    console.log("userProfileFollowingSliced", userProfileFollowingSliced);
     return NextResponse.json({ users: userProfileFollowingSliced, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -6,7 +6,7 @@ import Textarea from "@/components/forms/formElements/textarea";
 import { LuSend } from "react-icons/lu";
 import { useAlert } from "@/contexts/alert/alertContext";
 import CommentsList from "./commentsList";
-import { CommentType } from "@/types/post/postType";
+import { CommentType } from "@/types/post/comments/commentsType";
 
 interface CommentsSectionProps {
   postId: string;

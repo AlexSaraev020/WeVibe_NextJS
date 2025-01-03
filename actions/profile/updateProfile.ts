@@ -1,6 +1,5 @@
 import { ImageType } from "@/types/image/imageType";
 import axios from "axios";
-import { set } from "mongoose";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { deleteImage } from "../posts/deletion/deleteImage";
 
@@ -42,15 +41,9 @@ export const updateProfile = async ({
     if (response.data.usernameUpdated === true) {
       setUsername(response.data.username);
     }
-    if (
-      response.data.imageUpdated === true &&
-      currentImage.url !== "https://ik.imagekit.io/xkk8kgegl/defaultuser_qd6fcnlO1.webp" && 
-      currentImage.fileId !== "675fef71e375273f6052bf73"
-    ) {
+    if (response.data.imageUpdated === true) {
       setUserImage(response.data.image);
       await deleteImage(currentImage);
-
-      router.push("/home");
       setMessage(response.data.message);
     }
     router.refresh();
