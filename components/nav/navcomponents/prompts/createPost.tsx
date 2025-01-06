@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import axios from "axios";
 import { createPost } from "@/actions/posts/createPost";
 import { useRouter } from "next/navigation";
 import FormInput from "@/components/forms/formElements/input";

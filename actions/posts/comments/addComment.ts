@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getUser } from "../../user/searchUser";
-import { CommentType } from "@/types/post/postType";
+import { CommentType } from "@/types/post/comments/commentsType";
 
 interface AddCommentProps {
   postId: string;

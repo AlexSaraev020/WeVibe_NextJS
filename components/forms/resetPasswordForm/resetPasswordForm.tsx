@@ -21,7 +21,7 @@ export default function ResetPasswordForm({
   const [emailSent, setEmailSent] = useState<boolean>(false);
   const [codeVerified, setCodeVerified] = useState<boolean>(false);
   const [password, setPassword] = useState<string | null>(null);
-  const { setMessage, setError, message } = useAlert();
+  const { setMessage, setError } = useAlert();
   const router = useRouter()
   const [resetCode, setResetCode] = useState<string[]>([
     "",
@@ -109,7 +109,7 @@ export default function ResetPasswordForm({
               Reset Your Password
             </h2>
             <p className="mt-2 text-sm text-gray-400/80 hover:text-postBackground/70 md:text-base">
-              Enter your email, and we'll send you a link to reset your
+              Enter your email, and we&apos;ll send you a link to reset your
               password.
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function ResetPasswordForm({
               Enter Your Code
             </h2>
             <p className="mt-2 text-sm text-gray-400/80 hover:text-postBackground/70 md:text-base">
-              We've sent you a code to your email (
+              We&apos;ve sent you a code to your email (
               <span className="text-white">check also your spam</span>). Enter
               it below to reset your password. It expires in 10 minutes after
               you receive it.

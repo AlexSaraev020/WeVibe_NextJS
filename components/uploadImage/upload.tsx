@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { ImageKitProvider, IKImage, IKUpload } from "imagekitio-next";
+import React, { useRef } from "react";
+import { ImageKitProvider, IKUpload } from "imagekitio-next";
 import axios from "axios";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import {

@@ -58,7 +58,6 @@ export async function POST(req: Request) {
       to: email,
       subject: "Password Reset Code",
       body: `Your password reset code is ${generatedResetCode}`,
-      name: "Alex",
     })
     
     const generatedResetCodeToken = await generateToken(generatedResetCode);

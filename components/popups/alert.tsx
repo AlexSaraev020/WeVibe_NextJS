@@ -19,7 +19,7 @@ export default function Alert() {
         });
       }, 100);
       const timeout = setTimeout(() => {
-        setMessage && setMessage(undefined);
+        setMessage(undefined);
         setProgress(0);
       }, 3000);
       return () => {

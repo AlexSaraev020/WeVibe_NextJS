@@ -5,7 +5,6 @@ import { GoKebabHorizontal } from "react-icons/go";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { allowDelete } from "@/actions/posts/deletion/alllowDelete";
 import { deletePost } from "@/actions/posts/deletion/delete";
-import { useRouter } from "next/navigation";
 import { AiOutlineLoading } from "react-icons/ai";
 import { KebabSectionCombinedProps } from "@/types/post/kebabSection";
 import { allowDeleteComment } from "@/actions/posts/comments/deletion/allowDeleteComment";

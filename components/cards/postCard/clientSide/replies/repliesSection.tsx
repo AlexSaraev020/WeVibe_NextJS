@@ -3,7 +3,6 @@ import Textarea from "@/components/forms/formElements/textarea";
 import React, { useCallback, useEffect, useState } from "react";
 import { LuSend } from "react-icons/lu";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import ReplyCard from "./replyCard";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { getReplies } from "@/actions/posts/comments/replies/getReplies";
 import RepliesList from "./repliesList";

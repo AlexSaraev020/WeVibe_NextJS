@@ -2,7 +2,7 @@ import axios from "axios";
 
 interface HandleLikeProps{
     postId: string;
-    setLike: (like: boolean | undefined) => void
+    setLike: (like: boolean) => void
     like: boolean | undefined
     setLikes: (updateLikes: (prevLikes: number) => number) => void
 }

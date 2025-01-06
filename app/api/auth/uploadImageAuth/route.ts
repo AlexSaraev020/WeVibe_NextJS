@@ -1,4 +1,4 @@
-import ImageKit from "imagekit"
+import ImageKit from "imagekit";
 import { NextResponse } from "next/server";
 
 const imagekit = new ImageKit({
@@ -8,5 +8,11 @@ const imagekit = new ImageKit({
 });
 
 export async function GET(request: Request) {
+  if (request.method !== "GET") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 },
+    );
+  }
   return NextResponse.json(imagekit.getAuthenticationParameters());
 }

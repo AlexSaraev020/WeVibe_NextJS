@@ -16,7 +16,7 @@ interface PostBottomSideProps {
   setLikes: (updateLikes: (prevLikes: number) => number) => void;
   like: boolean | undefined;
   likes: number;
-  setLike: (like: boolean | undefined) => void;
+  setLike: (like: boolean) => void;
 }
 
 export default function PostClientSide({

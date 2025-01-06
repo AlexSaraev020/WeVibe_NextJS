@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 import { cookies } from "next/headers";
 import { startSession } from "mongoose";
-import { deleteImage } from "@/actions/posts/deletion/deleteImage";
 
 export async function DELETE(req: NextRequest) {
   if (req.method !== "DELETE") {
@@ -18,7 +17,7 @@ export async function DELETE(req: NextRequest) {
       { status: 400 },
     );
   }
-  let imagesToBeDeleted=[]
+  const imagesToBeDeleted=[]
   const session = await startSession();
   session.startTransaction();
   try {

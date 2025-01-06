@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { GoStar, GoStarFill } from "react-icons/go";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";

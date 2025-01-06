@@ -38,7 +38,7 @@ export default function EditForm({
   const [email, setEmail] = useState<string>(user.email);
   const [password, setPassword] = useState<string>("");
   const [bio, setBio] = useState<string>(user.bio);
-  const {userImage} = useUserNavData();
+  const { userImage } = useUserNavData();
   const [image, setImage] = useState<ImageType | undefined>(userImage);
   const [progress, setProgress] = useState<number>(0);
   const { setMessage, setError } = useAlert();
@@ -58,31 +58,30 @@ export default function EditForm({
   };
 
   const handleSave = async () => {
-    {
-      profile &&
-        !account &&
-        (await updateProfile({
-          username,
-          setMessage,
-          setUserImage,
-          setUsername,
-          setError,
-          setEdit,
-          bio,
-          image: image ? image : undefined,
-          currentImage: user.image,
-          router,
-        }));
-      account &&
-        !profile &&
-        (await updateAccount({
-          email,
-          password,
-          router,
-          setEdit,
-          setMessage,
-          setError,
-        }));
+    if (profile && !account) {
+      await updateProfile({
+        username,
+        setMessage,
+        setUserImage,
+        setUsername,
+        setError,
+        setEdit,
+        bio,
+        image: image ? image : undefined,
+        currentImage: user.image,
+        router,
+      });
+    } else if (account && !profile) {
+      await updateAccount({
+        email,
+        password,
+        router,
+        setEdit,
+        setMessage,
+        setError,
+      });
+    } else {
+      return;
     }
   };
   return (

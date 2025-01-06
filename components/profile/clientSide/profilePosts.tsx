@@ -13,7 +13,7 @@ interface ProfilePostsProps {
 }
 
 export default function ProfilePosts({ userId }: ProfilePostsProps) {
-  const {posts, setPosts} = usePostsNav();
+  const { posts, setPosts } = usePostsNav();
   const [loading, setLoading] = useState<boolean>(true);
   const [hasMore, setHasMore] = useState(true);
   const [showPostFullScreen, setShowPostFullScreen] = useState<boolean>(false);
@@ -45,7 +45,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
   };
 
   useEffect(() => {
-    setPosts((prev: PostType[]) => []);
+    setPosts(() => []);
     setSkip(0);
     setHasMore(true);
     if (inView) {

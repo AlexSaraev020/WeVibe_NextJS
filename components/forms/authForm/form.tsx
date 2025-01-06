@@ -18,29 +18,30 @@ export default function Form({ register, className }: FormProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { setMessage, setError , message } = useAlert();
+  const { setMessage, setError, message } = useAlert();
 
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    {
-      register
-        ? await registerUser({
-            userName,
-            email,
-            password,
-            setError,
-            setMessage,
-            router,
-          })
-        : await loginUser({
-            email,
-            setError,
-            password,
-            setMessage,
-            router,
-          });
+
+    if (register) {
+      await registerUser({
+        userName,
+        email,
+        password,
+        setError,
+        setMessage,
+        router,
+      });
+    } else {
+      await loginUser({
+        email,
+        setError,
+        password,
+        setMessage,
+        router,
+      });
     }
   };
   useEffect(() => {

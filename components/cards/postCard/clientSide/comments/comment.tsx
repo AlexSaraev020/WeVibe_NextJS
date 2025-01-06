@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CommentType } from "@/types/post/comments/commentsType";
-import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { GoKebabHorizontal, GoStar, GoStarFill } from "react-icons/go";
+import { GoStar, GoStarFill } from "react-icons/go";
 import Long_Text_Truncate from "@/components/text/longTextTruncate";
 import { handleLikeComment } from "@/actions/posts/comments/handleLikeComment";
 import { getIfLiked } from "@/actions/posts/comments/getIfLiked";

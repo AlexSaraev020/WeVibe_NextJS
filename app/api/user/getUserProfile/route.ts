@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
         { status: 404 },
       );
     }
-    console.log(userId);
     await connect();
     const user = await UserModel.findOne({ _id: userId })
       .select("-password -__v")
