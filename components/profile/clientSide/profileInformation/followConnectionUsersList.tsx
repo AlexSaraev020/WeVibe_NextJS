@@ -21,10 +21,10 @@ export default function UsersList({
   userId,
 }: UsersListProps) {
   const [users, setUsers] = useState<UserType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
+  const { ref, inView } = useInView({ triggerOnce: false, threshold: 0 });
   const fetchUsersByType = async ({
     skip,
     limit,
@@ -56,14 +56,11 @@ export default function UsersList({
   };
 
   const loadMoreUsers = useCallback(async () => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return;
     setLoading(true);
 
     const newUsers = await fetchUsersByType({ skip, limit: 8 });
-    if (newUsers.length < 8) {
-      setHasMore(false);
-    }
-    if (Array.isArray(newUsers)) {
+    if (Array.isArray(newUsers) && newUsers.length) {
       setUsers((prev) => [...prev, ...newUsers]);
     }
     setLoading(false);
@@ -74,6 +71,12 @@ export default function UsersList({
       loadMoreUsers();
     }
   }, [inView]);
+
+  useEffect(() => {
+    setUsers([]);
+    setSkip(0);
+    setHasMore(true);
+  }, []);
 
   const handleClickOutside = () => {
     setShowUsersList(false);
@@ -99,25 +102,27 @@ export default function UsersList({
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
         <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto p-4 scrollbar-none md:w-11/12">
-          {users.length > 0 ? (
-            users.map((user: UserType) => (
-              <ProfileCard
-                onClick={() => setShowUsersList(false)}
-                key={user._id}
-                id={user._id}
-                username={user.username}
-                image={user.image.url}
-              />
-            ))
-          ) : showFollowers ? (
-            <h1 className="text-center text-base text-white">
-              This user has 0 followers
-            </h1>
-          ) : (
-            <h1 className="text-center text-base text-white">
-              This user follows 0 people
-            </h1>
-          )}
+          {users.length > 0
+            ? users.map((user: UserType) => (
+                <ProfileCard
+                  onClick={() => setShowUsersList(false)}
+                  key={user._id}
+                  id={user._id}
+                  username={user.username}
+                  image={user.image.url}
+                />
+              ))
+            : showFollowers
+              ? !hasMore && (
+                  <h1 className="text-center text-base text-white">
+                    This user has 0 followers
+                  </h1>
+                )
+              : !hasMore && (
+                  <h1 className="text-center text-base text-white">
+                    This user follows 0 people
+                  </h1>
+                )}
           {hasMore && (
             <div
               ref={ref}

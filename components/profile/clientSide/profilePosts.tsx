@@ -14,15 +14,15 @@ interface ProfilePostsProps {
 
 export default function ProfilePosts({ userId }: ProfilePostsProps) {
   const { posts, setPosts } = usePostsNav();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState(true);
   const [showPostFullScreen, setShowPostFullScreen] = useState<boolean>(false);
   const [skip, setSkip] = useState(0);
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
+  const { ref, inView } = useInView({ triggerOnce: false, threshold: 0 });
   const [openPost, setOpenPost] = useState<PostType | null>(null);
 
   const loadMorePosts = useCallback(async () => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return;
     setLoading(true);
     const newPosts = await getProfilePosts({
       userId,
@@ -37,7 +37,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
     }
     setPosts((prev: PostType[]) => [...prev, ...newPosts]);
     setLoading(false);
-  }, [hasMore, userId, skip]);
+  }, [hasMore, loading, skip]);
 
   const handleOpenPost = (post: PostType) => {
     setOpenPost(post);
@@ -48,16 +48,13 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
     setPosts(() => []);
     setSkip(0);
     setHasMore(true);
-    if (inView) {
-      loadMorePosts();
-    }
   }, [userId]);
 
   useEffect(() => {
     if (inView) {
       loadMorePosts();
     }
-  }, [inView, userId, skip]);
+  }, [inView]);
 
   return (
     <>
@@ -86,12 +83,8 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
               />
             </li>
           ))
-        ) : loading ? (
-          <div className="col-span-3 flex items-center justify-center">
-            <AiOutlineLoading className="animate-spin" />
-          </div>
         ) : (
-          <p className="col-span-3 text-center">No posts yet</p>
+          !hasMore && <p className="col-span-3 text-center">No posts yet</p>
         )}
         {hasMore && (
           <div

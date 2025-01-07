@@ -26,7 +26,7 @@ export default function PostFullScreen({
     >
       <div
         onClick={handleClickInside}
-        className="h-fit w-full border-t-2 border-postBackground/50 bg-black shadow-glow shadow-postBackground/50 md:w-6/12 md:border-none md:shadow-none"
+        className="h-fit w-full border-t-2 border-postBackground/50 flex items-center justify-center bg-black shadow-glow shadow-postBackground/50 md:w-6/12 md:border-none md:shadow-none"
       >
         <Post
           post={post}

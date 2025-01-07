@@ -8,7 +8,6 @@ import { AiOutlineLoading } from "react-icons/ai";
 
 interface CommentsListProps {
   postId: string;
-  showComments: boolean;
   comments: CommentType[];
   setComments: (
     updateComments: (prevComments: CommentType[]) => CommentType[],
@@ -19,59 +18,57 @@ export default function CommentsList({
   postId,
   comments,
   setComments,
-  showComments,
 }: CommentsListProps) {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
+  const { ref, inView } = useInView({ triggerOnce: false, threshold: 0 });
 
   useEffect(() => {
     if (inView) {
       loadMoreComments();
     }
-  }, [inView, skip, showComments]);
+  }, [inView]);
+
+  useEffect(() => {
+    setComments((prev: CommentType[]) => []);
+    setSkip(0);
+    setHasMore(true);
+  }, []);
 
   const loadMoreComments = useCallback(async () => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return;
     setLoading(true);
     const newComments = await getComments({
       postId,
-      setSkip,
       skip,
       limit: 6,
+      setSkip,
       setLoading,
       setHasMore,
     });
-    if (newComments.length < 6) {
-      setHasMore(false);
-    }
-    if (Array.isArray(newComments)) {
+    if (Array.isArray(newComments) && newComments.length) {
       setComments((prev) => [...prev, ...newComments]);
     }
     setLoading(false);
-  }, [hasMore, postId, skip]);
+  }, [hasMore, loading, skip]);
 
   return (
     <ul className="flex h-full w-full flex-col items-center gap-4 overflow-y-auto py-2 scrollbar-none">
-      {comments.length ? (
-        comments.map((commentContent: CommentType) => (
-          <li
-            className="flex h-fit w-full flex-col items-center justify-center px-0 md:px-2"
-            key={commentContent._id}
-          >
-            <Comment
-              commentContent={commentContent}
-              postId={postId}
-              setComments={setComments}
-            />
-          </li>
-        ))
-      ) : (
-        <li className="flex w-full items-center justify-center">
-          <h3 className="text-lg text-gray-400">No comments</h3>
-        </li>
-      )}
+      {comments.length
+        ? comments.map((commentContent: CommentType) => (
+            <li
+              className="flex h-fit w-full flex-col items-center justify-center px-0 md:px-2"
+              key={commentContent._id}
+            >
+              <Comment
+                commentContent={commentContent}
+                postId={postId}
+                setComments={setComments}
+              />
+            </li>
+          ))
+        : !hasMore && <h3 className="text-lg text-gray-400">No comments</h3>}
       {hasMore && (
         <div
           ref={ref}

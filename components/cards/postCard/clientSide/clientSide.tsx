@@ -70,7 +70,6 @@ export default function PostClientSide({
       {showComments && (
         <CommentsSection
           postId={postId}
-          showComments={showComments}
           setShowComments={setShowComments}
         />
       )}

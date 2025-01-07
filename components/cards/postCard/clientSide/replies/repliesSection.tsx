@@ -28,7 +28,7 @@ export default function RepliesSection({
   const [reply, setReply] = useState<string>("");
   const [skip, setSkip] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
 
   const handleSubmitReply = async () => {
@@ -43,8 +43,14 @@ export default function RepliesSection({
     });
   };
 
+  useEffect(() => {
+    setReplies((prev: RepliesType[]) => []);
+    setSkip(0);
+    setHasMore(true);
+  }, []);
+
   const loadMoreReplies = useCallback(async () => {
-    if (!hasMore) return;
+    if (!hasMore || loading) return;
     setLoading(true);
     const newReplies = await getReplies({
       postId,
@@ -55,14 +61,11 @@ export default function RepliesSection({
       setHasMore,
       setSkip,
     });
-    if (newReplies.length < 6) {
-      setHasMore(false);
-    }
-    if (Array.isArray(newReplies)) {
-      setReplies((prev) => [...prev, ...newReplies]);
+    if (Array.isArray(newReplies) && newReplies.length) {
+      setReplies((prev: RepliesType[]) => [...prev, ...newReplies]);
     }
     setLoading(false);
-  }, [loading, hasMore, postId, skip, commentContent._id, replies]);
+  }, [loading, hasMore, skip]);
 
   useEffect(() => {
     if (showReplies) {

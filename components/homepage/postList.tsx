@@ -1,6 +1,6 @@
 "use client";
 import { PostType } from "@/types/post/postType";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Post from "../cards/postCard/post";
 import { getPosts } from "@/actions/posts/getPosts";
 import { useInView } from "react-intersection-observer";
@@ -12,23 +12,21 @@ export const PostList = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
+  const { ref, inView } = useInView({ triggerOnce: false, threshold: 0 });
   useEffect(() => {
     if (inView) {
       loadMorePosts();
     }
-  }, [inView, skip])
+  }, [inView])
 
   useEffect(() => {
-      setPosts((prev: PostType[]) => []);
-      setSkip(0);
-      setHasMore(true);
-      if (inView) {
-        loadMorePosts();
-      }
-    }, []);
-  const loadMorePosts = async () => {
-    if (!hasMore) return;
+    setPosts(() => []);
+    setSkip(0);
+    setHasMore(true);
+  }, []);
+  
+  const loadMorePosts = useCallback (async () => {
+    if (!hasMore || loading) return;
     setLoading(true);
     const newPosts = await getPosts({
       skip,
@@ -41,7 +39,7 @@ export const PostList = () => {
       setPosts((prev: PostType[]) => [...prev, ...newPosts]);
     }
     setLoading(false);
-  };
+  }, [hasMore, loading, skip]);
 
   return (
     <ul className="flex w-full h-full flex-col items-start justify-start py-5 md:w-10/12 lg:w-6/12">

@@ -11,13 +11,11 @@ import { CommentType } from "@/types/post/comments/commentsType";
 interface CommentsSectionProps {
   postId: string;
   setShowComments: (showComments: boolean) => void;
-  showComments: boolean;
 }
 
 export default function CommentsSection({
   postId,
   setShowComments,
-  showComments,
 }: CommentsSectionProps) {
   const [comment, setComment] = useState<string>("");
   const { setMessage } = useAlert();
@@ -59,7 +57,6 @@ export default function CommentsSection({
           comments={comments}
           setComments={setComments}
           postId={postId}
-          showComments={showComments}
         />
         <form
           onSubmit={handleSubmitComment}

@@ -23,8 +23,6 @@ export const seeWhoLiked = async ({
       skip,
       limit,
     });
-    console.log("users", response.data.users);
-    console.log("hasMore", response.data.hasMore);
     
     if (response.status < 300 && Array.isArray(response.data.users)) {
       setLoading(false);
