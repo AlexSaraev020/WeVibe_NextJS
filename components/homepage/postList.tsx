@@ -26,6 +26,7 @@ export const PostList = () => {
   }, []);
   
   const loadMorePosts = useCallback (async () => {
+    console.log(posts);
     if (!hasMore || loading) return;
     setLoading(true);
     const newPosts = await getPosts({
@@ -44,7 +45,7 @@ export const PostList = () => {
   return (
     <ul className="flex w-full h-full flex-col items-start justify-start py-5 md:w-10/12 lg:w-6/12">
       {posts.map((post: PostType) => (
-        <li key={post._id} className="w-full">
+        <li key={post._id} className="w-full mb-4 md:mb-10 xl:mb-16">
           <Post setPosts={setPosts} post={post} />
         </li>
       ))}

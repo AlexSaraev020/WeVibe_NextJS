@@ -13,6 +13,7 @@ interface ReplyCommentProps {
   setRepliesNumber: (
     updateRepliesNumber: (prevRepliesNumber: number) => number,
   ) => void;
+  setShowReplies: (showReplies: boolean) => void;
 }
 
 export const replyComment = async ({
@@ -20,22 +21,24 @@ export const replyComment = async ({
   setRepliesNumber,
   commentId,
   setShowReplyField,
+  setShowReplies,
   reply,
   setReplies,
   setReply,
 }: ReplyCommentProps) => {
   setReply("");
   try {
-    const response = await axios.put(`/api/posts/commentReplies/reply`, {
+    const response = await axios.patch(`/api/posts/commentReplies/reply`, {
       postId,
       commentId,
       reply,
     });
-    setReplies((prev) => [response.data.reply, ...prev]);
-
+    
     if (response.status < 300) {
       setShowReplyField(false);
       setRepliesNumber((prev) => prev + 1);
+      setReplies((prev) => [response.data.reply, ...prev]);
+      setShowReplies(true);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

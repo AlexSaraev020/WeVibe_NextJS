@@ -21,7 +21,6 @@ export const addComment = async ({ postId, comment, setComment ,setComments }: A
     });
 
     if (response.status < 300 ) {
-      console.log("response.data.comment", response.data.comment);
       setComments((prev) => [response.data.comment, ...prev]);
     }
   } catch (error: unknown) {

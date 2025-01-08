@@ -1,6 +1,7 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -30,6 +31,11 @@ export async function POST(req: Request) {
       );
     }
     await connect();
+    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    
     const reply = await CommentRepliesModel.findOne({ _id }).exec();
     if (!reply) {
       return NextResponse.json({ message: "Reply not found" }, { status: 404 });

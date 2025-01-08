@@ -38,7 +38,6 @@ export async function POST(req: Request) {
       );
     }
     const isAllowed = comment.user.toString() === loggedUser.toString();
-    console.log(isAllowed);
     return NextResponse.json(
       {
         allow: isAllowed,

@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json(
         { message: "No user account is associated with this mail" },
-        { status: 406 },
+        { status: 204 },
       );
     }
     const isPasswordIdentic = await bcrypt.compare(password, user.password);
@@ -73,8 +73,8 @@ export async function POST(req: Request) {
       );
     }
     return NextResponse.json(
-      { message: "New password must be different from the current one." },
-      { status: 407 },
+      { message: "New password must be different from the old one" },
+      { status: 402 },
     );
   } catch (error: unknown) {
     if (error instanceof Error) {

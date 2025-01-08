@@ -205,6 +205,7 @@ export default function ResetPasswordForm({
               className="w-full mt-2 rounded-md border border-gray-300 bg-transparent p-2 text-start text-white focus:border-postBackground/70 focus:outline-none focus:ring-2 focus:ring-postBackground/50"
               type="password"
               name="password"
+              password
               id="password"
               placeholder="Enter your password"
               required

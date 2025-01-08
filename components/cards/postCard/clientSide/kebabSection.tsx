@@ -107,7 +107,7 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
       {isOpen && (
         <div
           ref={menuRef}
-          className={`absolute ${props.type === "post" ? "right-4 top-16" : "right-0 top-8"} z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base`}
+          className={`absolute ${props.type === "post" ? "right-4 top-10" : "right-0 top-8"} z-40 flex animate-fadeIn flex-col gap-2 rounded-xl border-2 border-postBackground/50 bg-neutral-950 p-2 text-xs text-gray-400 shadow-glow-sm shadow-postBackground/50 transition-all duration-500 md:text-base`}
         >
           {loading ? (
             <AiOutlineLoading className="animate-spin" />

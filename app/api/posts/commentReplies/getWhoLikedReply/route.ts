@@ -1,3 +1,4 @@
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { UserModel } from "@/models/user";
@@ -11,6 +12,18 @@ export async function POST(req: Request) {
     );
   }
   try {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
+      return NextResponse.json(
+        { message: "User not logged in" },
+        { status: 401 },
+      );
+    }
+    await connect();
+    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -22,7 +35,7 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    await connect();
+
     const whoLikedReply = await CommentRepliesModel.findById({ _id: replyId })
       .select("likes")
       .populate({
@@ -38,7 +51,11 @@ export async function POST(req: Request) {
     const totalWhoLikedReply = whoLikedReply.likes.length;
     const hasMore = totalWhoLikedReply > skip + limit;
     return NextResponse.json(
-      { users:whoLikedReplySliced, message: "People who liked found", hasMore },
+      {
+        users: whoLikedReplySliced,
+        message: "People who liked found",
+        hasMore,
+      },
       { status: 200 },
     );
   } catch (error: unknown) {

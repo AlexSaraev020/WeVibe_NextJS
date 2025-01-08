@@ -2,6 +2,7 @@ import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { CommentsModel } from "@/models/posts/comments";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req: Request) {
@@ -31,8 +32,12 @@ export async function PATCH(req: Request) {
         { status: 401 },
       );
     }
-
     await connect();
+    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
     await CommentRepliesModel.deleteOne({ _id: replyId });
     await CommentsModel.updateOne(
       { _id: commentId },

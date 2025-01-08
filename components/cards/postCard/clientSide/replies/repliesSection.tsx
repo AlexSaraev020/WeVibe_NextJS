@@ -40,14 +40,9 @@ export default function RepliesSection({
       setShowReplyField,
       setRepliesNumber,
       setReplies,
+      setShowReplies,
     });
   };
-
-  useEffect(() => {
-    setReplies((prev: RepliesType[]) => []);
-    setSkip(0);
-    setHasMore(true);
-  }, []);
 
   const loadMoreReplies = useCallback(async () => {
     if (!hasMore || loading) return;
@@ -61,7 +56,7 @@ export default function RepliesSection({
       setHasMore,
       setSkip,
     });
-    if (Array.isArray(newReplies) && newReplies.length) {
+    if (Array.isArray(newReplies) && newReplies.length > 0) {
       setReplies((prev: RepliesType[]) => [...prev, ...newReplies]);
     }
     setLoading(false);

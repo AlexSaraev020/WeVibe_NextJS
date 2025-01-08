@@ -2,6 +2,7 @@ import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
+import { CommentRepliesModel } from "@/models/posts/commentReplies";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -42,14 +43,25 @@ export async function POST(req: Request) {
         { status: 200 },
       );
     }
-    const postsWithLikesNumber = posts.map((post) => ({
-      ...post,
-      likes: post.likes.length,
-    }));
-    
+    const postsWithCountedLikesAndComments = await Promise.all(
+      posts.map(async (post) => {
+        const repliesCount = await CommentRepliesModel.countDocuments({
+          postId: post._id,
+        });
+        return {
+          ...post,
+          likes: post.likes.length,
+          comments: post.comments.length + repliesCount,
+        };
+      }),
+    );
+
     const totalPostsCount = await PostModel.countDocuments();
     const hasMore = totalPostsCount > skip + limit;
-    return NextResponse.json({ posts: postsWithLikesNumber, hasMore }, { status: 200 });
+    return NextResponse.json(
+      { posts: postsWithCountedLikesAndComments, hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

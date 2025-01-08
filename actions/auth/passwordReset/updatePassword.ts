@@ -18,14 +18,18 @@ export const updatePassword = async ({
       "/api/auth/resetPassword/updatePassword",
       { password },
     );
+    console.log("triggered");
+    console.log(response);
     if (response.status < 300) {
       setError(false);
       setMessage(response.data.message);
       router.push("/login");
     }
+    setError(true);
+    setMessage(response.data.message);
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      setError(true)
+      setError(true);
       setMessage(error.response.data.message);
       return error.response.data;
     }

@@ -16,6 +16,6 @@ export interface PostType {
     }
   };
   likes: number;
-  comments: CommentType[];
+  comments: number;
 }
 

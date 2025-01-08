@@ -7,8 +7,8 @@ import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  if (req.method !== "PUT") {
+export async function PATCH(req: Request) {
+  if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
@@ -77,7 +77,7 @@ export async function PUT(req: Request) {
       );
     }
 
-    await CommentsModel.findOneAndUpdate(
+    await CommentsModel.updateOne(
       { _id: commentId },
       { $push: { replies: newReply._id } },
       { new: true },
@@ -87,10 +87,9 @@ export async function PUT(req: Request) {
       model: UserModel,
       select: ["username", "image", "_id"],
     });
-
     return NextResponse.json(
       { message: "Reply created successfully", reply: populatedNewReply },
-      { status: 201 },
+      { status: 200 },
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
