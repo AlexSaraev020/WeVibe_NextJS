@@ -50,6 +50,10 @@ export default function Upload(props: UploadProps) {
     props.setMessage(error.message);
   };
 
+  const handleUploadStart = () => {
+    props.setDisable && props.setDisable(true);
+  };
+
   const validateAndResetFile = (file: File) => {
     const isValid = file.size < 2000000;
     if (!isValid) {
@@ -75,6 +79,7 @@ export default function Upload(props: UploadProps) {
           const percent = Math.floor((evt.loaded / evt.total) * 100);
           props.setProgress(percent);
         }}
+        onUploadStart={handleUploadStart}
         onSuccess={handleSuccess}
         onError={handleError}
         style={{ display: "none" }}

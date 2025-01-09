@@ -18,8 +18,6 @@ export const updatePassword = async ({
       "/api/auth/resetPassword/updatePassword",
       { password },
     );
-    console.log("triggered");
-    console.log(response);
     if (response.status < 300) {
       setError(false);
       setMessage(response.data.message);

@@ -129,7 +129,7 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
           )}
           {!loading && (
             <Link
-              href={`/profile?user=${props.userId}`}
+              href={`/profile/${props.userId}`}
               className={`${props.type === "post" ? "text-xs md:text-base" : ""} hover:text-gray-100`}
             >
               Profile

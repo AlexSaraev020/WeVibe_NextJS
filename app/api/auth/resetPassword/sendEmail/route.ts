@@ -34,18 +34,19 @@ export async function POST(req: Request) {
     }
 
     const { email } = body;
-    if (!email) {
-      return NextResponse.json({ message: "Email not found" }, { status: 400 });
+    if (!email || email.trim() === "") {
+      return NextResponse.json({ message: "Email cannot be empty" }, { status: 400 });
     }
+    const trimmedEmail = email.trim();
 
-    const validateEmail = validate__Fields__Length({ email });
+    const validateEmail = validate__Fields__Length({ email: trimmedEmail });
     if (validateEmail) {
       return NextResponse.json({ message: validateEmail }, { status: 400 });
     }
 
     await connect();
 
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email: trimmedEmail });
     if (!user) {
       return NextResponse.json(
         { message: "No account is associated with this email" },
@@ -55,13 +56,13 @@ export async function POST(req: Request) {
     const generatedResetCode = generateRandomCode();
 
     await sendMail({
-      to: email,
+      to: trimmedEmail,
       subject: "Password Reset Code",
       body: `Your password reset code is ${generatedResetCode}`,
     })
     
     const generatedResetCodeToken = await generateToken(generatedResetCode);
-    const encryptedMail = await generateToken(email);
+    const encryptedMail = await generateToken(trimmedEmail);
     (await cookies()).set({
       name: "resetCode",
       value: generatedResetCodeToken,

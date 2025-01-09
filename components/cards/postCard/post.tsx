@@ -29,11 +29,11 @@ export default function Post({
   return (
     <>
       {like !== undefined ? (
-        <div className="relative flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0  md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
+        <div className="relative flex w-full flex-col items-start justify-center rounded-xl from-postBackground/10 via-postBackground/40 to-postBackground/10 px-0 md:bg-gradient-to-b md:px-2 md:shadow-glow md:shadow-postBackground/50">
           <div className="flex w-full justify-between">
             <div className="flex w-full animate-fadeIn flex-col items-start transition-all duration-500 md:p-0">
               <Link
-                href={`/profile?user=${post.createdBy._id}`}
+                href={`/profile/${post.createdBy._id}`}
                 className="flex items-center justify-center text-sm font-bold md:text-lg"
               >
                 <Image

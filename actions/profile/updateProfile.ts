@@ -38,7 +38,7 @@ export const updateProfile = async ({
       setMessage(response.data.message);
       setEdit(false);
     }
-    if (response.data.usernameUpdated === true) {
+    if (response.data.userNameUpdated === true) {
       setUsername(response.data.username);
     }
     if (response.data.imageUpdated === true) {
@@ -49,7 +49,6 @@ export const updateProfile = async ({
     router.refresh();
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      console.log("Server response error:", error.response.data.message);
       setMessage(error.response.data.message);
       setError(true);
       return error.response.data.message;

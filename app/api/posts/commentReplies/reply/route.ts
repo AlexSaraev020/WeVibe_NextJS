@@ -22,10 +22,18 @@ export async function PATCH(req: Request) {
     const { commentId, postId, reply } = body;
     if (!commentId || !postId || !reply) {
       return NextResponse.json(
-        { message: "No commentId or postId found" },
+        { message: "Invalid data received" },
         { status: 400 },
       );
     }
+    if (reply.trim() === "") {
+      return NextResponse.json(
+        { message: "Reply cannot be empty" },
+        { status: 400 },
+      );
+    }
+    const trimmedReply = reply.trim();
+
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json(
@@ -57,7 +65,7 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const validate = validate__Fields__Length({ comment: reply });
+    const validate = validate__Fields__Length({ comment: trimmedReply });
 
     if (validate) {
       return NextResponse.json({ message: validate }, { status: 400 });
@@ -67,7 +75,7 @@ export async function PATCH(req: Request) {
       commentId: commentId,
       postId: postId,
       user: isLoggedIn,
-      content: reply,
+      content: trimmedReply,
     });
 
     if (!newReply) {

@@ -7,8 +7,10 @@ export const getUserProfile = async (userId: string) => {
     const response = await axios.get(
       `${url}/api/user/getUserProfile?user=${userId}`
     );
-
-    return response
+    if (response.status < 300) {
+      return response.data.user as UserType;
+    }
+    return {} as UserType;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

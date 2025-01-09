@@ -4,9 +4,6 @@ import ReplyCard from "./replyCard";
 interface RepliesListProps {
   replies: RepliesType[];
   showReplies: boolean;
-  commentContent: {
-    replies: number;
-  };
   setReplies: (
     updateReplies: (prevReplies: RepliesType[]) => RepliesType[],
   ) => void;
@@ -18,7 +15,6 @@ export default function RepliesList({
   replies,
   hasMore,
   showReplies,
-  commentContent,
   setPage,
   setReplies,
 }: RepliesListProps) {
@@ -30,7 +26,7 @@ export default function RepliesList({
             <ReplyCard setReplies={setReplies} reply={reply} key={reply._id} />
           ))}
           <div className="flex w-full justify-start">
-            {hasMore && (
+            {hasMore && replies.length > 0 && (
               <button
                 onClick={() => setPage((prev) => prev + 1)}
                 className="text-xs italic text-gray-400 md:text-sm"

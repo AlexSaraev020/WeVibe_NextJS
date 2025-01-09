@@ -5,26 +5,39 @@ import { CommentType } from "@/types/post/comments/commentsType";
 interface AddCommentProps {
   postId: string;
   comment: string;
-  setComments: (updateComments: (prevComments: CommentType[]) => CommentType[]) => void;
+  setComments: (
+    updateComments: (prevComments: CommentType[]) => CommentType[],
+  ) => void;
   setComment: (comment: string) => void;
+  setMessage: (message: string | undefined) => void;
+  setError: (error: boolean) => void;
 }
 
-export const addComment = async ({ postId, comment, setComment ,setComments }: AddCommentProps) => {
+export const addComment = async ({
+  postId,
+  comment,
+  setComment,
+  setComments,
+  setMessage,
+  setError,
+}: AddCommentProps) => {
   setComment("");
   try {
     const userResponse = await getUser();
     const userId = userResponse.user._id;
-    const response = await axios.put(`/api/posts/comments/create`, {
+    console.log(comment);
+    const response = await axios.patch(`/api/posts/comments/create`, {
       postId,
       comment,
       userId,
     });
-
-    if (response.status < 300 ) {
-      setComments((prev) => [response.data.comment, ...prev]);
+    if (response.status < 300) {
+      setComments((prev: CommentType[]) => [response.data.comment, ...prev]);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
+      setError(true);
+      setMessage(error.response.data.message);
       return error.response.data;
     }
     console.error("Error adding comment:", error);

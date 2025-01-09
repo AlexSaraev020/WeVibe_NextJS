@@ -18,7 +18,7 @@ export default function CommentsSection({
   setShowComments,
 }: CommentsSectionProps) {
   const [comment, setComment] = useState<string>("");
-  const { setMessage } = useAlert();
+  const { setMessage , setError } = useAlert();
   const [comments, setComments] = useState<CommentType[]>([]);
   const handleClickOutside = () => {
     setShowComments(false);
@@ -29,11 +29,8 @@ export default function CommentsSection({
   };
   const handleSubmitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!comment.trim()) {
-      setMessage("Comment cannot start with a space or be empty");
-      return;
-    }
-    await addComment({ postId, comment, setComment, setComments });
+    
+    await addComment({ postId, comment, setComment, setComments, setMessage , setError });
   };
   return (
     <div

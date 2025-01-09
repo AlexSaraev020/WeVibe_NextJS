@@ -5,21 +5,25 @@ interface SendEmailProps {
   setMessage: (message: string | undefined) => void;
   setEmailSent: (emailSent: boolean) => void;
   setError: (error: boolean) => void;
+  setEmail: (email: string | null) => void;
 }
 export const sendEmail = async ({
   email,
   setMessage,
   setEmailSent,
+  setEmail,
   setError,
 }: SendEmailProps) => {
   try {
     const response = await axios.post("/api/auth/resetPassword/sendEmail", {
       email,
     });
+    
     if (response.status === 200) {
+      setEmail(null);
       setError(false);
-      setMessage(response.data.message);
       setEmailSent(true)
+      setMessage(response.data.message);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {

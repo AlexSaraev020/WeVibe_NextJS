@@ -68,7 +68,7 @@ export default function Comment({
           <div className="flex w-full gap-2">
             <Link
               className="mt-1 min-w-fit max-w-fit"
-              href={`/profile?user=${commentContent.user._id}`}
+              href={`/profile/${commentContent.user._id}`}
             >
               <Image
                 src={commentContent.user.image.url}
@@ -82,7 +82,7 @@ export default function Comment({
               <div className="relative flex flex-1 flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <Link
-                    href={`/profile?user=${commentContent.user._id}`}
+                    href={`/profile/${commentContent.user._id}`}
                     className="text-xs font-bold md:text-lg"
                   >
                     {commentContent.user.username.length > 25

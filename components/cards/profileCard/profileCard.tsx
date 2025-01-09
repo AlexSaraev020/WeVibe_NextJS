@@ -24,7 +24,7 @@ export default function ProfileCard({
   return (
     <Link
       onClick={onClick}
-      href={`/profile` + `?user=${id}`}
+      href={`/profile/${id}`}
       className={`${className} relative flex w-full animate-fadeIn flex-col rounded-lg border-2 border-transparent p-3 shadow-glow-sm shadow-postBackground/50 transition-all delay-100 duration-500 hover:scale-105 hover:border-postBackground/50 hover:shadow-glow hover:shadow-postBackground/50`}
     >
       <div className="flex items-center w-full gap-2">

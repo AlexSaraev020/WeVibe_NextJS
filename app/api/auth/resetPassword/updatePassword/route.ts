@@ -18,13 +18,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Body not found" }, { status: 401 });
     }
     const { password } = body;
-    if (!password) {
+    if (!password || password.trim() === "") {
       return NextResponse.json(
-        { message: "No password entered" },
+        { message: "Password cannot be empty" },
         { status: 402 },
       );
     }
-    const validFields = validate__Fields__Length({ password });
+    const trimmedPassword = password.trim();
+    const validFields = validate__Fields__Length({ password: trimmedPassword });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
@@ -61,12 +62,14 @@ export async function POST(req: Request) {
         { status: 204 },
       );
     }
-    const isPasswordIdentic = await bcrypt.compare(password, user.password);
-    if (password !== undefined && password !== null && !isPasswordIdentic) {
+    const isPasswordIdentic = await bcrypt.compare(trimmedPassword, user.password);
+    if (trimmedPassword !== undefined && trimmedPassword !== null && !isPasswordIdentic) {
       const salt = await bcrypt.genSalt(10);
-      const newEncryptedPassword = await bcrypt.hash(password, salt);
+      const newEncryptedPassword = await bcrypt.hash(trimmedPassword, salt);
       user.password = newEncryptedPassword;
       await user.save();
+      cookieStore.delete("encryptedMail");
+      cookieStore.delete("resetCode");
       return NextResponse.json(
         { message: "Password changed, you can now log in" },
         { status: 200 },

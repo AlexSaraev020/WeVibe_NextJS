@@ -35,5 +35,5 @@ export const handleProfile = ({
 }: toggleFunctionsProps) => {
   setShowSearch(false);
   setShowCreatePost(false);
-  router.push("/profile" + `?user=${userId}`);
+  router.push(`/profile/${userId}`);
 };

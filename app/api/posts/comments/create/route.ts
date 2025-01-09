@@ -5,8 +5,8 @@ import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  if (req.method !== "PUT") {
+export async function PATCH(req: Request) {
+  if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
@@ -26,20 +26,22 @@ export async function PUT(req: Request) {
       );
     }
 
-    if (!comment.trim()) {
+    if (comment.trim() === "") {
       return NextResponse.json(
-        { message: "Comment cannot start with a space or be empty" },
+        { message: "Comment cannot be empty" },
         { status: 400 },
       );
     }
-    
-    const validate = validate__Fields__Length({ comment });
+
+    const trimmedComment = comment.trim();
+
+    const validate = validate__Fields__Length({ comment: trimmedComment });
     if (validate) {
       return NextResponse.json({ message: validate }, { status: 400 });
     }
 
     const newComment = await CommentsModel.create({
-      comment,
+      comment: trimmedComment,
       post: postId,
       user: userId,
     });

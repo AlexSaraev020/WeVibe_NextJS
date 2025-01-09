@@ -17,7 +17,7 @@ export async function DELETE(req: Request) {
       );
     }
     cookieStore.delete("encryptedMail");
-    cookieStore.delete("encryptedCode");
+    cookieStore.delete("resetCode");
     return NextResponse.json(
       { message: "You can now choose another mail" },
       { status: 200 },

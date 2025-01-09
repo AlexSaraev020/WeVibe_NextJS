@@ -62,7 +62,7 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
           <div className="flex w-full gap-2">
             <Link
               className="mt-1 min-w-fit max-w-fit"
-              href={`/profile?user=${reply.user._id}`}
+              href={`/profile/${reply.user._id}`}
             >
               <Image
                 src={reply.user.image.url}
@@ -76,7 +76,7 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
               <div className="relative flex flex-1 flex-col items-start justify-center">
                 <div className="flex items-center gap-2">
                   <Link
-                    href={`/profile?user=${reply.user._id}`}
+                    href={`/profile/${reply.user._id}`}
                     className="text-xs font-bold md:text-lg"
                   >
                     {reply.user.username}

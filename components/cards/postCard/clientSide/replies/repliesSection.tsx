@@ -6,6 +6,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
 import { getReplies } from "@/actions/posts/comments/replies/getReplies";
 import RepliesList from "./repliesList";
+import { useAlert } from "@/contexts/alert/alertContext";
 
 interface RepliesSectionProps {
   commentContent: {
@@ -30,6 +31,7 @@ export default function RepliesSection({
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
+  const { setMessage, setError } = useAlert();
 
   const handleSubmitReply = async () => {
     await replyComment({
@@ -41,6 +43,9 @@ export default function RepliesSection({
       setRepliesNumber,
       setReplies,
       setShowReplies,
+      replies,
+      setMessage,
+      setError,
     });
   };
 
@@ -121,7 +126,6 @@ export default function RepliesSection({
           setPage={setPage}
           replies={replies}
           showReplies={showReplies}
-          commentContent={commentContent}
           setReplies={setReplies}
         />
       </div>

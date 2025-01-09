@@ -75,7 +75,6 @@ export default function EditForm({
       await updateAccount({
         email,
         password,
-        router,
         setEdit,
         setMessage,
         setError,

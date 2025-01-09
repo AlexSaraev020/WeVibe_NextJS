@@ -1,3 +1,4 @@
+import { ImageType } from "@/types/image/imageType";
 import { Document, model, Model, models, Schema, Types } from "mongoose";
 
 export interface User extends Document {
@@ -7,10 +8,7 @@ export interface User extends Document {
   email: string;
   password: string;
   bio: string;
-  image: {
-    url: string;
-    fileId: string;
-  };
+  image:ImageType
   following: Types.ObjectId[];
   followers: Types.ObjectId[];
   posts: Types.ObjectId[];

@@ -27,12 +27,32 @@ export async function POST(req: Request) {
       );
     }
 
-    const validFields = validate__Fields__Length({ email, password });
+    if (email.length > 0 && email.trim() === "") {
+      return NextResponse.json(
+        { message: "Email cannot be empty" },
+        { status: 401 },
+      );
+    }
+
+    if (password.length > 0 && password.trim() === "") {
+      return NextResponse.json(
+        { message: "Password cannot be empty" },
+        { status: 401 },
+      );
+    }
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    const validFields = validate__Fields__Length({
+      email: trimmedEmail,
+      password: trimmedPassword,
+    });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
 
-    const existingUser = await UserModel.findOne({ email }).exec();
+    const existingUser = await UserModel.findOne({ email: trimmedEmail }).exec();
 
     if (!existingUser) {
       return NextResponse.json(
@@ -42,7 +62,7 @@ export async function POST(req: Request) {
     }
 
     const isPasswordCorrect = await bcrypt.compare(
-      password,
+      trimmedPassword,
       existingUser.password,
     );
 

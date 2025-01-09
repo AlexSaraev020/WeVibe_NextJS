@@ -14,6 +14,9 @@ interface ReplyCommentProps {
     updateRepliesNumber: (prevRepliesNumber: number) => number,
   ) => void;
   setShowReplies: (showReplies: boolean) => void;
+  replies: RepliesType[];
+  setMessage: (message: string | undefined) => void;
+  setError: (error: boolean) => void;
 }
 
 export const replyComment = async ({
@@ -23,7 +26,10 @@ export const replyComment = async ({
   setShowReplyField,
   setShowReplies,
   reply,
+  setMessage,
+  setError,
   setReplies,
+  replies,
   setReply,
 }: ReplyCommentProps) => {
   setReply("");
@@ -33,15 +39,19 @@ export const replyComment = async ({
       commentId,
       reply,
     });
-    
+
     if (response.status < 300) {
       setShowReplyField(false);
       setRepliesNumber((prev) => prev + 1);
-      setReplies((prev) => [response.data.reply, ...prev]);
+      if (replies.length > 0) {
+        setReplies((prev: RepliesType[]) => [response.data.reply, ...prev]);
+      }
       setShowReplies(true);
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
+      setError(true);
+      setMessage(error.response.data.message);
       return error.response.data;
     }
     console.error("Error adding comment:", error);

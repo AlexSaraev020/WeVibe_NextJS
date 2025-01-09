@@ -1,10 +1,8 @@
 import axios from "axios";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface UpdateAccountProps {
   email: string;
   password: string;
-  router: AppRouterInstance;
   setEdit: (edit: boolean) => void;
   setMessage: (message: string | undefined) => void;
   setError: (error: boolean) => void;
@@ -13,13 +11,12 @@ interface UpdateAccountProps {
 export const updateAccount = async ({
   email,
   password,
-  router,
   setError,
   setEdit,
   setMessage,
 }: UpdateAccountProps) => {
   try {
-    const response = await axios.put("/api/user/profile/update/account", {
+    const response = await axios.patch("/api/user/profile/update/account", {
       email,
       password,
     });

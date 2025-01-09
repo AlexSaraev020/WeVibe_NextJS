@@ -5,8 +5,8 @@ import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  if (req.method !== "PUT") {
+export async function PATCH(req: Request) {
+  if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
@@ -24,7 +24,24 @@ export async function PUT(req: Request) {
         { status: 400 },
       );
     }
-    const validateDataLength = validate__Fields__Length({ email, password });
+    if (email.trim() === "") {
+      return NextResponse.json(
+        { message: "Email cannot be empty" },
+        { status: 400 },
+      );
+    }
+    if (password.length > 0 && password.trim() === "") {
+      return NextResponse.json(
+        { message: "Password cannot be empty" },
+        { status: 400 },
+      );
+    }
+    const trimedEmail = email.trim();
+    const trimedPassword = password.trim();
+    const validateDataLength = validate__Fields__Length({
+      email: trimedEmail,
+      password: trimedPassword,
+    });
     if (validateDataLength) {
       return NextResponse.json(
         { message: validateDataLength },
@@ -45,20 +62,21 @@ export async function PUT(req: Request) {
     }
     let emailUpdated = false;
     let passwordUpdated = false;
-    if (loggedUser.email !== email) {
-      loggedUser.email = email;
+    if (loggedUser.email !== trimedEmail) {
+      loggedUser.email = trimedEmail;
       emailUpdated = true;
     }
     if (
       password !== undefined &&
       password !== null &&
-      !(await bcrypt.compare(password, loggedUser.password))
+      !(await bcrypt.compare(trimedPassword, loggedUser.password))
     ) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(trimedPassword, salt);
       loggedUser.password = hashedPassword;
       passwordUpdated = true;
     }
+    
 
     if (emailUpdated || passwordUpdated) {
       await loggedUser.save();
@@ -68,8 +86,8 @@ export async function PUT(req: Request) {
       );
     } else {
       return NextResponse.json(
-        { message: "No changes detected" },
-        { status: 200 },
+        { message: "Your email or password cannot be the same" },
+        { status: 400 },
       );
     }
   } catch (error: unknown) {

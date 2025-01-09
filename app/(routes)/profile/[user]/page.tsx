@@ -7,19 +7,19 @@ import ProfileFollowers from "@/components/profile/clientSide/profileInformation
 import ProfilePictureZoom from "@/components/profile/clientSide/profileInformation/profilePictureZoom";
 import ProfileFollowing from "@/components/profile/clientSide/profileInformation/profileFollowing";
 import ProfilePosts from "@/components/profile/clientSide/profilePosts";
-import { UserType } from "@/types/userTypes/user/userType";
 import DisplayFullUsername from "@/components/profile/clientSide/displayFullUsername";
 
-export default async function Page(props: {
-  searchParams: Promise<{ user: string }>;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ user: string }>;
 }) {
-  const searchParams = await props.searchParams;
-  const userId = searchParams.user;
-  const response = await getUserProfile(userId);
-  const user = response.data.user as UserType;
+  const userId = (await params).user;
+  const user = await getUserProfile(userId);
+  
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center">
-      {user ? (
+      {user._id ? (
         <div className="mt-10 flex h-full w-full flex-col items-center justify-center gap-2 px-1 pb-4 md:gap-10">
           <div className="mx-auto flex w-auto flex-col items-center justify-center">
             <div
@@ -32,38 +32,41 @@ export default async function Page(props: {
               <div className="mt-4 flex flex-col">
                 <div className="flex items-center gap-4 md:gap-8">
                   <h1 className="truncate text-xs font-semibold md:text-xl">
-                    {user.username.length > 20
+                    {user?.username.length > 20
                       ? user.username.slice(0, 20) + "..."
                       : user.username}
                   </h1>
-                  {user.username.length > 20 && (
+                  {user?.username.length > 20 && (
                     <DisplayFullUsername username={user.username} />
                   )}
                 </div>
                 <div className="mt-1 flex gap-2 md:mt-4 md:gap-6">
                   <div className="flex flex-col items-center justify-center md:flex-row md:gap-2">
                     <h2 className="text-xs font-bold md:text-base">
-                      {user.posts}
+                      {user?.posts}
                     </h2>
                     <p className="text-xs md:text-base">Posts</p>
                   </div>
                   <ProfileFollowers
                     userId={userId}
-                    followers={user.followers}
+                    followers={user?.followers}
                   />
                   <ProfileFollowing
                     userId={userId}
-                    following={user.following}
+                    following={user?.following}
                   />
                 </div>
               </div>
             </div>
             <div
               aria-label="bio"
-              className="mx-5 mt-3 flex max-w-xs flex-col md:mt-0 md:max-w-md"
+              className="mx-5 mt-3 flex w-full max-w-xs flex-col md:mt-0 md:max-w-md"
             >
-              {user.bio.length > 0 && (
-                <Long_Text_Truncate className="text-white/50" text={user.bio} />
+              {user?.bio.length > 0 && (
+                <Long_Text_Truncate
+                  className="w-full text-white/50"
+                  text={user.bio}
+                />
               )}
               <div className="mt-2 flex w-full justify-start">
                 <ProfileActionsButtons user={user} />
