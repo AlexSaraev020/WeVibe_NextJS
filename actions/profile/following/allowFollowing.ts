@@ -1,9 +1,10 @@
 "use client";
+import { AllowTypes } from "@/types/userTypes/user/userType";
 import axios from "axios";
 
 interface AllowFollowingProps {
   userId: string;
-  setAllow?: (allow: string) => void;
+  setAllow?: (allow: AllowTypes) => void;
 }
 
 export const allowFollowing = async ({userId, setAllow}: AllowFollowingProps) => {

@@ -119,7 +119,7 @@ export default function Nav() {
                 >
                   {item.icon}
                   <h2 className="text-md hidden max-w-0 overflow-hidden font-semibold opacity-0 transition-all lg:block lg:delay-1000 lg:duration-1000 lg:group-hover:max-w-xs lg:group-hover:opacity-100 lg:group-hover:delay-0">
-                    {item.name}
+                    {item.name.length > 20 ? item.name.slice(0, 10) + "..." : item.name}
                   </h2>
                 </button>
               </div>

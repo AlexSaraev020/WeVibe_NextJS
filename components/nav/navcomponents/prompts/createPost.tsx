@@ -48,7 +48,6 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
       setDisabled,
       setShowCreatePost,
       description,
-      router,
       image,
       setMessage,
       setError,

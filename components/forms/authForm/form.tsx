@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FormInput from "../formElements/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,8 @@ import { loginUser } from "@/actions/auth/login";
 import { AiOutlineLoading } from "react-icons/ai";
 import ShinyButton from "../../buttons/shinyButton";
 import { useAlert } from "@/contexts/alert/alertContext";
+import { IoCheckbox } from "react-icons/io5";
+import { IoCheckboxOutline } from "react-icons/io5";
 
 interface FormProps {
   register?: boolean;
@@ -19,6 +21,15 @@ export default function Form({ register, className }: FormProps) {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { setMessage, setError, message } = useAlert();
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const checkboxRef = useRef<HTMLInputElement>(null);
+
+  const handleRememberMe = () => {
+    setRememberMe(!rememberMe);
+    if (checkboxRef.current) {
+      checkboxRef.current.checked = !checkboxRef.current.checked;
+    }
+  };
 
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,6 +47,7 @@ export default function Form({ register, className }: FormProps) {
       });
     } else {
       await loginUser({
+        rememberMe,
         email,
         setError,
         password,
@@ -103,6 +115,23 @@ export default function Form({ register, className }: FormProps) {
               placeholder="Enter your password"
               required
             />
+            {!register && (
+              <div className="w-full">
+                <div
+                  className="group flex w-fit gap-1 hover:cursor-pointer"
+                  onClick={handleRememberMe}
+                >
+                  {rememberMe ? (
+                    <IoCheckbox className="h-6 w-6 animate-appear fill-postBackground/80 transition-all duration-500" />
+                  ) : (
+                    <IoCheckboxOutline className="h-6 w-6 animate-appear transition-all duration-500 group-hover:text-postBackground/80" />
+                  )}
+                  <h2 className="transition-all duration-500 group-hover:text-postBackground/80">
+                    Remember me
+                  </h2>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <ShinyButton
@@ -127,6 +156,7 @@ export default function Form({ register, className }: FormProps) {
               {register ? " Login " : " Register "}
             </Link>
           </div>
+
           {!register && (
             <Link
               className="md:text-md text-center text-sm font-bold text-postBackground/90"

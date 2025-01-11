@@ -13,13 +13,16 @@ export async function DELETE(req: Request) {
     );
   }
   try {
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
+    const loggedUser = await UserModel.findOne({
+      _id: isLoggedIn,
+    })
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -31,7 +34,7 @@ export async function DELETE(req: Request) {
         { status: 400 },
       );
     }
-    if (createdBy !== loggedUser) {
+    if (createdBy !== isLoggedIn && !loggedUser?.isAdmin) {
       return NextResponse.json(
         { message: "You are not allowed to delete this post", allow: false },
         { status: 403 },
@@ -39,7 +42,7 @@ export async function DELETE(req: Request) {
     }
     await PostModel.findByIdAndDelete(postId);
     await UserModel.updateMany(
-      { _id: loggedUser  },
+      { _id: isLoggedIn  },
       { $pull: { posts: postId } },
     );
     await CommentsModel.deleteMany({ post: postId });

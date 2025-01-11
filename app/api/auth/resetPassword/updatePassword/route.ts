@@ -5,6 +5,7 @@ import { UserModel } from "@/models/user";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 export async function POST(req: Request) {
   if (req.method !== "POST") {
     return NextResponse.json(
@@ -18,13 +19,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Body not found" }, { status: 401 });
     }
     const { password } = body;
-    if (!password || password.trim() === "") {
+    const validateTrim = validateFieldsTrim({ password: password });
+    if (validateTrim.error || !validateTrim.fields) {
       return NextResponse.json(
-        { message: "Password cannot be empty" },
-        { status: 402 },
+        { message: validateTrim.error },
+        { status: 400 },
       );
     }
-    const trimmedPassword = password.trim();
+    const trimmedPassword = validateTrim.fields.password;
     const validFields = validate__Fields__Length({ password: trimmedPassword });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
@@ -55,15 +57,22 @@ export async function POST(req: Request) {
       );
     }
     await connect();
-    const user = await UserModel.findOne({ email:decryptedMail });
+    const user = await UserModel.findOne({ email: decryptedMail });
     if (!user) {
       return NextResponse.json(
         { message: "No user account is associated with this mail" },
         { status: 204 },
       );
     }
-    const isPasswordIdentic = await bcrypt.compare(trimmedPassword, user.password);
-    if (trimmedPassword !== undefined && trimmedPassword !== null && !isPasswordIdentic) {
+    const isPasswordIdentic = await bcrypt.compare(
+      trimmedPassword,
+      user.password,
+    );
+    if (
+      trimmedPassword !== undefined &&
+      trimmedPassword !== null &&
+      !isPasswordIdentic
+    ) {
       const salt = await bcrypt.genSalt(10);
       const newEncryptedPassword = await bcrypt.hash(trimmedPassword, salt);
       user.password = newEncryptedPassword;

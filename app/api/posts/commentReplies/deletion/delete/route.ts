@@ -37,6 +37,19 @@ export async function PATCH(req: Request) {
     if (!userLoggedIn) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+    const reply = await CommentRepliesModel.findOne({ _id: replyId }).exec();
+    if (!reply) {
+      return NextResponse.json({ message: "Reply not found" }, { status: 404 });
+    }
+    if (
+      userLoggedIn._id.toString() !== reply.user.toString() &&
+      !userLoggedIn.isAdmin
+    ) {
+      return NextResponse.json(
+        { message: "You are not authorized to delete this reply" },
+        { status: 401 },
+      );
+    }
 
     await CommentRepliesModel.deleteOne({ _id: replyId });
     await CommentsModel.updateOne(

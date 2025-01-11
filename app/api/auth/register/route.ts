@@ -3,9 +3,9 @@ import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 
 export async function POST(req: Request) {
-  
   if (req.method !== "POST") {
     return NextResponse.json({ message: "Method not allowed" });
   }
@@ -13,19 +13,24 @@ export async function POST(req: Request) {
     await connect();
     const body = await req.json();
     const { username, email, password } = body;
-    if (!username || !email || !password) {
+    const validateTrim = validateFieldsTrim({ username, email, password });
+    if (validateTrim.error || !validateTrim.fields) {
       return NextResponse.json(
-        { message: "All fields are required" },
+        { message: validateTrim.error },
         { status: 400 },
       );
     }
 
-    const validFields = validate__Fields__Length({ username, email, password });
+    const validFields = validate__Fields__Length({
+      username: validateTrim.fields.username,
+      email: validateTrim.fields.email,
+      password: validateTrim.fields.password,
+    });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
-    const existingEmail = await UserModel.findOne({ email });
-    const existingUsername = await UserModel.findOne({ username });
+    const existingEmail = await UserModel.findOne({ email:validateTrim.fields.email });
+    const existingUsername = await UserModel.findOne({ username:validateTrim.fields.username });
     if (existingEmail && existingUsername) {
       return NextResponse.json(
         {
@@ -50,10 +55,10 @@ export async function POST(req: Request) {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(validateTrim.fields.password, salt);
     const newUser = await UserModel.create({
-      username,
-      email,
+      username:validateTrim.fields.username,
+      email:validateTrim.fields.email,
       password: hashedPassword,
     });
 

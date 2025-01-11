@@ -1,7 +1,7 @@
 "use client";
 import FormInput from "@/components/forms/formElements/input";
 import { UserType } from "@/types/userTypes/user/userType";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ShinyButton from "@/components/buttons/shinyButton";
 import { IoClose } from "react-icons/io5";
@@ -15,6 +15,7 @@ import { updateAccount } from "@/actions/profile/updateAccount";
 import { deleteImage } from "@/actions/posts/deletion/deleteImage";
 import { ImageType } from "@/types/image/imageType";
 import Upload from "@/components/uploadImage/upload";
+
 interface EditFormProps {
   user: UserType;
   setEdit: (edit: boolean) => void;
@@ -45,6 +46,7 @@ export default function EditForm({
   const { setUsername, setUserImage } = useUserNavData();
   const [disable, setDisable] = useState<boolean>(false);
   const router = useRouter();
+
   const cancelProfileUpdate = async () => {
     try {
       if (image) {
@@ -62,6 +64,7 @@ export default function EditForm({
       await updateProfile({
         username,
         setMessage,
+        searchedUser: user._id,
         setUserImage,
         setUsername,
         setError,
@@ -74,7 +77,9 @@ export default function EditForm({
     } else if (account && !profile) {
       await updateAccount({
         email,
+        router,
         password,
+        searchedUser: user._id,
         setEdit,
         setMessage,
         setError,

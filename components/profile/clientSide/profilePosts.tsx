@@ -32,7 +32,8 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
       skip,
       limit: 6,
     });
-    if (newPosts.length < 6) {
+    console.log(newPosts);
+    if (newPosts.length < 6 || !Array.isArray(newPosts)) {
       setHasMore(false);
     }
     setPosts((prev: PostType[]) => [...prev, ...newPosts]);

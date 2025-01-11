@@ -1,4 +1,5 @@
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
@@ -26,14 +27,13 @@ export async function PATCH(req: Request) {
         { status: 400 },
       );
     }
-    if (reply.trim() === "") {
-      return NextResponse.json(
-        { message: "Reply cannot be empty" },
-        { status: 400 },
-      );
-    }
-    const trimmedReply = reply.trim();
+    const trimValidation = validateFieldsTrim({ reply: reply });
 
+    if (trimValidation.error || !trimValidation.fields) {
+      return NextResponse.json({ message: trimValidation.error }, { status: 400 });
+    }
+
+    const trimmedReply = trimValidation.fields.reply;
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json(

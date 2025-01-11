@@ -26,7 +26,6 @@ export const PostList = () => {
   }, []);
   
   const loadMorePosts = useCallback (async () => {
-    console.log(posts);
     if (!hasMore || loading) return;
     setLoading(true);
     const newPosts = await getPosts({

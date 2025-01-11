@@ -6,17 +6,19 @@ interface loginUserProps {
   password: string;
   setMessage: (message: string | undefined) => void;
   router: AppRouterInstance;
+  rememberMe: boolean;
   setError: (error: boolean) => void;
 }
 export const loginUser = async ({
   email,
+  rememberMe,
   password,
   setMessage,
   setError,
   router,
 }: loginUserProps) => {
   try {
-    const response = await axios.post("/api/auth/login", { email, password });
+    const response = await axios.post("/api/auth/login", { email, password, rememberMe });
     if (response.status === 200) {
       setError(false);
       setMessage(response.data.message);

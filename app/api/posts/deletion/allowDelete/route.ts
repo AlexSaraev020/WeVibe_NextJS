@@ -1,6 +1,7 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { PostModel } from "@/models/posts/post";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -22,16 +23,19 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
+    const loggedUser = await UserModel.findOne({
+      _id: isLoggedIn,
+    }).exec();
     await connect();
     const post = await PostModel.findById({ _id: postId }).exec();
-    const isAllowed = post?.createdBy._id.equals(loggedUser);
+    const isAllowed = post?.createdBy._id.equals(isLoggedIn) || loggedUser?.isAdmin;
     return NextResponse.json({ allow: isAllowed }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

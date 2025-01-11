@@ -8,6 +8,8 @@ import { useAlert } from "@/contexts/alert/alertContext";
 import { updatePassword } from "@/actions/auth/passwordReset/updatePassword";
 import { useRouter } from "next/navigation";
 import { chooseAnotherEmail } from "@/actions/auth/passwordReset/chooseAnotherEmail";
+import { IoMdArrowRoundBack } from "react-icons/io";
+
 
 interface ResetPasswordFormProps {
   encryptedCode: string | undefined;
@@ -24,6 +26,7 @@ export default function ResetPasswordForm({
   const [password, setPassword] = useState<string | null>(null);
   const { setMessage, setError } = useAlert();
   const router = useRouter();
+  const [disable, setDisable] = useState<boolean>(false);
   const [resetCode, setResetCode] = useState<string[]>([
     "",
     "",
@@ -76,7 +79,11 @@ export default function ResetPasswordForm({
   };
   const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setDisable(true);
     await sendEmail({ email, setMessage, setEmailSent, setError,setEmail });
+    setTimeout(() => {
+      setDisable(false);
+    }, 3000);
   };
 
   const handlePasswordChange = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -104,6 +111,9 @@ export default function ResetPasswordForm({
 
   return (
     <>
+    <button className="absolute top-5 right-5 z-20 text-postBackground/90 border-2 rounded-full border-postBackground/50 p-0 md:p-1">
+      <IoMdArrowRoundBack className="h-8 w-8" onClick={() => router.back()}/>
+    </button>
       {!emailSent && !codeVerified && (
         <form
           onSubmit={handleEmailSubmit}
@@ -137,7 +147,7 @@ export default function ResetPasswordForm({
           </div>
 
           <ShinyButton
-            disabled={email ? false : true}
+            disabled={disable}
             className="mt-5 w-full text-sm font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30 md:text-base"
             background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"
             type="submit"

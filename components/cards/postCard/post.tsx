@@ -50,7 +50,7 @@ export default function Post({
                     : post.createdBy.username}
                 </h2>
               </Link>
-              <p className="ml-2 text-xs text-gray-400 md:text-lg">
+              <p className="ml-2 text-xs text-gray-400 md:text-lg md:-mt-2">
                 {post.title}
               </p>
             </div>

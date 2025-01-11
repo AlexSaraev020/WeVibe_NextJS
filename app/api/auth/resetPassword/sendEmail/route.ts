@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { generateToken } from "@/actions/auth/jwtCreate";
 import { sendMail } from "@/lib/mail";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -34,19 +35,22 @@ export async function POST(req: Request) {
     }
 
     const { email } = body;
-    if (!email || email.trim() === "") {
-      return NextResponse.json({ message: "Email cannot be empty" }, { status: 400 });
+    const validateTrim = validateFieldsTrim({ email: email });
+    if (validateTrim.error || !validateTrim.fields) {
+      return NextResponse.json(
+        { message: validateTrim.error },
+        { status: 400 },
+      );
     }
-    const trimmedEmail = email.trim();
 
-    const validateEmail = validate__Fields__Length({ email: trimmedEmail });
+    const validateEmail = validate__Fields__Length({ email: validateTrim.fields.email });
     if (validateEmail) {
       return NextResponse.json({ message: validateEmail }, { status: 400 });
     }
 
     await connect();
 
-    const user = await UserModel.findOne({ email: trimmedEmail });
+    const user = await UserModel.findOne({ email: validateTrim.fields.email }).exec();
     if (!user) {
       return NextResponse.json(
         { message: "No account is associated with this email" },
@@ -56,13 +60,13 @@ export async function POST(req: Request) {
     const generatedResetCode = generateRandomCode();
 
     await sendMail({
-      to: trimmedEmail,
+      to: validateTrim.fields.email,
       subject: "Password Reset Code",
       body: `Your password reset code is ${generatedResetCode}`,
     })
     
     const generatedResetCodeToken = await generateToken(generatedResetCode);
-    const encryptedMail = await generateToken(trimmedEmail);
+    const encryptedMail = await generateToken(validateTrim.fields.email);
     (await cookies()).set({
       name: "resetCode",
       value: generatedResetCodeToken,

@@ -79,7 +79,9 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
                     href={`/profile/${reply.user._id}`}
                     className="text-xs font-bold md:text-lg"
                   >
-                    {reply.user.username}
+                    {reply.user.username.length > 20
+                      ? reply.user.username.slice(0, 20) + "..."
+                      : reply.user.username}
                   </Link>
                   <h6 className="text-xs font-medium text-zinc-300">
                     {handleDate(reply.createdAt)}

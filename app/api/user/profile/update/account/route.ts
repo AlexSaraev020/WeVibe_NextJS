@@ -1,11 +1,13 @@
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
-import { NextResponse } from "next/server";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
@@ -13,35 +15,36 @@ export async function PATCH(req: Request) {
     );
   }
   try {
+    const userProfileId = req.nextUrl.searchParams.get("user");
+    if (!userProfileId || !Types.ObjectId.isValid(userProfileId)) {
+      return NextResponse.json(
+        { message: "User profile id not found" },
+        { status: 404 },
+      );
+    }
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
     const { email, password } = body;
-    if (!email && !password) {
+    const validateTrim = validateFieldsTrim({
+      email: email,
+      updatePassword: password,
+    });
+    if (validateTrim.error || !validateTrim.fields) {
       return NextResponse.json(
-        { message: "Email and password are required" },
+        { message: validateTrim.error },
         { status: 400 },
       );
     }
-    if (email.trim() === "") {
-      return NextResponse.json(
-        { message: "Email cannot be empty" },
-        { status: 400 },
-      );
-    }
-    if (password.length > 0 && password.trim() === "") {
-      return NextResponse.json(
-        { message: "Password cannot be empty" },
-        { status: 400 },
-      );
-    }
-    const trimedEmail = email.trim();
-    const trimedPassword = password.trim();
+    
+    const trimedEmail = validateTrim.fields.email;
+    const trimedPassword = validateTrim.fields.updatePassword;
     const validateDataLength = validate__Fields__Length({
       email: trimedEmail,
       password: trimedPassword,
     });
+    
     if (validateDataLength) {
       return NextResponse.json(
         { message: validateDataLength },
@@ -55,33 +58,43 @@ export async function PATCH(req: Request) {
         { status: 401 },
       );
     }
-    await connect();
     const loggedUser = await UserModel.findById(isLoggedIn);
     if (!loggedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+    if (userProfileId !== isLoggedIn && !loggedUser.isAdmin) {
+      return NextResponse.json(
+        { message: "You are not allowed to update this user" },
+        { status: 401 },
+      );
+    }
+    
+    await connect();
+    const userToBeModified = await UserModel.findById(userProfileId);
+    if (!userToBeModified) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     let emailUpdated = false;
     let passwordUpdated = false;
-    if (loggedUser.email !== trimedEmail) {
-      loggedUser.email = trimedEmail;
+    if (userToBeModified.email !== trimedEmail) {
+      userToBeModified.email = trimedEmail;
       emailUpdated = true;
     }
     if (
-      password !== undefined &&
-      password !== null &&
-      !(await bcrypt.compare(trimedPassword, loggedUser.password))
+      trimedPassword !== undefined &&
+      trimedPassword !== null &&
+      !(await bcrypt.compare(trimedPassword, userToBeModified.password))
     ) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(trimedPassword, salt);
-      loggedUser.password = hashedPassword;
+      userToBeModified.password = hashedPassword;
       passwordUpdated = true;
     }
-    
 
     if (emailUpdated || passwordUpdated) {
-      await loggedUser.save();
+      await userToBeModified.save();
       return NextResponse.json(
-        { message: "User updated successfully" },
+        { message: "User updated successfully", email: trimedEmail },
         { status: 200 },
       );
     } else {

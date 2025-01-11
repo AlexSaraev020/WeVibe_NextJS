@@ -1,4 +1,6 @@
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
 import { PostModel } from "@/models/posts/post";
@@ -14,26 +16,35 @@ export async function PATCH(req: Request) {
   }
   await connect();
   try {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
+      return NextResponse.json( 
+        { message: "You are not logged in!" },
+        { status: 401 },  
+      );
+    }
+    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId, comment, userId } = body;
-    if (!postId || !comment || !userId) {
+    const { postId, comment } = body;
+    if (!postId || !comment) {
       return NextResponse.json(
         { message: "Please fill the required fields" },
         { status: 400 },
       );
     }
 
-    if (comment.trim() === "") {
-      return NextResponse.json(
-        { message: "Comment cannot be empty" },
-        { status: 400 },
-      );
+    const trimValidation = validateFieldsTrim({ comment: comment });
+    if (trimValidation.error || !trimValidation.fields) {
+      return NextResponse.json({ message: trimValidation.error }, { status: 400 });
     }
 
-    const trimmedComment = comment.trim();
+    const trimmedComment = trimValidation.fields.comment;
 
     const validate = validate__Fields__Length({ comment: trimmedComment });
     if (validate) {
@@ -43,9 +54,9 @@ export async function PATCH(req: Request) {
     const newComment = await CommentsModel.create({
       comment: trimmedComment,
       post: postId,
-      user: userId,
+      user: isLoggedIn,
     });
-    await PostModel.findOneAndUpdate(
+    await PostModel.updateOne(
       { _id: postId },
       { $push: { comments: newComment._id } },
       { new: true },

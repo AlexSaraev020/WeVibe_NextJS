@@ -5,24 +5,24 @@ import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
 
-export async function PUT(req: Request) {
-  if (req.method !== "PUT") {
+export async function PATCH(req: Request) {
+  if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
       { status: 400 },
     );
   }
   try {
-    const loggedUserId = await checkUserLoggedIn();
-    if (!loggedUserId) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
     await connect();
-    const userLoggedIn = await UserModel.findOne({ _id: loggedUserId }).exec();
-    if (!userLoggedIn) {
+    const loggedUser = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!loggedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const body = await req.json();
@@ -40,7 +40,7 @@ export async function PUT(req: Request) {
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
-    const isLoggedInUserIdObject = new Types.ObjectId(loggedUserId);
+    const isLoggedInUserIdObject = new Types.ObjectId(isLoggedIn);
     if (!isLoggedInUserIdObject) {
       return NextResponse.json(
         { message: "User id not found" },
@@ -49,18 +49,18 @@ export async function PUT(req: Request) {
     }
 
     if (post.likes.includes(isLoggedInUserIdObject)) {
-      await PostModel.findOneAndUpdate(
+      await PostModel.updateOne(
         { _id: postId },
-        { $pull: { likes: loggedUserId} },
+        { $pull: { likes: isLoggedIn} },
       ).exec();
       return NextResponse.json(
         { message: "Post unliked", like: false },
         { status: 200 },
       );
     } else {
-      await PostModel.findOneAndUpdate(
+      await PostModel.updateOne(
         { _id: postId },
-        { $addToSet: { likes: loggedUserId } },
+        { $addToSet: { likes: isLoggedIn } },
       ).exec();
       return NextResponse.json(
         { message: "Post liked", like: true },

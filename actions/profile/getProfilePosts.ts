@@ -1,6 +1,7 @@
 import { PostType } from "@/types/post/postType";
 import axios from "axios";
 
+
 interface GetProfilePostsProps {
   userId: string;
   setLoading: (loading: boolean) => void;
@@ -29,10 +30,11 @@ export const getProfilePosts = async ({
       setHasMore(response.data.hasMore);
       return response.data.posts as PostType[];
     }
-    return [];
+    return [] as PostType[];
   } catch (error: unknown) {
+
     if (axios.isAxiosError(error) && error.response) {
-      return error.response.data;
+      return error.response.data.message;
     }
     console.error("Error fetching user profile:", error);
     return error;

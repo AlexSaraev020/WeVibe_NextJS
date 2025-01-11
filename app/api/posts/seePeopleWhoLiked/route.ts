@@ -1,3 +1,4 @@
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
@@ -11,6 +12,17 @@ export async function POST(req: Request) {
     );
   }
   try {
+    const isUserLoggedIn = await checkUserLoggedIn();
+    if (!isUserLoggedIn) {
+      return NextResponse.json(
+        { message: "You are not logged in!" },
+        { status: 401 },
+      );
+    }
+    const loggedUser = await UserModel.findOne({ _id: isUserLoggedIn }).exec();
+    if (!loggedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });

@@ -13,16 +13,16 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
     await connect();
-    const userLoggedIn = await UserModel.findOne({ _id: loggedUser }).exec();
-    if (!userLoggedIn) {
+    const loggedUser = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!loggedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const body = await req.json();
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-    const isLoggedInUserIdObject = new Types.ObjectId(loggedUser);
+    const isLoggedInUserIdObject = new Types.ObjectId(isLoggedIn);
     const isLiked = reply.likes.includes(isLoggedInUserIdObject);
     return NextResponse.json({ isLiked }, { status: 200 });
   } catch (error: unknown) {

@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 import { cookies } from "next/headers";
 import { startSession } from "mongoose";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 
 export async function DELETE(req: NextRequest) {
   if (req.method !== "DELETE") {
@@ -17,7 +18,7 @@ export async function DELETE(req: NextRequest) {
       { status: 400 },
     );
   }
-  const imagesToBeDeleted=[]
+  const imagesToBeDeleted = [];
   const session = await startSession();
   session.startTransaction();
   try {
@@ -28,14 +29,19 @@ export async function DELETE(req: NextRequest) {
         { status: 404 },
       );
     }
-    const userId = await checkUserLoggedIn();
-    if (!userId) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
-    if (userProfileId !== userId) {
+    await connect();
+    const loggedUser = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!loggedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    if (userProfileId !== isLoggedIn && !loggedUser.isAdmin) {
       return NextResponse.json(
         { message: "You are not allowed to delete this account" },
         { status: 403 },
@@ -46,76 +52,89 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
     const { password } = body;
-    if (!password) {
+    if (!password && !loggedUser.isAdmin) {
       return NextResponse.json(
         { message: "Password not found" },
         { status: 400 },
       );
     }
-    const validFields = validate__Fields__Length({ password });
-    if (validFields) {
+    const validateTrim = validateFieldsTrim({ password });
+    if (validateTrim.error || !validateTrim.fields) {
+      return NextResponse.json(
+        { message: validateTrim.error },
+        { status: 400 },
+      );
+    }
+    const trimPassword = validateTrim.fields.password;
+    const validFields = validate__Fields__Length({ password: trimPassword });
+    if (validFields && !loggedUser.isAdmin) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
-    await connect();
-    const user = await UserModel.findOne({ _id: userId }).exec();
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect) {
+    const isPasswordCorrect = await bcrypt.compare(
+      trimPassword,
+      loggedUser.password,
+    );
+    if (!isPasswordCorrect && !loggedUser.isAdmin) {
       return NextResponse.json(
         { message: "Password is incorrect" },
         { status: 401 },
       );
     }
     await UserModel.updateMany(
-      { following: userId },
-      { $pull: { following: userId } },
+      { following: userProfileId },
+      { $pull: { following: userProfileId } },
       { session },
     );
     await UserModel.updateMany(
-      { followers: userId },
-      { $pull: { followers: userId } },
+      { followers: userProfileId },
+      { $pull: { followers: userProfileId } },
       { session },
     );
     await CommentsModel.updateMany(
-      { likes: userId },
-      { $pull: { likes: userId } },
+      { likes: userProfileId },
+      { $pull: { likes: userProfileId } },
       { session },
     );
     await CommentRepliesModel.updateMany(
-      { likes: userId },
-      { $pull: { likes: userId } },
+      { likes: userProfileId },
+      { $pull: { likes: userProfileId } },
       { session },
     );
     await PostModel.updateMany(
-      { likes: userId },
-      { $pull: { likes: userId } },
+      { likes: userProfileId },
+      { $pull: { likes: userProfileId } },
       { session },
     );
-    const userImageToBeDeleted = await UserModel.findOne({ _id: userId });
+    const userImageToBeDeleted = await UserModel.findOne({
+      _id: userProfileId,
+    });
     if (
       userImageToBeDeleted &&
-      userImageToBeDeleted?.image.fileId !== "675fef71e375273f6052bf73"
+      userImageToBeDeleted?.image.url !==
+        "https://ik.imagekit.io/xkk8kgegl/defaultuser.webp?updatedAt=1735907399967"
     ) {
       imagesToBeDeleted.push(userImageToBeDeleted?.image);
     }
-    await UserModel.deleteOne({ _id: userId }, { session });
-    await CommentRepliesModel.deleteMany({ user: userId }, { session });
-    await CommentsModel.deleteMany({ user: userId }, { session });
-    const postImagesToBeDeleted = await PostModel.find({ createdBy: userId });
+    await UserModel.deleteOne({ _id: userProfileId }, { session });
+    await CommentRepliesModel.deleteMany({ user: userProfileId }, { session });
+    await CommentsModel.deleteMany({ user: userProfileId }, { session });
+    const postImagesToBeDeleted = await PostModel.find({
+      createdBy: userProfileId,
+    });
     postImagesToBeDeleted.forEach((post) => {
       imagesToBeDeleted.push(post.image);
     });
-    await PostModel.deleteMany({ createdBy: userId }, { session });
+    await PostModel.deleteMany({ createdBy: userProfileId }, { session });
     await session.commitTransaction();
-    const cookieStore = await cookies();
-    const response = cookieStore.delete("authToken");
-    if (!response) {
-      return NextResponse.json(
-        { message: "An error occurred" },
-        { status: 500 },
-      );
+    if (!loggedUser.isAdmin) {
+      const cookieStore = await cookies();
+      const response = cookieStore.delete("authToken");
+      if (!response) {
+        return NextResponse.json(
+          { message: "An error occurred" },
+          { status: 500 },
+        );
+      }
     }
     return NextResponse.json(
       { message: "Account deleted successfully", imagesToBeDeleted },

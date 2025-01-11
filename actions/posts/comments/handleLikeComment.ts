@@ -17,7 +17,7 @@ export const handleLikeComment = async ({
   try {
     setLiked(!liked);
     setLikes((prevLikes: number) => (!liked ? prevLikes + 1 : prevLikes - 1));
-    await axios.put(`/api/posts/comments/handleLikeComment`, {
+    await axios.patch(`/api/posts/comments/handleLikeComment`, {
       commentId,
       postId,
     });

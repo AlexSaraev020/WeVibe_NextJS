@@ -13,7 +13,7 @@ export const handleLike = async ({ postId , setLike , setLikes, like}: HandleLik
       setLike(!like);
     }
     setLikes((prevLikes: number) => (!like ? prevLikes + 1 : prevLikes - 1));
-    await axios.put(`/api/posts/handleLike`, { postId });
+    await axios.patch(`/api/posts/handleLike`, { postId });
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;

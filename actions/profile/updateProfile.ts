@@ -14,10 +14,12 @@ interface UpdateProfileProps {
   setUserImage: (userImage: ImageType) => void;
   setUsername: (username: string) => void;
   setError: (error: boolean) => void;
+  searchedUser: string;
 }
 export const updateProfile = async ({
   setMessage,
   setError,
+  searchedUser,
   username,
   setUserImage,
   setUsername,
@@ -28,11 +30,14 @@ export const updateProfile = async ({
   setEdit,
 }: UpdateProfileProps) => {
   try {
-    const response = await axios.patch("/api/user/profile/update/profile", {
-      username,
-      bio,
-      image,
-    });
+    const response = await axios.patch(
+      `/api/user/profile/update/profile?user=${searchedUser}`,
+      {
+        username,
+        bio,
+        image,
+      },
+    );
     if (response.status < 300) {
       setError(false);
       setMessage(response.data.message);

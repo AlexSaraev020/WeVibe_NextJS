@@ -23,13 +23,9 @@ export const addComment = async ({
 }: AddCommentProps) => {
   setComment("");
   try {
-    const userResponse = await getUser();
-    const userId = userResponse.user._id;
-    console.log(comment);
     const response = await axios.patch(`/api/posts/comments/create`, {
       postId,
       comment,
-      userId,
     });
     if (response.status < 300) {
       setComments((prev: CommentType[]) => [response.data.comment, ...prev]);

@@ -1,6 +1,7 @@
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
+import { UserModel } from "@/models/user";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -22,13 +23,16 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const loggedUser = await checkUserLoggedIn();
-    if (!loggedUser) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
+    const userLoggedIn = await UserModel.findOne({
+      _id: isLoggedIn,
+    });
     await connect();
     const comment = await CommentsModel.findById({ _id: commentId }).exec();
     if (!comment) {
@@ -37,7 +41,8 @@ export async function POST(req: Request) {
         { status: 404 },
       );
     }
-    const isAllowed = comment.user.toString() === loggedUser.toString();
+    const isAllowed =
+      comment.user.toString() === isLoggedIn || userLoggedIn?.isAdmin;
     return NextResponse.json(
       {
         allow: isAllowed,

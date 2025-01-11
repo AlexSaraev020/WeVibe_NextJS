@@ -17,9 +17,9 @@ export const chooseAnotherEmail = async ({
     const response = await axios.delete(
       "/api/auth/resetPassword/chooseAnotherEmail",
     );
+    setEmailSent(false);
     if (response.status < 300) {
       setResetCode(["", "", "", "", "", ""]);
-      setEmailSent(false);
       setError(false);
       setMessage(response.data.message);
     }

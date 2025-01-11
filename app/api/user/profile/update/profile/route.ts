@@ -1,24 +1,17 @@
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { ImageType } from "@/types/image/imageType";
-import { NextResponse } from "next/server";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
 type UserUpdates = {
   username?: string;
   bio?: string;
   image?: ImageType;
 };
-
-type UpdatedFields = {
-  usernameUpdated: boolean;
-  bioUpdated: boolean;
-  imageUpdated: boolean;
-  image: ImageType;
-  username: string;
-};
-
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   if (req.method !== "PATCH") {
     return NextResponse.json(
       { message: "Method not allowed" },
@@ -30,6 +23,18 @@ export async function PATCH(req: Request) {
     if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
+        { status: 401 },
+      );
+    }
+    const userProfileId = req.nextUrl.searchParams.get("user");
+    if (!userProfileId || !Types.ObjectId.isValid(userProfileId)) {
+      return NextResponse.json(
+        { message: "User profile id not found" }, { status: 404 },
+      );
+    }
+    if (userProfileId !== isLoggedIn) {
+      return NextResponse.json(
+        { message: "You can only update your own profile" },
         { status: 401 },
       );
     }
@@ -45,22 +50,19 @@ export async function PATCH(req: Request) {
         { status: 400 },
       );
     }
-    if (username && username.trim() !== "") {
-      updates.username = username.trim();
-    } else if (username) {
+    const validateTrim = validateFieldsTrim({ username, bio });
+    if (validateTrim.error || !validateTrim.fields) {
       return NextResponse.json(
-        { message: "Username cannot be empty" },
+        { message: validateTrim.error },
         { status: 400 },
       );
     }
+    if (validateTrim.fields.username) {
+      updates.username = validateTrim.fields.username;
+    }
 
-    if (bio && bio.trim() !== "") {
-      updates.bio = bio.trim();
-    } else if (bio) {
-      return NextResponse.json(
-        { message: "Bio cannot be empty" },
-        { status: 400 },
-      );
+    if (validateTrim.fields.bio) {
+      updates.bio = validateTrim.fields.bio;
     }
 
     if (image) {

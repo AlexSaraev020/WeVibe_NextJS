@@ -4,7 +4,11 @@ import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 
-type Allow = "edit" | "follow" | "unfollow";
+type Allow = {
+  edit: boolean;
+  follow: boolean;
+  unfollow: boolean;
+};
 
 export async function GET(req: NextRequest) {
   if (req.method !== "GET") {
@@ -15,8 +19,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const userId = await checkUserLoggedIn();
-    if (!userId) {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
@@ -28,9 +32,14 @@ export async function GET(req: NextRequest) {
     }
     await connect();
 
+    const loggedUser = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!loggedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
     let allow: Allow;
-    if (userId === query) {
-      allow = "edit";
+    if (isLoggedIn === query) {
+      allow = { edit: true, follow: false, unfollow: false };
     } else {
       const user = await UserModel.findOne({ _id: query }).exec();
       if (!user) {
@@ -39,8 +48,10 @@ export async function GET(req: NextRequest) {
           { status: 404 },
         );
       }
-      const objectUserId = new Types.ObjectId(userId);
-      allow = user.followers.includes(objectUserId) ? "unfollow" : "follow";
+      const objectUserId = new Types.ObjectId(isLoggedIn);
+      allow = user.followers.includes(objectUserId)
+        ? { edit: loggedUser.isAdmin ? true : false, follow: false, unfollow: true }
+        : { edit: loggedUser.isAdmin ? true : false, follow: true, unfollow: false };
     }
 
     return NextResponse.json({ allow }, { status: 200 });

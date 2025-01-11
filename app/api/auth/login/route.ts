@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { generateToken } from "@/actions/auth/jwtCreate";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 
 export async function POST(req: Request) {
   try {
@@ -18,41 +19,29 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { email, password } = body;
-
-    if (!email || !password) {
+    const { email, password, rememberMe } = body;
+    const trimValidation = validateFieldsTrim({
+      email: email,
+      password: password,
+    });
+    if (trimValidation.error || !trimValidation.fields) {
       return NextResponse.json(
-        { message: "All fields are required" },
-        { status: 401 },
+        { message: trimValidation.error },
+        { status: 400 },
       );
     }
-
-    if (email.length > 0 && email.trim() === "") {
-      return NextResponse.json(
-        { message: "Email cannot be empty" },
-        { status: 401 },
-      );
-    }
-
-    if (password.length > 0 && password.trim() === "") {
-      return NextResponse.json(
-        { message: "Password cannot be empty" },
-        { status: 401 },
-      );
-    }
-
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
 
     const validFields = validate__Fields__Length({
-      email: trimmedEmail,
-      password: trimmedPassword,
+      email: trimValidation.fields.email,
+      password: trimValidation.fields.password,
     });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
 
-    const existingUser = await UserModel.findOne({ email: trimmedEmail }).exec();
+    const existingUser = await UserModel.findOne({
+      email: trimValidation.fields.email,
+    }).exec();
 
     if (!existingUser) {
       return NextResponse.json(
@@ -62,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     const isPasswordCorrect = await bcrypt.compare(
-      trimmedPassword,
+      trimValidation.fields.password,
       existingUser.password,
     );
 
@@ -77,7 +66,7 @@ export async function POST(req: Request) {
     (await cookies()).set({
       name: "authToken",
       value: token,
-      maxAge: 14 * 24 * 60 * 60,
+      maxAge: rememberMe ? 14 * 24 * 60 * 60 : 60 * 60,
       httpOnly: true,
       sameSite: "strict",
     });

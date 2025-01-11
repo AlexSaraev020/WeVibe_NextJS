@@ -4,50 +4,64 @@ import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
+import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 export async function POST(req: Request) {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 },
+    );
+  }
   try {
-    if (req.method !== "POST") {
+    const isLoggedIn = await checkUserLoggedIn();
+    if (!isLoggedIn) {
       return NextResponse.json(
-        { message: "Method not allowed" },
-        { status: 400 },
+        { message: "You are not logged in!" },
+        { status: 401 },        
       );
     }
-
+    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    if (!userLoggedIn) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
     const { title, description, image } = body;
-    if (!image || !title) {
+    if (!image) {
       return NextResponse.json(
-        { message: "Please fill the required fields" },
+        { message: "Please upload an image" },
         { status: 400 },
       );
     }
+    const validateTrim = validateFieldsTrim({ title, description });
+    if (validateTrim.error || !validateTrim.fields) {
+      return NextResponse.json(
+        { message: validateTrim.error },
+        { status: 400 },
+      );
+    }
+    const trimmedTitle = validateTrim.fields.title;
+    const trimmedDescription = validateTrim.fields.description;
 
-    const validFields = validate__Fields__Length({ title, description });
+    const validFields = validate__Fields__Length({
+      title: trimmedTitle,
+      description: trimmedDescription,
+    });
     if (validFields) {
       return NextResponse.json({ message: validFields }, { status: 400 });
     }
-
-    const userId = await checkUserLoggedIn();
-    if (!userId) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 },
-      );
-    }
     await connect();
     const newPost = await PostModel.create({
-      title,
-      description,
+      title: trimmedTitle,
+      description: trimmedDescription,
       image: {
         url: image.url,
         fileId: image.fileId,
       },
-      createdBy: userId,
+      createdBy: isLoggedIn,
     });
-    console.log(newPost);
 
     if (!newPost) {
       return NextResponse.json(
@@ -56,8 +70,8 @@ export async function POST(req: Request) {
       );
     }
 
-    await UserModel.findOneAndUpdate(
-      { _id: userId },
+    await UserModel.updateOne(
+      { _id: isLoggedIn },
       { $push: { posts: newPost._id } },
     );
 
@@ -71,14 +85,11 @@ export async function POST(req: Request) {
       .exec();
 
     if (!post) {
-      return NextResponse.json(
-        { message: "Post not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
 
     return NextResponse.json(
-      { message: "Post created successfully!" ,post},
+      { message: "Post created successfully!", post },
       { status: 201 },
     );
   } catch (error: unknown) {
@@ -88,6 +99,9 @@ export async function POST(req: Request) {
         { status: 500 },
       );
     }
-    return NextResponse.json({ message: "An error occurred", error }, { status: 500 });
+    return NextResponse.json(
+      { message: "An error occurred", error },
+      { status: 500 },
+    );
   }
 }

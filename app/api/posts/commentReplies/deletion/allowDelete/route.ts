@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     if (!reply) {
       return NextResponse.json({ message: "Reply not found" }, { status: 404 });
     }
-    const isAllowed = reply.user.toString() === isLoggedIn.toString();
+    const isAllowed = reply.user.toString() === isLoggedIn || userLoggedIn.isAdmin;
     return NextResponse.json({ allow: isAllowed }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

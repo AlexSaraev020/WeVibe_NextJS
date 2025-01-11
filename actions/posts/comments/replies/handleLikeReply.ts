@@ -16,7 +16,7 @@ export const handleLikeReply = async ({
   setLiked(!liked);
   setLikes((prevLikes: number) => (!liked ? prevLikes + 1 : prevLikes - 1));
   try {
-    await axios.put("/api/posts/commentReplies/handleLikeReply", {
+    await axios.patch("/api/posts/commentReplies/handleLikeReply", {
       _id,
     });
   } catch (error: unknown) {

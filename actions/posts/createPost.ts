@@ -9,7 +9,6 @@ interface CreatePostProps {
   image: ImageType | undefined;
   setMessage: (message: string | undefined) => void;
   setError: (erorr: boolean) => void;
-  router: AppRouterInstance;
   setShowCreatePost: (showCreatePost: boolean) => void;
   setDisabled: (disabled: boolean) => void;
   setPosts: (updatePosts: (prevPosts: PostType[]) => PostType[]) => void;
@@ -20,7 +19,6 @@ export const createPost = async ({
   title,
   description,
   image,
-  router,
   setDisabled,
   setShowCreatePost,
   setMessage,
@@ -42,9 +40,9 @@ export const createPost = async ({
     return null;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      console.log("Server response error:", error.response.data.message);
       setMessage(error.response.data.message);
       setError(true);
+      setDisabled(false);
       return error.response.data.message;
     }
     console.error("Error following:", error);

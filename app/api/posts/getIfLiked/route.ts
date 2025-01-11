@@ -3,6 +3,7 @@ import { PostModel } from "@/models/posts/post";
 import { NextResponse } from "next/server";
 import { connect } from "@/db/mongo/db";
 import { Types } from "mongoose";
+import { UserModel } from "@/models/user";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -18,6 +19,10 @@ export async function POST(req: Request) {
         { message: "You are not logged in!" },
         { status: 401 },
       );
+    }
+    const loggedUser = await UserModel.findOne({ _id: isUserLoggedIn }).exec();
+    if (!loggedUser) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const body = await req.json();
     if (!body) {

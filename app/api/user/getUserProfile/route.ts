@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
       );
     }
     await connect();
-
     const user = await UserModel.findOne({ _id: userId })
       .select("-password")
       .lean()
