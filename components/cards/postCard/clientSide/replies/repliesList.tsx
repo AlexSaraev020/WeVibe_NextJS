@@ -1,5 +1,5 @@
 import { RepliesType } from "@/types/post/comments/replies/repliesType";
-import React, { useEffect } from "react";
+import React from "react";
 import ReplyCard from "./replyCard";
 interface RepliesListProps {
   replies: RepliesType[];

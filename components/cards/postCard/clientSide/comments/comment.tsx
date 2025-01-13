@@ -60,7 +60,6 @@ export default function Comment({
           setShowUsersList={setShowUsersList}
           _id={commentContent._id}
           type="comment"
-          showUsersList={showUsersList}
         />
       )}
       {liked !== undefined ? (

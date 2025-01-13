@@ -31,7 +31,7 @@ export default function CommentsList({
   }, [inView]);
 
   useEffect(() => {
-    setComments((prev: CommentType[]) => []);
+    setComments(() => []);
     setSkip(0);
     setHasMore(true);
   }, []);

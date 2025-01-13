@@ -11,13 +11,11 @@ import { useInView } from "react-intersection-observer";
 
 interface UsersListProps {
   setShowUsersList: (showUsersList: boolean) => void;
-  showUsersList: boolean;
   _id: string;
   type: "post" | "comment" | "reply";
 }
 export default function UsersList({
   setShowUsersList,
-  showUsersList,
   _id,
   type,
 }: UsersListProps) {

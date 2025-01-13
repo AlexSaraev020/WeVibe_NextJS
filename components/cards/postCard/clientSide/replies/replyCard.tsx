@@ -54,7 +54,6 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
           setShowUsersList={setShowUsersList}
           _id={reply._id}
           type="reply"
-          showUsersList={showUsersList}
         />
       )}
       {liked !== undefined ? (

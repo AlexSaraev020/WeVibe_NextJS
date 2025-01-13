@@ -1,7 +1,7 @@
 "use client";
 import FormInput from "@/components/forms/formElements/input";
 import { UserType } from "@/types/userTypes/user/userType";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import ShinyButton from "@/components/buttons/shinyButton";
 import { IoClose } from "react-icons/io5";

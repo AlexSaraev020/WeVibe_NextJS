@@ -63,7 +63,6 @@ export default function PostClientSide({
         <UsersList
           type="post"
           _id={postId}
-          showUsersList={showUsersList}
           setShowUsersList={setShowUsersList}
         />
       )}

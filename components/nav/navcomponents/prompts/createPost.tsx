@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { createPost } from "@/actions/posts/createPost";
-import { useRouter } from "next/navigation";
 import FormInput from "@/components/forms/formElements/input";
 import { twMerge } from "tailwind-merge";
 import Textarea from "@/components/forms/formElements/textarea";
@@ -25,7 +24,6 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
   const [progress, setProgress] = useState<number>(0);
   const [imageCover, setImageCover] = useState<boolean>(true);
   const [disabled, setDisabled] = useState<boolean>(false);
-  const router = useRouter();
   const { setMessage, setError } = useAlert();
 
   const cancelCreatePost = async () => {
