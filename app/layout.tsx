@@ -19,7 +19,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
+  userScalable: true,
   viewportFit: 'contain',
 }
 
@@ -40,7 +40,7 @@ export default function RootLayout({
       className="overflow-y-scroll bg-black text-white antialiased scrollbar-none"
     >
       <Head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
       </Head>
       <body
         suppressHydrationWarning={true}
