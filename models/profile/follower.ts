@@ -1,6 +1,6 @@
 import { Model, model, models, Schema, Types } from "mongoose";
 
-export interface Follower extends Document {
+ interface Follower extends Document {
   user: Types.ObjectId;
   follower: Types.ObjectId;
   createdAt: Date;

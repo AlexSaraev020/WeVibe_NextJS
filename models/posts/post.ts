@@ -1,6 +1,5 @@
-import { ImageType } from "@/types/image/imageType";
 import { Document, model, Model, models, Schema, Types } from "mongoose";
-export interface Post extends Document {
+ interface Post extends Document {
   _id: Types.ObjectId;
   title: string;
   description: string;

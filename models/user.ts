@@ -1,7 +1,7 @@
 import { ImageType } from "@/types/image/imageType";
 import { Document, model, Model, models, Schema, Types } from "mongoose";
 
-export interface User extends Document {
+interface User extends Document {
   _id: Types.ObjectId;
   isAdmin: boolean;
   username: string;
