@@ -99,6 +99,9 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
     <>
     {showDeletePostPrompt && <DeletePostPrompt handleDelete={handleDelete} setShowDeletePostPrompt={setShowDeletePostPrompt}/>}
       <button
+      aria-label="closeMenu"
+        type="button"
+        id="closeMenu"
         onClick={() => setIsOpen(!isOpen)}
         className="z-20 rounded-full p-1"
       >
@@ -114,6 +117,8 @@ export default function KebabSection(props: KebabSectionCombinedProps) {
           ) : (
             allow && (
               <button
+                aria-label="deletePost"
+                id="deletePost"
                 onClick={() => setShowDeletePostPrompt(true)}
                 type="button"
                 className="z-50 flex items-center gap-1 hover:text-gray-100"

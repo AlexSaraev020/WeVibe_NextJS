@@ -75,7 +75,7 @@ export default function PostClientSide({
       )}
       <div className="flex w-full flex-col pb-4">
         <div className="flex w-full gap-2 p-2">
-          <button onClick={handleLikeOnClick} type="button">
+          <button onClick={handleLikeOnClick} type="button" aria-label="likeHandler" id="like">
             {like ? (
               <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
             ) : (
@@ -84,6 +84,8 @@ export default function PostClientSide({
           </button>
 
           <button
+            id="showComments"
+            aria-label="showComments"
             className=""
             onClick={() => setShowComments(!showComments)}
             type="button"
@@ -100,6 +102,8 @@ export default function PostClientSide({
             </p>
             {description.length > 200 && (
               <button
+                id="showMoreTextDescriptionText"
+                aria-label="showMoreDecriptionText"
                 className="md:text-md text-xs text-zinc-300/90"
                 onClick={handleTruncate}
                 type="button"

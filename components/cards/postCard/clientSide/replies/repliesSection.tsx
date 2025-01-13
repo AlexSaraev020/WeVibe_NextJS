@@ -77,6 +77,9 @@ export default function RepliesSection({
     <div className="flex w-full flex-col items-end">
       <div className="flex w-11/12 items-center justify-start gap-4">
         <button
+          type="button"
+          aria-label="displayReplyFieldButton"
+          id="displayReplyFieldButton"
           onClick={() => setShowReplyField(!showReplyField)}
           className="text-xs italic text-white/60 md:text-sm"
         >
@@ -84,6 +87,9 @@ export default function RepliesSection({
         </button>
         {repliesNumber > 0 && (
           <button
+            type="button"
+            aria-label="displayRepliesButton" 
+            id="displayRepliesButton"
             onClick={() => {
               setShowReplies(!showReplies);
               setPage(0);
@@ -112,6 +118,9 @@ export default function RepliesSection({
             ariaLabel="Reply comment"
           />
           <button
+            type="button"
+            aria-label="submitReplyButton"
+            id="submitReplyButton"
             onClick={handleSubmitReply}
             className="group flex h-6 items-center justify-center transition-all duration-500 hover:scale-110"
           >

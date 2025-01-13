@@ -9,6 +9,8 @@ interface ShinyButtonProps {
   children?: React.ReactNode;
   bottomLineCollor?: string;
   topLineColor?: string;
+  ariaLabel: string;
+  id: string;
   background?: string;
   disabled?: boolean;
 }
@@ -18,6 +20,8 @@ export default function ShinyButton({
   onClick,
   type,
   disabled,
+  ariaLabel,
+  id,
   children,
   className,
   bottomLineCollor,
@@ -27,6 +31,8 @@ export default function ShinyButton({
   return (
     <button
       disabled={disabled}
+      aria-label={ariaLabel}
+      id={id}
       type={type}
       onClick={onClick}
       className={twMerge(

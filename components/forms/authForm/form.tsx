@@ -135,6 +135,8 @@ export default function Form({ register, className }: FormProps) {
           </div>
         </div>
         <ShinyButton
+        ariaLabel="SubmitAuthenticationForm"
+        id="submitAuthenticationForm"
           onClick={() => setMessage(undefined)}
           className="w-32 font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30"
           background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"

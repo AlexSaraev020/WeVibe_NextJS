@@ -110,6 +110,8 @@ export default function Comment({
                   userId={commentContent.user._id}
                 />
                 <button
+                  aria-label="handleLikeButton"
+                  title="handleLikeButton"
                   className="flex h-6 w-full items-center justify-center"
                   onClick={handleLike}
                   type="button"
@@ -121,6 +123,9 @@ export default function Comment({
                   )}
                 </button>
                 <button
+                  type="button"
+                  id="displayUsersList"
+                  aria-label="displayUsersList"
                   onClick={() => setShowUsersList(true)}
                   className="flex h-6 w-full items-start justify-center text-xs font-bold"
                 >

@@ -104,6 +104,9 @@ export default function Nav() {
             {navButtons.map((item) => (
               <div className="group relative" key={item.id}>
                 <button
+                aria-label={item.name}
+                  type="button"
+                  id={item.id.toString()}
                   onClick={() =>
                     item.onClick({
                       setShowCreatePost,

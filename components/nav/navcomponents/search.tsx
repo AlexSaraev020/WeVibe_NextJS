@@ -51,6 +51,8 @@ export default function Search({ setShowSearch }: SearchProps) {
         <div className="absolute right-1 top-1/2 flex -translate-y-1/2 transform gap-2 md:right-2">
           {showClear && (
             <button
+              aria-label="clearSearch"
+              id="clearSearch"
               type="button"
               onClick={handleClear}
               className="transform animate-fadeIn transition-all duration-500"
@@ -59,6 +61,8 @@ export default function Search({ setShowSearch }: SearchProps) {
             </button>
           )}
           <button
+            aria-label="searchButton"
+            id="searchButton"
             type="submit"
             className="transform animate-fadeIn rounded-full bg-sky-900/80 p-1 transition-all duration-500"
           >

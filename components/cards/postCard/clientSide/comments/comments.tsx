@@ -45,8 +45,10 @@ export default function CommentsSection({
           Comments
         </h2>
         <button
+        aria-label="CloseComments"
+        id="closeComments"
           className="absolute right-2 top-2 rounded-full p-1 md:p-0"
-          onClick={() => setShowComments && setShowComments(false)}
+          onClick={() => setShowComments(false)}
         >
           <IoClose className="h-7 w-7 cursor-pointer fill-sky-100 transition-all duration-500 hover:scale-105 hover:fill-postBackground/70 md:h-10 md:w-10" />
         </button>
@@ -73,8 +75,10 @@ export default function CommentsSection({
             ariaLabel="Comment"
           />
           <button
+            id="submitComment"
+            title="SubmitComment"
             type="submit"
-            aria-label="Submit comment"
+            aria-label="SubmitComment"
             disabled={comment.length === 0}
             className={`flex h-full w-12 items-center justify-center rounded-lg border-2 transition-all duration-500 hover:scale-105 ${
               comment.length > 0

@@ -28,6 +28,9 @@ export default function RepliesList({
           <div className="flex w-full justify-start">
             {hasMore && replies.length > 0 && (
               <button
+                type="button"
+                aria-label="MoreRepliesButton"
+                id="moreRepliesButton"
                 onClick={() => setPage((prev) => prev + 1)}
                 className="text-xs italic text-gray-400 md:text-sm"
               >

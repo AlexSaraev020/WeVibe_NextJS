@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { chooseAnotherEmail } from "@/actions/auth/passwordReset/chooseAnotherEmail";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-
 interface ResetPasswordFormProps {
   encryptedCode: string | undefined;
   encryptedMail: string | undefined;
@@ -80,7 +79,7 @@ export default function ResetPasswordForm({
   const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setDisable(true);
-    await sendEmail({ email, setMessage, setEmailSent, setError,setEmail });
+    await sendEmail({ email, setMessage, setEmailSent, setError, setEmail });
     setTimeout(() => {
       setDisable(false);
     }, 3000);
@@ -106,14 +105,24 @@ export default function ResetPasswordForm({
   const getCodeAsString = () => resetCode.join("");
 
   const handleChooseAnotherMail = async () => {
-    await chooseAnotherEmail({ setMessage, setError,setEmailSent,setResetCode });
+    await chooseAnotherEmail({
+      setMessage,
+      setError,
+      setEmailSent,
+      setResetCode,
+    });
   };
 
   return (
     <>
-    <button className="absolute top-5 right-5 z-20 text-postBackground/90 border-2 rounded-full border-postBackground/50 p-0 md:p-1">
-      <IoMdArrowRoundBack className="h-8 w-8" onClick={() => router.back()}/>
-    </button>
+      <button
+        type="button"
+        aria-label="BackButton"
+        id="backButton"
+        className="absolute right-5 top-5 z-20 rounded-full border-2 border-postBackground/50 p-0 text-postBackground/90 md:p-1"
+      >
+        <IoMdArrowRoundBack className="h-8 w-8" onClick={() => router.back()} />
+      </button>
       {!emailSent && !codeVerified && (
         <form
           onSubmit={handleEmailSubmit}
@@ -147,6 +156,8 @@ export default function ResetPasswordForm({
           </div>
 
           <ShinyButton
+            ariaLabel="SubmitResetPasswordForm"
+            id="submitResetPasswordForm"
             disabled={disable}
             className="mt-5 w-full text-sm font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30 md:text-base"
             background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"
@@ -189,12 +200,16 @@ export default function ResetPasswordForm({
 
           <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
             <ShinyButton
+              ariaLabel="SubmitCodeVerification"
+              id="submitCodeVerification"
               className="mt-5 w-full text-sm font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30 md:text-base"
               background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"
               type="submit"
               text="Verify Code"
             />
             <ShinyButton
+              ariaLabel="ChooseAnotherMail"
+              id="chooseAnotherMail"
               onClick={handleChooseAnotherMail}
               className="mt-5 w-full text-sm font-semibold shadow-lg shadow-white/20 hover:shadow-xl hover:shadow-white/30 md:text-base"
               type="button"
@@ -238,6 +253,8 @@ export default function ResetPasswordForm({
           />
 
           <ShinyButton
+            ariaLabel="SubmitPasswordChange"
+            id="submitPasswordChange"
             className="mt-5 w-full text-sm font-semibold shadow-lg shadow-postBackground/20 hover:shadow-xl hover:shadow-postBackground/30 md:text-base"
             background="bg-gradient-to-tr from-black via-neutral-950 to-black py-2"
             type="submit"

@@ -101,6 +101,8 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
                   _id={reply._id}
                 />
                 <button
+                  aria-label="HandleLikeButton"
+                  id="handleLikeButton"
                   className="flex h-6 w-full items-center justify-center"
                   onClick={handleLike}
                   type="button"
@@ -112,6 +114,9 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
                   )}
                 </button>
                 <button
+                  type="button"
+                  aria-label="ShowUsersListButton"
+                  id="showUsersListButton"
                   onClick={() => setShowUsersList(true)}
                   className="flex h-6 w-full items-start justify-center text-xs font-bold"
                 >

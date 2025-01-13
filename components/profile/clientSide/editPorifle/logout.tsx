@@ -32,6 +32,8 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
         <div className="flex justify-center gap-10">
           <ShinyButton
             type="submit"
+            id="logoutButton"
+            ariaLabel="Logout"
             className="w-24 bg-red-950/50 text-sm font-semibold text-red-100 hover:text-red-400 hover:shadow-red-500/70 md:w-28 md:text-lg"
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-red-500/70 to-sky-500/0"
@@ -39,6 +41,8 @@ export default function Logout({ setShowLogoutPrompt }: LogoutProps) {
             text="Yes"
           />
           <ShinyButton
+            ariaLabel="Cancel"
+            id="cancelLogoutButton"
             type="button"
             onClick={() => setShowLogoutPrompt(false)}
             background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"

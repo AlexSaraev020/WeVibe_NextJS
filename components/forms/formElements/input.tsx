@@ -80,6 +80,8 @@ export default function FormInput({
         />
         {password && (
           <button
+            aria-label="TogglePasswordVisibility"
+            id="togglePasswordVisibility"
             type="button"
             onClick={() => setHidePass(!hidePass)}
             className="absolute  h-full w-6 md:w-8 right-0 top-1/2 -translate-y-1/2"

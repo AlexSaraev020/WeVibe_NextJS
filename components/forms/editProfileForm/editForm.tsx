@@ -102,6 +102,8 @@ export default function EditForm({
             )}
           />
           <button
+            aria-label="EditProfile"
+            id="editProfile"
             type="button"
             className={twMerge(
               "absolute z-10 h-10 w-16 -translate-x-1/2 rounded-full text-xs font-semibold transition-all duration-500 md:h-12 md:w-20 md:text-sm",
@@ -111,6 +113,8 @@ export default function EditForm({
             Profile
           </button>
           <button
+            aria-label="EditAccount"
+            id="editAccount"
             type="button"
             className={twMerge(
               "absolute z-10 h-10 w-16 translate-x-1/2 rounded-full text-xs font-semibold transition-all duration-500 md:h-12 md:w-20 md:text-sm",
@@ -121,6 +125,8 @@ export default function EditForm({
           </button>
         </div>
         <button
+          aria-label="CancelUpdate"
+          id="cancelUpdate"
           type="button"
           className="absolute right-2 top-2 rounded-full p-1 md:p-0"
           onClick={cancelProfileUpdate}
@@ -245,6 +251,8 @@ export default function EditForm({
           )}
         >
           <ShinyButton
+          ariaLabel="SaveYourChanges"
+          id="saveYourChanges"
             type="button"
             disabled={disable}
             onClick={handleSave}
@@ -253,6 +261,8 @@ export default function EditForm({
             text="Save"
           />
           <ShinyButton
+          ariaLabel="CancelProfileUpdate"
+          id="cancelProfileUpdate"
             disabled={disable}
             onClick={cancelProfileUpdate}
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
@@ -264,6 +274,8 @@ export default function EditForm({
           />
 
           <ShinyButton
+          ariaLabel="ToggleLogoutPrompt"
+          id="toggleLogoutPrompt"
             type="button"
             onClick={() => setLogout(true)}
             className="text-sm font-semibold text-red-100 shadow-2xl hover:text-red-400 hover:shadow-red-500/30 md:w-full md:text-lg"
@@ -274,6 +286,8 @@ export default function EditForm({
           />
           {account && (
             <ShinyButton
+            ariaLabel="ToggleDeleteAccountPrompt"
+            id="toggleDeleteAccountPrompt"
               type="button"
               onClick={() => setDeleteAccount(true)}
               bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-red-500/80 to-sky-500/0"

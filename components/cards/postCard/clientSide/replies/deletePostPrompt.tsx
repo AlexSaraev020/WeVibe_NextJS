@@ -20,6 +20,8 @@ export const DeletePostPrompt = ({handleDelete, setShowDeletePostPrompt}: Delete
         </h3>
             <div className="flex justify-center gap-10">
               <ShinyButton
+              ariaLabel='DeletePostButton'
+              id='deletePostButton'
               onClick={handleDelete}
                 type="button"
                 className="w-24 bg-red-950/50 text-sm font-semibold text-red-100 hover:text-red-400 hover:shadow-red-500/70 md:w-28 md:text-lg"
@@ -29,6 +31,8 @@ export const DeletePostPrompt = ({handleDelete, setShowDeletePostPrompt}: Delete
                 text="Delete"
               />
               <ShinyButton
+              ariaLabel='CancelDeletePostButton'
+              id='cancelDeletePostButton'
                 type="button"
                 onClick={() => setShowDeletePostPrompt(false)}
                 background="bg-gradient-to-tr from-black py-2 md:py-1 via-neutral-950 to-black"

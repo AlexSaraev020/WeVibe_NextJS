@@ -18,7 +18,7 @@ interface CreatePostProps {
 }
 
 export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
-  const {setPosts} = usePostsNav();
+  const { setPosts } = usePostsNav();
   const [image, setImage] = useState<ImageType | undefined>(undefined);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -80,7 +80,7 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
             ) : (
               <>
                 <Upload
-                setError={setError}
+                  setError={setError}
                   setImage={setImage}
                   setMessage={setMessage}
                   setProgress={setProgress}
@@ -133,6 +133,8 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
         </div>
         <div className="flex w-full items-center justify-start gap-3">
           <ShinyButton
+            ariaLabel="CreatePost"
+            id="createPost"
             disabled={disabled}
             bottomLineCollor={twMerge(
               !disabled
@@ -155,6 +157,8 @@ export default function CreatePost({ setShowCreatePost }: CreatePostProps) {
             type="submit"
           />
           <ShinyButton
+            ariaLabel="CancelCreatePost"
+            id="cancelCreatePost"
             onClick={cancelCreatePost}
             bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
             topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"

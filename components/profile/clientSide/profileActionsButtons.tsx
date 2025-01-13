@@ -61,6 +61,8 @@ export default function ProfileActionsButtons({ user }: Props) {
       )}
       {allow.follow && (
         <ShinyButton
+          id="followUserButton"
+          ariaLabel="FollowUserButton"
           type="button"
           onClick={handleFollowUser}
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-postBackground/50 to-sky-500/0"
@@ -72,6 +74,8 @@ export default function ProfileActionsButtons({ user }: Props) {
       )}
       {allow.unfollow && (
         <ShinyButton
+          id="unfollowUserButton"
+          ariaLabel="UnfollowUserButton"
           onClick={handleUnfollowUser}
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
@@ -83,6 +87,8 @@ export default function ProfileActionsButtons({ user }: Props) {
       )}
       {allow.edit&& (
         <ShinyButton
+          id="editUserButton"
+          ariaLabel="EditUserButton"
           onClick={() => (edit === false ? setEdit(true) : setEdit(true))}
           bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
           topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"

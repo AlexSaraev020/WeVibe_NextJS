@@ -96,6 +96,9 @@ export default function UsersList({
         className="relative flex h-5/6 w-full animate-fadeIn flex-col items-center justify-start gap-6 overflow-auto rounded-t-xl border-t-2 border-postBackground/50 bg-black p-2 py-14 shadow-glow shadow-postBackground/50 transition-all duration-500 scrollbar-none md:w-5/12 md:rounded-xl md:border-2 md:p-6 md:py-14 md:shadow-glow md:shadow-postBackground/50"
       >
         <button
+          type="button"
+          aria-label="CloseUsersList"
+          title="closeUsersList"
           className="absolute right-2 top-2 rounded-full p-1 md:p-0"
           onClick={() => setShowUsersList(false)}
         >
