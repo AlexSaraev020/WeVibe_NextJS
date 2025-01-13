@@ -5,13 +5,15 @@ import { PostType } from "@/types/post/postType";
 import { getProfilePosts } from "@/actions/profile/getProfilePosts";
 import { useInView } from "react-intersection-observer";
 import { AiOutlineLoading } from "react-icons/ai";
-import PostFullScreen from "./postFullScreen";
 import { usePostsNav } from "@/contexts/posts/postsNavContext";
+import dynamic from "next/dynamic";
 
 interface ProfilePostsProps {
   userId: string;
 }
-
+const DynamicFullScreenPost = dynamic(() => import("./postFullScreen"), {
+  ssr: false,
+})
 export default function ProfilePosts({ userId }: ProfilePostsProps) {
   const { posts, setPosts } = usePostsNav();
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,7 +62,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
   return (
     <>
       {showPostFullScreen && openPost && (
-        <PostFullScreen
+        <DynamicFullScreenPost
           post={openPost}
           setPosts={setPosts}
           setShowPostFullScreen={setShowPostFullScreen}
@@ -78,7 +80,7 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
                 className="relative z-10 h-40 w-full rounded-xl border-2 border-transparent object-cover transition-all duration-500 hover:border-postBackground/60 md:h-80"
                 src={post.image.url}
                 alt="image"
-                priority
+                loading="lazy"
                 width={1080}
                 height={1080}
               />

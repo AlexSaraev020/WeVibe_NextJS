@@ -40,6 +40,7 @@ export default function Post({
                   src={post.createdBy.image.url}
                   alt={post.createdBy.username}
                   className="h-9 w-9 rounded-full object-cover p-1 md:h-12 md:w-12 md:p-2"
+                  loading="lazy"
                   width={400}
                   height={400}
                 />
@@ -68,7 +69,7 @@ export default function Post({
           <div className="relative w-full animate-fadeIn rounded-xl bg-zinc-950 transition-all duration-500 md:p-0">
             <Image
               src={post.image.url}
-              priority
+              loading="lazy"
               alt="Image"
               className="relative max-h-[20rem] rounded-xl object-contain md:max-h-[40rem]"
               width={1080}
@@ -76,7 +77,7 @@ export default function Post({
             />
             <Image
               src={post.image.url}
-              priority
+              loading="lazy"
               alt="ImageBackground"
               className="absolute inset-0 -z-10 max-h-[20rem] rounded-xl opacity-20 blur-sm md:max-h-[40rem]"
               width={1080}

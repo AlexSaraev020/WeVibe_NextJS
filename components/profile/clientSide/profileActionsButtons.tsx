@@ -8,6 +8,8 @@ import { AiOutlineLoading } from "react-icons/ai";
 import EditProfile from "./editPorifle/editProfile";
 import { AllowTypes, UserType } from "@/types/userTypes/user/userType";
 import ShinyButton from "@/components/buttons/shinyButton";
+import { IoSettingsOutline } from "react-icons/io5";
+
 
 interface Props {
   user: UserType;
@@ -86,17 +88,15 @@ export default function ProfileActionsButtons({ user }: Props) {
         />
       )}
       {allow.edit&& (
-        <ShinyButton
+        <button
           id="editUserButton"
-          ariaLabel="EditUserButton"
+          aria-label="EditUserButton"
           onClick={() => (edit === false ? setEdit(true) : setEdit(true))}
-          bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
-          topLineColor="bg-gradient-to-r from-sky-500/0 via-neutral-500 to-sky-500/0"
-          className="w-16 text-xs font-semibold hover:shadow-lg hover:shadow-neutral-700 md:w-24 md:text-lg"
-          text="Edit"
-          background="bg-zinc-800 py-2 md:py-1"
+          className="w-fit"
           type="button"
-        />
+        >
+          <IoSettingsOutline className="h-6 w-6" />
+        </button>
       )}
     </>
   );

@@ -6,6 +6,11 @@ import { getPosts } from "@/actions/posts/getPosts";
 import { useInView } from "react-intersection-observer";
 import { AiOutlineLoading } from "react-icons/ai";
 import { usePostsNav } from "@/contexts/posts/postsNavContext";
+import dynamic from "next/dynamic";
+
+const DynamicPost = dynamic(() => import("../cards/postCard/post"), {
+  ssr: false,
+});
 
 export const PostList = () => {
   const { posts, setPosts } = usePostsNav();
@@ -17,15 +22,15 @@ export const PostList = () => {
     if (inView) {
       loadMorePosts();
     }
-  }, [inView])
+  }, [inView]);
 
   useEffect(() => {
     setPosts(() => []);
     setSkip(0);
     setHasMore(true);
   }, []);
-  
-  const loadMorePosts = useCallback (async () => {
+
+  const loadMorePosts = useCallback(async () => {
     if (!hasMore || loading) return;
     setLoading(true);
     const newPosts = await getPosts({
@@ -42,10 +47,10 @@ export const PostList = () => {
   }, [hasMore, loading, skip]);
 
   return (
-    <ul className="flex w-full h-full flex-col items-start justify-start py-5 md:w-10/12 lg:w-6/12">
+    <ul className="flex h-full w-full flex-col items-start justify-start py-5 md:w-10/12 lg:w-6/12">
       {posts.map((post: PostType) => (
-        <li key={post._id} className="w-full mb-4 md:mb-10 xl:mb-16">
-          <Post setPosts={setPosts} post={post} />
+        <li key={post._id} className="mb-4 w-full md:mb-10 xl:mb-16">
+          <DynamicPost setPosts={setPosts} post={post} />
         </li>
       ))}
       {hasMore && (

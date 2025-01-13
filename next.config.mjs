@@ -39,7 +39,7 @@ const nextConfig = {
       },
     ];
   },
-  compress: true,
+  compress: false,
 };
 
 export default nextConfig;
