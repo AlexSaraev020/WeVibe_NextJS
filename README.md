@@ -19,7 +19,7 @@
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/wevibe.git
+   git clone https://github.com/AlexSaraev020/WeVibe_NextJS.git
 
 2. **Create a .env.local file in the root directory with the necessary environment variables**:
    ```bash
