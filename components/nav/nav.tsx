@@ -30,7 +30,13 @@ export default function Nav() {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const isGuest = document.cookie.includes("isGuest=true");
+  const [isGuest, setIsGuest] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (document.cookie.includes("isGuest=true")) {
+      setIsGuest(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (paths.includes(path)) {

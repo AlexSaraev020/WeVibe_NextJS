@@ -9,7 +9,9 @@ export default function RootPageTerminal() {
   const router = useRouter();
   const handleGuest = () => {
     router.push("/home");
-    document.cookie = "isGuest=true; path=/;";
+    if(typeof window !== "undefined"){
+      document.cookie = "isGuest=true; path=/;";
+    }
   };
   return (
     <div className="flex w-full items-center justify-center">

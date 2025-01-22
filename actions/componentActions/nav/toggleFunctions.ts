@@ -14,7 +14,9 @@ export interface toggleFunctionsProps {
 export const handleLogin = ({ isGuest, router }: toggleFunctionsProps) => {
   if (isGuest) {
     router.push("/auth/login");
-    document.cookie = "isGuest=false;";
+    if (typeof window !== "undefined") {
+      document.cookie = "isGuest=false;";
+    }
   }
 };
 

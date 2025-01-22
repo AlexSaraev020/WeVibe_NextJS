@@ -45,7 +45,8 @@ export default function ResetPasswordForm({
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
   ) => {
-    const value = e.target.value;
+    if(typeof window !== "undefined"){
+      const value = e.target.value;
 
     if (/^\d$/.test(value)) {
       const newCode = [...resetCode];
@@ -60,12 +61,13 @@ export default function ResetPasswordForm({
       newCode[index] = "";
       setResetCode(newCode);
     }
+    }
   };
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number,
   ) => {
-    if (e.key === "Backspace" && resetCode[index] === "") {
+    if (e.key === "Backspace" && resetCode[index] === "" && typeof window !== "undefined") {
       if (index > 0) {
         const prevInput = document.getElementById(`code-input-${index - 1}`);
         prevInput?.focus();
