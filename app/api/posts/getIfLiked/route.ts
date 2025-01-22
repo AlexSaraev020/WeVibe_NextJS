@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { connect } from "@/db/mongo/db";
 import { Types } from "mongoose";
 import { UserModel } from "@/models/user";
+import { cookies } from "next/headers";
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -13,17 +15,8 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const isUserLoggedIn = await checkUserLoggedIn();
-    if (!isUserLoggedIn) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 },
-      );
-    }
-    const loggedUser = await UserModel.findOne({ _id: isUserLoggedIn }).exec();
-    if (!loggedUser) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
+    const isGuest = await checkIsGuest();
+    let isLiked = false;
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -35,14 +28,29 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    let isLiked = false;
-    const isLoggedInUserIdObject = new Types.ObjectId(isUserLoggedIn);
-
     await connect();
     const post = await PostModel.findOne({ _id: postId }).exec();
-
-    if (post?.likes.includes(isLoggedInUserIdObject)) {
-      isLiked = true;
+    if (!isGuest) {
+      const isUserLoggedIn = await checkUserLoggedIn();
+      if (!isUserLoggedIn) {
+        return NextResponse.json(
+          { message: "You are not logged in!" },
+          { status: 401 },
+        );
+      }
+      const loggedUser = await UserModel.findOne({
+        _id: isUserLoggedIn,
+      }).exec();
+      if (!loggedUser) {
+        return NextResponse.json(
+          { message: "User not found" },
+          { status: 404 },
+        );
+      }
+      const isLoggedInUserIdObject = new Types.ObjectId(isUserLoggedIn);
+      if (post?.likes.includes(isLoggedInUserIdObject)) {
+        isLiked = true;
+      }
     }
 
     return NextResponse.json(

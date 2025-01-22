@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 export default function RootPageTerminal() {
   const [showTerminal, setShowTerminal] = useState<boolean>(true);
   const router = useRouter();
+  const handleGuest = () => {
+    router.push("/home");
+    document.cookie = "isGuest=true; path=/;";
+  };
   return (
     <div className="flex w-full items-center justify-center">
       {showTerminal ? (
@@ -51,6 +55,16 @@ export default function RootPageTerminal() {
               background="bg-gradient-to-tr py-2 from-black via-neutral-950 to-black"
               className="w-24 text-sm font-semibold shadow-xl shadow-white/20 hover:shadow-2xl hover:shadow-white/50 md:w-32 md:text-lg"
               text="Register"
+            />
+            <ShinyButton
+              ariaLabel="Register"
+              id="registerButton"
+              onClick={handleGuest}
+              bottomLineCollor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
+              topLineColor="bg-gradient-to-r from-sky-500/0 via-white/70 to-sky-500/0"
+              background="bg-gradient-to-tr py-2 from-black via-neutral-950 to-black"
+              className="w-24 text-sm font-semibold shadow-xl shadow-white/20 hover:shadow-2xl hover:shadow-white/50 md:w-32 md:text-lg"
+              text="Guest"
             />
           </div>
         </div>

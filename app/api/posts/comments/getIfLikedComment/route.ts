@@ -1,8 +1,10 @@
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
 import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -13,14 +15,18 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const loggedUser = await checkUserLoggedIn();
+    const isGuest = await checkIsGuest();
+    let isLiked = false;
+    await connect();
+    if(!isGuest){
+      const loggedUser = await checkUserLoggedIn();
     if (!loggedUser) {
       return NextResponse.json(
         { message: "You are not logged in!" },
         { status: 401 },
       );
     }
-    await connect();
+    
     const userLoggedIn = await UserModel.findOne({ _id: loggedUser }).exec();
     if (!userLoggedIn) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -38,10 +44,16 @@ export async function POST(req: Request) {
     }
     const comment = await CommentsModel.findOne({ _id: commentId }).exec();
     if (!comment) {
-      return NextResponse.json({ message: "Comment not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Comment not found" },
+        { status: 404 },
+      );
     }
     const isLoggedInUserIdObject = new Types.ObjectId(loggedUser);
-    const isLiked = comment.likes.includes(isLoggedInUserIdObject);
+    if(comment.likes.includes(isLoggedInUserIdObject)){
+      isLiked = true;
+    };
+    }
     return NextResponse.json({ isLiked }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

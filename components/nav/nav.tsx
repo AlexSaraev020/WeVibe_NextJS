@@ -11,11 +11,13 @@ import Link from "next/link";
 import { fetchUserWithTimeout } from "@/actions/componentActions/nav/fetchUserData";
 import {
   handleCreatePost,
+  handleLogin,
   handleProfile,
   handleSearch,
 } from "@/actions/componentActions/nav/toggleFunctions";
 import { Router } from "next/router";
 import { useUserNavData } from "@/contexts/user/userNavContext";
+import { twMerge } from "tailwind-merge";
 export default function Nav() {
   const paths = useMemo(
     () => ["/", "/auth/register", "/auth/login", "/auth/resetpassword"],
@@ -28,29 +30,32 @@ export default function Nav() {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const isGuest = document.cookie.includes("isGuest=true");
 
   useEffect(() => {
     if (paths.includes(path)) {
       setShowCreatePost(false);
       setShowSearch(false);
     }
-    (async () => {
-      await fetchUserWithTimeout({
-        setUserId,
-        setUsername,
-        setUserImage,
-        paths,
-        path,
-        router,
-      });
-    })();
+    if (!isGuest) {
+      (async () => {
+        await fetchUserWithTimeout({
+          setUserId,
+          setUsername,
+          setUserImage,
+          paths,
+          path,
+          router,
+        });
+      })();
+    }
   }, [router, path, paths]);
 
   useEffect(() => {
-    if (username) {
+    if (username || isGuest) {
       setIsLoaded(true);
     }
-  }, [router, username]);
+  }, [router, username, isGuest]);
 
   useEffect(() => {
     document.documentElement.style.overflow = showCreatePost
@@ -62,6 +67,7 @@ export default function Nav() {
   const navButtons = displayedButtons({
     handleCreatePost: handleCreatePost,
     handleSearch: handleSearch,
+    handleLogin: handleLogin,
     handleProfile: handleProfile,
     userName: isLoaded ? username : "Profile",
     profilePicture: userImage.url ? userImage.url : ProfilePlaceholder,
@@ -76,6 +82,10 @@ export default function Nav() {
       Router.events.off("routeChangeComplete", disable__Search__OnRouteChange);
     };
   }, []);
+
+  const filteredButtons = isGuest
+    ? navButtons.filter((item) => item.id !== 1 && item.id !== 2)
+    : navButtons.filter((item) => item.id !== 4);
 
   return (
     <>
@@ -101,14 +111,15 @@ export default function Nav() {
             />
           </Link>
           <div className="flex flex-row items-start gap-4 lg:flex-col lg:gap-8 lg:px-2 lg:py-10">
-            {navButtons.map((item) => (
+            {filteredButtons.map((item) => (
               <div className="group relative" key={item.id}>
                 <button
-                aria-label={item.name}
+                  aria-label={item.name}
                   type="button"
                   id={item.id.toString()}
                   onClick={() =>
                     item.onClick({
+                      isGuest,
                       setShowCreatePost,
                       setShowSearch,
                       router,
@@ -118,11 +129,15 @@ export default function Nav() {
                     })
                   }
                   disabled={isLoaded ? false : true}
-                  className="relative flex items-center justify-center gap-2"
+                  className={twMerge(
+                    "relative flex items-center justify-center gap-2",
+                  )}
                 >
                   {item.icon}
                   <h2 className="text-md hidden max-w-0 overflow-hidden font-semibold opacity-0 transition-all lg:block lg:delay-1000 lg:duration-1000 lg:group-hover:max-w-xs lg:group-hover:opacity-100 lg:group-hover:delay-0">
-                    {item.name.length > 20 ? item.name.slice(0, 10) + "..." : item.name}
+                    {item.name.length > 20
+                      ? item.name.slice(0, 10) + "..."
+                      : item.name}
                   </h2>
                 </button>
               </div>

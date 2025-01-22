@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 
 type Allow = {
   edit: boolean;
@@ -19,7 +20,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const isLoggedIn = await checkUserLoggedIn();
+    const isGuest = await checkIsGuest();
+    let allow: Allow = { edit: false, follow: false, unfollow: false };
+    if(!isGuest){
+      const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json(
         { message: "You are not logged in!" },
@@ -37,7 +41,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    let allow: Allow;
+   
     if (isLoggedIn === query) {
       allow = { edit: true, follow: false, unfollow: false };
     } else {
@@ -52,6 +56,7 @@ export async function GET(req: NextRequest) {
       allow = user.followers.includes(objectUserId)
         ? { edit: loggedUser.isAdmin ? true : false, follow: false, unfollow: true }
         : { edit: loggedUser.isAdmin ? true : false, follow: true, unfollow: false };
+    }
     }
 
     return NextResponse.json({ allow }, { status: 200 });

@@ -1,3 +1,4 @@
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
@@ -13,13 +14,8 @@ export async function POST(req: NextRequest) {
     );
   }
   try {
-    const isLoggedIn = await checkUserLoggedIn();
-    if (!isLoggedIn) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 },
-      );
-    }
+    const isGuest = await checkIsGuest();
+
     const body = await req.json();
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
@@ -32,11 +28,6 @@ export async function POST(req: NextRequest) {
       );
     }
     await connect();
-    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
-    if (!userLoggedIn) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-
     const userProfileId = req.nextUrl.searchParams.get("user");
     if (!userProfileId) {
       return NextResponse.json(

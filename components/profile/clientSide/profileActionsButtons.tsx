@@ -18,6 +18,7 @@ interface Props {
 export default function ProfileActionsButtons({ user }: Props) {
   const [allow, setAllow] = useState<AllowTypes>({ edit: false, follow: false, unfollow: false });
   const [edit, setEdit] = useState<boolean>(false);
+  const [isGuest, setIsGuest] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,6 +43,12 @@ export default function ProfileActionsButtons({ user }: Props) {
     }
   };
 
+  useEffect(() => {
+    if(document.cookie.includes("isGuest=true")) {
+      setIsGuest(true);
+    }
+  },[])
+
   const handleUnfollowUser = async () => {
     if (user._id) {
       const response = await unfollowUser({ query: user._id , router });
@@ -58,7 +65,7 @@ export default function ProfileActionsButtons({ user }: Props) {
   return (
     <>
       {edit && <EditProfile edit={edit} user={user} setEdit={setEdit} />}
-      {!allow.edit && !allow.follow && !allow.unfollow  && (
+      {((!allow.edit && !allow.follow && !allow.unfollow) && !isGuest)  && (
         <AiOutlineLoading className="h-6 w-6 animate-spin text-postBackground" />
       )}
       {allow.follow && (

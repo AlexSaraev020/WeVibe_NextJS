@@ -20,6 +20,12 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
   const [likes, setLikes] = useState<number>(reply.likes);
   const [liked, setLiked] = useState<boolean | undefined>(undefined);
   const [showUsersList, setShowUsersList] = useState<boolean>(false);
+  const [isGuest, setIsGuest] = useState<boolean>(false);
+  useEffect(() => {
+    if (document.cookie.includes("isGuest=true")) {
+      setIsGuest(true);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -102,8 +108,9 @@ export default function ReplyCard({ reply, setReplies }: ReplyCardProps) {
                 <button
                   aria-label="HandleLikeButton"
                   id="handleLikeButton"
-                  className="flex h-6 w-full items-center justify-center"
+                  className="flex h-6 w-full items-center justify-center cursor-pointer"
                   onClick={handleLike}
+                  disabled={isGuest}
                   type="button"
                 >
                   {liked ? (

@@ -7,7 +7,15 @@ export interface toggleFunctionsProps {
   userId: string | null;
   showSearch: boolean;
   showCreatePost: boolean;
+  isGuest: boolean;
 }
+
+export const handleLogin = ({ isGuest, router }: toggleFunctionsProps) => {
+  if (isGuest) {
+    router.push("/auth/login");
+    document.cookie = "isGuest=false;";
+  }
+};
 
 export const handleSearch = ({
   setShowSearch,

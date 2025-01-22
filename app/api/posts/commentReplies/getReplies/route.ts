@@ -1,7 +1,9 @@
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
 import { UserModel } from "@/models/user";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -12,17 +14,24 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const isLoggedIn = await checkUserLoggedIn();
-    if (!isLoggedIn) {
-      return NextResponse.json(
-        { message: "You are not logged in!" },
-        { status: 401 },
-      );
-    }
+    const isGuest = await checkIsGuest();
     await connect();
-    const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
-    if (!userLoggedIn) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    if (!isGuest) {
+      const isLoggedIn = await checkUserLoggedIn();
+      if (!isLoggedIn) {
+        return NextResponse.json(
+          { message: "You are not logged in!" },
+          { status: 401 },
+        );
+      }
+
+      const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+      if (!userLoggedIn) {
+        return NextResponse.json(
+          { message: "User not found" },
+          { status: 404 },
+        );
+      }
     }
     const body = await req.json();
     if (!body) {
@@ -62,7 +71,10 @@ export async function POST(req: Request) {
       commentId,
     });
     const hasMore = totalRepliesCount > skip + limit;
-    return NextResponse.json({ replies: formattedReplies, hasMore }, { status: 200 });
+    return NextResponse.json(
+      { replies: formattedReplies, hasMore },
+      { status: 200 },
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

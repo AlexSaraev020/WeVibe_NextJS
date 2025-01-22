@@ -1,3 +1,4 @@
+import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
@@ -11,6 +12,7 @@ export async function GET(req: NextRequest) {
     );
   }
   try {
+    const isGuest = await checkIsGuest();
     const userId = req.nextUrl.searchParams.get("user");
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return NextResponse.json(

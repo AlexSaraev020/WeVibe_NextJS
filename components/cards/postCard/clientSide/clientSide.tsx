@@ -33,7 +33,7 @@ export default function PostClientSide({
   const [showComments, setShowComments] = useState<boolean>(false);
   const [timeAgo, setTimeAgo] = useState<string | null>(null);
   const [showUsersList, setShowUsersList] = useState<boolean>(false);
-
+  const [isGuest, setIsGuest] = useState<boolean>(false);
   useEffect(() => {
     const convertedDate = new Date(date);
     if (!isNaN(convertedDate.getTime())) {
@@ -44,6 +44,12 @@ export default function PostClientSide({
       setTimeAgo("Invalid date");
     }
   }, [date]);
+
+  useEffect(() => {
+    if(document.cookie.includes("isGuest=true")) {
+      setIsGuest(true);
+    }
+  },[])
 
   useEffect(() => {
     document.body.style.overflow = showComments ? "hidden" : "auto";
@@ -74,7 +80,7 @@ export default function PostClientSide({
       )}
       <div className="flex w-full flex-col pb-4">
         <div className="flex w-full gap-2 p-2">
-          <button onClick={handleLikeOnClick} type="button" aria-label="likeHandler" id="like">
+          <button disabled={isGuest} onClick={handleLikeOnClick} className="cursor-pointer" type="button" aria-label="likeHandler" id="like">
             {like ? (
               <GoStarFill className="h-8 w-7 animate-fadeIn fill-sky-500 transition-all duration-500" />
             ) : (

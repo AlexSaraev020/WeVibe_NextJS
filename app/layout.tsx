@@ -49,7 +49,7 @@ export default function RootLayout({
         <AlertContextProvider>
           <UserNavDataContextProvider>
             <PostsNavContextProvider>
-              <Nav />
+             <Nav/>
               {children}
               <Alert />
             </PostsNavContextProvider>

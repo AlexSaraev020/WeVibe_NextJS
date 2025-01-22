@@ -10,6 +10,7 @@ import ShinyButton from "../../buttons/shinyButton";
 import { useAlert } from "@/contexts/alert/alertContext";
 import { IoCheckbox } from "react-icons/io5";
 import { IoCheckboxOutline } from "react-icons/io5";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 interface FormProps {
   register?: boolean;
@@ -62,6 +63,14 @@ export default function Form({ register, className }: FormProps) {
 
   return (
     <>
+    <button
+            type="button"
+            aria-label="BackButton"
+            id="backButton"
+            className="absolute right-5 top-5 z-20 rounded-full border-2 border-postBackground/50 p-0 text-postBackground/90 md:p-1"
+          >
+            <IoMdArrowRoundBack className="h-8 w-8" onClick={() => router.push("/")} />
+          </button>
       <form
         className={`${className} z-10 flex w-10/12 flex-col items-center justify-center gap-8 rounded-xl border-2 border-postBackground/60 bg-transparent py-5 shadow-glow shadow-postBackground/50 md:w-3/6 md:py-10 lg:w-4/12 xl:w-3/12`}
         onSubmit={handleSubmit}

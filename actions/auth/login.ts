@@ -18,8 +18,13 @@ export const loginUser = async ({
   router,
 }: loginUserProps) => {
   try {
-    const response = await axios.post("/api/auth/login", { email, password, rememberMe });
+    const response = await axios.post("/api/auth/login", {
+      email,
+      password,
+      rememberMe,
+    });
     if (response.status === 200) {
+      document.cookie = "isGuest=false;";
       setError(false);
       setMessage(response.data.message);
       router.push("/home");
