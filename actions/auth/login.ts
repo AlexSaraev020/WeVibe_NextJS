@@ -24,7 +24,6 @@ export const loginUser = async ({
       rememberMe,
     });
     if (response.status === 200) {
-      document.cookie = "isGuest=false;";
       setError(false);
       setMessage(response.data.message);
       router.push("/home");

@@ -8,7 +8,14 @@ import { validate__Fields__Length } from "@/actions/auth/validateFieldsLength";
 import { validateFieldsTrim } from "@/actions/auth/validateFieldsTrim";
 
 export async function POST(req: Request) {
+  if (req.method !== "POST") {
+    return NextResponse.json(
+      { message: "Method not allowed" },
+      { status: 400 },
+    );
+  }
   try {
+    const cookieStore = await cookies();
     await connect();
     if (req.method !== "POST") {
       return NextResponse.json(
@@ -70,6 +77,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       sameSite: "strict",
     });
+    cookieStore.set("isGuest", "false")
 
     return NextResponse.json({ message: "Logged in!" }, { status: 200 });
   } catch (error: unknown) {

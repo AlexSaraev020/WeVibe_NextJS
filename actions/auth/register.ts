@@ -7,14 +7,14 @@ interface RegisterProps {
   password: string;
   setMessage: (message: string | undefined) => void;
   router: AppRouterInstance;
-  setError:(error:boolean)=>void
+  setError: (error: boolean) => void;
 }
 
 export const registerUser = async ({
   userName,
   email,
   password,
- setError,
+  setError,
   setMessage,
   router,
 }: RegisterProps) => {
@@ -26,7 +26,7 @@ export const registerUser = async ({
     });
 
     if (response.status === 200) {
-      setError(false)
+      setError(false);
       setMessage(response.data.message);
       router.push("/");
     }
@@ -34,10 +34,9 @@ export const registerUser = async ({
     if (axios.isAxiosError(error) && error.response) {
       console.log("Server response error:", error.response.data.message);
       setMessage(error.response.data.message);
-      setError(true)
+      setError(true);
       return error.response.data.message;
     }
     console.error("Error following:", error);
   }
 };
-
