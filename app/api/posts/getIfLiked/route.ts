@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
     await connect();
     const post = await PostModel.findOne({ _id: postId }).exec();
-    if (!isGuest) {
+    if (isGuest === "false") {
       const isUserLoggedIn = await checkUserLoggedIn();
       if (!isUserLoggedIn) {
         return NextResponse.json(

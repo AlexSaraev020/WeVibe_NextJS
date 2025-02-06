@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   try {
     const isGuest = await checkIsGuest();
     await connect();
-    if (!isGuest) {
+    if (isGuest === "false") {
       const userId = await checkUserLoggedIn();
       if (!userId) {
         return NextResponse.json(
