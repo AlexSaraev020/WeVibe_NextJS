@@ -69,7 +69,7 @@ export default function Post({
           <div className="relative w-full animate-fadeIn rounded-xl bg-zinc-950 transition-all duration-500 md:p-0">
             <Image
               src={post.image.url}
-              loading="lazy"
+              priority
               alt="Image"
               className="relative max-h-[20rem] rounded-xl object-contain md:max-h-[40rem]"
               width={1080}

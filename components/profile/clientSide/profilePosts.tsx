@@ -34,7 +34,6 @@ export default function ProfilePosts({ userId }: ProfilePostsProps) {
       skip,
       limit: 6,
     });
-    console.log(newPosts);
     if (newPosts.length < 6 || !Array.isArray(newPosts)) {
       setHasMore(false);
     }

@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   try {
     const isGuest = await checkIsGuest();
     let allow: Allow = { edit: false, follow: false, unfollow: false };
-    if(!isGuest){
+    if(isGuest === "false") {
       const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json(
@@ -40,9 +40,9 @@ export async function GET(req: NextRequest) {
     if (!loggedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-
    
     if (isLoggedIn === query) {
+      console.log("same user")
       allow = { edit: true, follow: false, unfollow: false };
     } else {
       const user = await UserModel.findOne({ _id: query }).exec();
@@ -58,7 +58,6 @@ export async function GET(req: NextRequest) {
         : { edit: loggedUser.isAdmin ? true : false, follow: true, unfollow: false };
     }
     }
-
     return NextResponse.json({ allow }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

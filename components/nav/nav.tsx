@@ -15,7 +15,6 @@ import {
   handleProfile,
   handleSearch,
 } from "@/actions/componentActions/nav/toggleFunctions";
-import { Router } from "next/router";
 import { useUserNavData } from "@/contexts/user/userNavContext";
 import { twMerge } from "tailwind-merge";
 export default function Nav() {
@@ -33,10 +32,12 @@ export default function Nav() {
   const [isGuest, setIsGuest] = useState<boolean>(false);
 
   useEffect(() => {
-    if (document.cookie.includes("isGuest=true")) {
-      setIsGuest(true);
-    }
-  }, []);
+      setIsGuest(document.cookie.includes("isGuest=true"));
+  }, [path]);
+
+  useEffect(() => {
+    console.log(isGuest);
+  }, [isGuest]);
 
   useEffect(() => {
     if (paths.includes(path)) {
@@ -55,7 +56,7 @@ export default function Nav() {
         });
       })();
     }
-  }, [router, path, paths]);
+  }, [router, path, paths, isGuest]);
 
   useEffect(() => {
     if (username || isGuest) {
@@ -80,14 +81,8 @@ export default function Nav() {
   });
 
   useEffect(() => {
-    const disable__Search__OnRouteChange = () => {
-      setShowSearch(false);
-    };
-    Router.events.on("routeChangeComplete", disable__Search__OnRouteChange);
-    return () => {
-      Router.events.off("routeChangeComplete", disable__Search__OnRouteChange);
-    };
-  }, []);
+    setShowSearch(false);
+  }, [path]);
 
   const filteredButtons = isGuest
     ? navButtons.filter((item) => item.id !== 1 && item.id !== 2)

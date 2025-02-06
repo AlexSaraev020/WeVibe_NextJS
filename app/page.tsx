@@ -6,11 +6,6 @@ import Image from "next/image";
 import RootPageTerminal from "@/components/rootPageTerminal/rootPageTerminal";
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("authToken");
-  if (token) {
-    redirect("/home");
-  }
   return (
     <div className="relative flex h-[100dvh] w-full animate-fadeIn flex-col items-center justify-center gap-10 transition-all duration-1000">
       <div className="flex items-center justify-center text-6xl font-extrabold md:text-8xl transition-all duration-500 animate-fadeIn">
