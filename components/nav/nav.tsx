@@ -36,10 +36,6 @@ export default function Nav() {
   }, [path]);
 
   useEffect(() => {
-    console.log(isGuest);
-  }, [isGuest]);
-
-  useEffect(() => {
     if (paths.includes(path)) {
       setShowCreatePost(false);
       setShowSearch(false);
