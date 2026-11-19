@@ -17,11 +17,12 @@ stack:
 status: live
 year: 2024 — present
 role: Solo — data model, auth, interface, deployment
-cover: docs/portfolio/feed-desktop.jpg
+cover: docs/portfolio/wevibe-home.jpg
 gallery:
-  - docs/portfolio/profile-desktop.jpg
-  - docs/portfolio/thread-desktop.jpg
-  - docs/portfolio/people-phone.jpg
+  - docs/portfolio/wevibe-feed.jpg
+  - docs/portfolio/wevibe-discover.jpg
+  - docs/portfolio/wevibe-profile.jpg
+  - docs/portfolio/wevibe-login.jpg
 live: https://we-vibe.vercel.app
 tags:
   - social
