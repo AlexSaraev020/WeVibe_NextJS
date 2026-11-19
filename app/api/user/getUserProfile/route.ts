@@ -1,4 +1,5 @@
 import { checkIsGuest } from "@/actions/guest/checkIsGuest";
+import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
 import { Types } from "mongoose";
@@ -13,6 +14,7 @@ export async function GET(req: NextRequest) {
   }
   try {
     const isGuest = await checkIsGuest();
+    const viewerId = await checkUserLoggedIn();
     const userId = req.nextUrl.searchParams.get("user");
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return NextResponse.json(
@@ -22,7 +24,8 @@ export async function GET(req: NextRequest) {
     }
     await connect();
     const user = await UserModel.findOne({ _id: userId })
-      .select("-password")
+      /* email and isAdmin are the owner's own data: they were handed to every visitor before */
+      .select(viewerId && viewerId === userId ? "-password" : "-password -email -isAdmin")
       .lean()
       .exec();
 

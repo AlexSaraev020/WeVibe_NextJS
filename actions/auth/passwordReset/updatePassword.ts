@@ -21,7 +21,8 @@ export const updatePassword = async ({
     if (response.status < 300) {
       setError(false);
       setMessage(response.data.message);
-      router.push("/login");
+      router.push("/auth/login");
+      return;
     }
     setError(true);
     setMessage(response.data.message);

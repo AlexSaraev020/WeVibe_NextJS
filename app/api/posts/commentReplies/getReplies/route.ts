@@ -1,4 +1,3 @@
-import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentRepliesModel } from "@/models/posts/commentReplies";
@@ -14,23 +13,14 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const isGuest = await checkIsGuest();
     await connect();
-    if (isGuest === "true") {
-      const isLoggedIn = await checkUserLoggedIn();
-      if (!isLoggedIn) {
-        return NextResponse.json(
-          { message: "You are not logged in!" },
-          { status: 401 },
-        );
-      }
-
-      const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    /* replies are public too. This route locked them out for anyone the app had filed as
+       a guest, which is the mirror image of the comment-thread bug. */
+    const isLoggedIn = await checkUserLoggedIn();
+    if (isLoggedIn) {
+      const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).select("_id").exec();
       if (!userLoggedIn) {
-        return NextResponse.json(
-          { message: "User not found" },
-          { status: 404 },
-        );
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
       }
     }
     const body = await req.json();

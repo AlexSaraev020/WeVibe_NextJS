@@ -1,0 +1,532 @@
+/* WeVibe — product UI. Dark layered grounds, one sky accent, one sans family loaded by
+   next/font in app/layout.tsx (--wv-font), one type ladder, a floating left rail on desktop
+   and a bottom tab bar on phones.
+
+   Type ladder (six steps, nothing else): 13 / 15 / 16 / 18 / 22 / 28px.
+   Surfaces: page < card < raised < hover. Nothing glows; elevation is a shadow.
+
+   Class names changed in this pass (apply these in the running repo):
+   + .wv-nav-item (+ --tab), .wv-toast(+--error/--dot/-text), .wv-main(+--wide), .wv-cols,
+     .wv-cols, .wv-aside, .wv-aside-card, .wv-row, .wv-field, .wv-error, .wv-hint,
+     .wv-skel-row, .wv-skel-comment, .wv-photo-status, .wv-photo-actions, .wv-profile-head
+   - .wv-nav-link (was the rail link + identity slot) -> .wv-nav-item
+   .wv-nav, .wv-nav-brand, .wv-nav-links, .wv-nav-end, .wv-tabs, .wv-light, .wv-page,
+   .wv-card, .wv-btn*, .wv-input, .wv-tab, .wv-skel, .wv-feed-tail, .wv-photo*, .wv-post*,
+   .wv-thread, .wv-comment, .wv-replies and the .wv-display/.wv-title/.wv-handle/.wv-label/
+   .wv-cap/.wv-num* aliases all keep their names — they are re-pointed at the ladder. */
+
+@layer od-layout {
+  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
+  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
+  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
+  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
+  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
+  .od-fill    { flex: 1 1 0; min-width: 0; }
+  .od-fixed   { flex: none; }
+  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
+  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
+  .od-icon { display: inline-block; inline-size: var(--od-icon-size, 1em); block-size: var(--od-icon-size, 1em); flex: none; }
+  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .od-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .od-nowrap  { white-space: nowrap; }
+}
+
+:root {
+  /* layered grounds: deep page, card, raised control, hover */
+  --wv-void: #0b0d0f;
+  --wv-void-2: #15191d;
+  --wv-void-3: #1e242a;
+  --wv-void-4: #272f37;
+
+  --wv-ink: #f3f5f7;                 /* 18.4:1 on page, 15.6:1 on card */
+  --wv-mid: rgba(243, 245, 247, .82);   /* 12.1:1 on card */
+  --wv-low: rgba(243, 245, 247, .66);   /* 8.6:1 on card — captions, timestamps, meta */
+
+  --wv-blue: #0ea5e9;
+  --wv-blue-strong: #38bdf8;
+  --wv-blue-text: #b8e6fb;          /* 13.1:1 on card, 14.6:1 on page */
+  --wv-on-blue: #0b1418;            /* 7.0:1 on --wv-blue, 9.6:1 on --wv-blue-strong */
+  --wv-danger: #f28b82;
+  --wv-danger-text: #fca5a5;        /* 11.4:1 on card */
+
+  --wv-hair: rgba(243, 245, 247, .14);
+  --wv-hair-soft: rgba(243, 245, 247, .08);
+
+  /* rgb triples so tailwind.config.ts can apply alpha to this same palette */
+  --wv-void-rgb: 11 13 15;
+  --wv-ink-rgb: 243 245 247;
+  --wv-blue-rgb: 14 165 233;
+
+  /* elevation: the rail, the toast and a lifted card all share these */
+  --wv-elev: 0 12px 32px rgba(0, 0, 0, .45);
+  --wv-elev-soft: 0 4px 14px rgba(0, 0, 0, .35);
+  /* kept for components this folder does not restyle; retuned so nothing glows */
+  --wv-glow: var(--wv-elev-soft);
+  --wv-glow-soft: 0 1px 2px rgba(0, 0, 0, .25);
+  --wv-glow-blue: 0 1px 2px rgba(0, 0, 0, .25);
+
+  /* ONE ladder. .wv-display/.wv-title/.wv-handle/.wv-num--* are aliases onto it. */
+  --wv-text-xs: .8125rem;   /* 13 — captions, timestamps, meta */
+  --wv-text-sm: .9375rem;   /* 15 — nav, buttons, comments, hints */
+  --wv-text-base: 1rem;     /* 16 — post body, inputs, account names */
+  --wv-text-lg: 1.125rem;   /* 18 — post titles, section headings */
+  --wv-text-xl: 1.375rem;   /* 22 — page titles, profile handle, wordmark */
+  --wv-text-2xl: 1.75rem;   /* 28 — page titles from 768px up, nothing below it */
+
+  --wv-body: var(--wv-font), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --wv-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --wv-1: 8px; --wv-2: 16px; --wv-3: 24px; --wv-4: 32px;
+  --wv-6: 48px; --wv-8: 64px; --wv-12: 96px; --wv-16: 128px;
+
+  --wv-radius: 14px;
+  --wv-radius-sm: 10px;
+  --wv-radius-bar: 18px;
+
+  --wv-ease: cubic-bezier(.2, .8, .2, 1);
+  --wv-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --wv-ease-in: cubic-bezier(.4, 0, 1, 1);
+  --wv-spring: cubic-bezier(.34, 1.25, .64, 1);
+  --wv-t: 180ms;
+  --wv-t-bar: 280ms;
+
+  /* nav geometry: rail is 72px wide on tablet, 232px with labels on desktop,
+     176px once the page has scrolled. Content reserves the widest of these at each
+     breakpoint, so the rail can resize without the page moving. */
+  --wv-rail: 232px;
+  --wv-rail-condensed: 176px;
+  --wv-rail-icon: 72px;
+  --wv-tabs-h: 64px;
+  --wv-feed-w: 680px;
+  --wv-aside-w: 320px;
+}
+
+.wv-canvas {
+  min-height: 100dvh;
+  background: var(--wv-void);
+  color: var(--wv-ink);
+  font-family: var(--wv-body);
+  font-size: var(--wv-text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  /* clip, not hidden: an overflow:hidden ancestor turns this box into the scroll container and
+     kills position:sticky for the companion column */
+  overflow-x: clip;
+}
+.wv-canvas ::selection { background: var(--wv-blue); color: var(--wv-on-blue); }
+.wv-canvas :focus-visible { outline: 2px solid var(--wv-blue); outline-offset: 2px; }
+
+/* ── the light that follows the cursor: one fixed layer, two custom properties ── */
+.wv-light {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(620px circle at var(--wv-spot-x, 70%) var(--wv-spot-y, 12%),
+    rgba(14, 165, 233, .16), rgba(14, 165, 233, .05) 45%, rgba(14, 165, 233, 0) 70%);
+}
+@media (pointer: coarse) { .wv-light { display: none; } }
+@media (prefers-reduced-motion: reduce) { .wv-light { display: none; } }
+
+/* ── content column: padding for whatever chrome this width has ─────────────── */
+.wv-page { position: relative; z-index: 10; min-height: 100dvh; padding: 12px 16px calc(var(--wv-tabs-h) + 28px + env(safe-area-inset-bottom)); }
+@media (min-width: 640px) { .wv-page { padding: 20px 24px 40px calc(var(--wv-rail-icon) + 44px); } }
+@media (min-width: 1024px) { .wv-page { padding-left: calc(var(--wv-rail) + 40px); } }
+/* a page with no chrome of its own: last so it overrides the reserved padding above */
+.wv-page--bare { padding: 16px; }
+@media (min-width: 640px) { .wv-page--bare { padding: 24px; } }
+
+/* one column of reading, centred; at 1280px and up the feed gains a companion column */
+.wv-main { width: 100%; max-width: var(--wv-feed-w); margin-inline: auto; }
+.wv-main--wide { max-width: 880px; }
+.wv-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--wv-3); width: 100%; max-width: var(--wv-feed-w); margin-inline: auto; }
+@media (min-width: 1280px) {
+  .wv-cols { grid-template-columns: minmax(0, var(--wv-feed-w)) var(--wv-aside-w); gap: var(--wv-4); max-width: calc(var(--wv-feed-w) + var(--wv-aside-w) + var(--wv-4)); }
+}
+.wv-aside { display: none; }
+@media (min-width: 1280px) { .wv-aside { display: grid; gap: var(--wv-2); align-content: start; } }
+
+/* ── navigation: floating rail (desktop) that resizes, bottom tabs (phones) ──── */
+.wv-nav {
+  position: fixed; z-index: 40; top: 0; right: 0; left: 0;
+  display: flex; align-items: center; gap: var(--wv-1);
+  min-height: 64px; padding: 0 12px;
+  background: rgba(21, 25, 29, .74);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid transparent;
+  border-bottom-color: var(--wv-hair);
+  transition:
+    min-height var(--wv-t-bar) var(--wv-spring),
+    padding var(--wv-t-bar) var(--wv-spring),
+    border-color var(--wv-t) var(--wv-ease),
+    background-color var(--wv-t) var(--wv-ease);
+}
+/* phones get the bottom tab bar only — no second copy of the same four destinations */
+@media (max-width: 639px) { .wv-nav { display: none; } }
+
+.wv-nav-brand {
+  display: none; padding: 0 0 4px 4px;
+  font-size: var(--wv-text-xl); font-weight: 600; letter-spacing: -.015em; line-height: 1.2;
+  text-decoration: none; color: var(--wv-ink);
+  transition: font-size var(--wv-t-bar) var(--wv-spring);
+}
+.wv-nav-brand span { color: var(--wv-blue-text); }
+.wv-nav-links { display: none; margin: 0; padding: 0; list-style: none; }
+.wv-nav-end { display: flex; align-items: center; gap: var(--wv-1); margin-left: auto; }
+
+.wv-nav-item {
+  position: relative; display: flex; min-height: 44px; align-items: center; gap: 10px;
+  padding: 0 12px; border-radius: var(--wv-radius-sm); text-decoration: none;
+  font-size: var(--wv-text-sm); font-weight: 500; color: var(--wv-mid);
+  transition: background-color var(--wv-t) var(--wv-ease), color var(--wv-t) var(--wv-ease);
+}
+.wv-nav-item > svg { flex: none; }
+/* the label is always in the accessible name; it is only hidden visually */
+.wv-nav-label { max-width: 16ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+@media (hover: hover) { .wv-nav-item:hover { background: var(--wv-void-3); color: var(--wv-ink); } }
+.wv-nav-item[aria-current="page"] { background: var(--wv-void-3); color: var(--wv-blue-text); }
+.wv-nav-item[aria-current="page"]::before {
+  content: ""; position: absolute; top: 10px; bottom: 10px; left: 2px; width: 3px; border-radius: 3px;
+  background: var(--wv-blue);
+}
+.wv-nav[data-scrolled="true"] { border-bottom-color: var(--wv-hair); background: rgba(21, 25, 29, .86); }
+.wv-nav[data-condensed="true"] { min-height: 52px; }
+
+/* 640–1023px: an icon rail. It is 72px wide and its labels stay hidden — a 232px flyout here
+   would sit on top of the cards. */
+@media (min-width: 640px) {
+  .wv-nav {
+    top: 16px; right: auto; bottom: 16px; left: 16px;
+    width: var(--wv-rail-icon); min-height: 0;
+    flex-direction: column; align-items: stretch; gap: 4px;
+    padding: 14px 8px; border-radius: var(--wv-radius-bar); box-shadow: var(--wv-elev);
+  }
+  .wv-nav[data-scrolled="true"] { border-color: var(--wv-hair); }
+  .wv-nav-brand { display: none; }
+  /* hidden but never removed: the label is still the link's accessible name */
+  .wv-nav-label {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .wv-nav-links { display: flex; flex: 1; flex-direction: column; align-items: stretch; gap: 2px; overflow-y: auto; }
+  .wv-nav-item { justify-content: center; padding: 0; min-height: 46px; }
+  .wv-nav-item[aria-current="page"]::before { top: 50%; bottom: auto; left: 2px; width: 3px; height: 22px; transform: translateY(-50%); }
+  .wv-nav-end { flex: none; margin-top: auto; margin-left: 0; flex-direction: column; }
+  /* the resize that is visible here is the rail itself narrowing */
+  .wv-nav[data-condensed="true"] { width: 64px; padding: 10px 6px; }
+  .wv-nav[data-condensed="true"] .wv-nav-item { min-height: 44px; }
+}
+
+/* 1024px and up: the rail carries labels and condenses 232px -> 176px once the page scrolls */
+@media (min-width: 1024px) {
+  .wv-nav { width: var(--wv-rail); padding: 18px 12px 14px; }
+  .wv-nav-brand { display: block; }
+  .wv-nav-label {
+    position: static; width: auto; height: auto; max-width: 14ch;
+    clip-path: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .wv-nav-item { justify-content: flex-start; min-height: 44px; padding: 0 12px; }
+  .wv-nav-item[aria-current="page"]::before { top: 10px; bottom: 10px; height: auto; transform: none; }
+  .wv-nav-end { padding-top: 12px; }
+  .wv-nav[data-condensed="true"] { width: var(--wv-rail-condensed); padding: 12px 10px; }
+  .wv-nav[data-condensed="true"] .wv-nav-brand { font-size: var(--wv-text-lg); }
+}
+
+/* phones: sections live in a fixed bottom bar, four destinations, icon over label */
+.wv-tabs {
+  position: fixed; z-index: 40; right: 0; bottom: 0; left: 0;
+  border-top: 1px solid var(--wv-hair);
+  background: rgba(21, 25, 29, .94);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+@media (min-width: 640px) { .wv-tabs { display: none; } }
+.wv-nav-item--tab {
+  flex-direction: column; gap: 3px; min-height: var(--wv-tabs-h); padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  border-radius: 0; font-size: var(--wv-text-xs);
+}
+.wv-nav-item--tab .wv-nav-label { max-width: 100%; }
+@media (hover: hover) { .wv-nav-item--tab:hover { background: var(--wv-void-3); } }
+.wv-nav-item--tab[aria-current="page"]::before { top: 2px; bottom: auto; left: 10%; right: 10%; width: auto; height: 3px; transform: none; }
+
+/* ── type, one ladder ────────────────────────────────────────────────────────── */
+.wv-display { font-size: var(--wv-text-xl); font-weight: 600; line-height: 1.2; letter-spacing: -.012em; }
+@media (min-width: 768px) { .wv-display { font-size: var(--wv-text-2xl); line-height: 1.15; letter-spacing: -.02em; } }
+.wv-title { font-size: var(--wv-text-lg); font-weight: 600; line-height: 1.35; letter-spacing: -.008em; }
+.wv-handle { font-size: var(--wv-text-xl); font-weight: 600; line-height: 1.25; letter-spacing: -.012em; }
+@media (min-width: 768px) { .wv-handle { font-size: var(--wv-text-2xl); line-height: 1.15; letter-spacing: -.02em; } }
+.wv-label { font-size: var(--wv-text-sm); font-weight: 500; color: var(--wv-mid); }
+.wv-cap { font-size: var(--wv-text-xs); font-weight: 400; line-height: 1.5; color: var(--wv-low); }
+.wv-num { font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.01em; line-height: 1.2; color: var(--wv-ink); }
+.wv-num--sm { font-size: var(--wv-text-sm); }
+.wv-num--md { font-size: var(--wv-text-lg); }
+.wv-num--xl { font-size: var(--wv-text-xl); }
+.wv-code { font-family: var(--wv-mono); font-variant-numeric: tabular-nums; letter-spacing: .3em; }
+
+/* ── surfaces ────────────────────────────────────────────────────────────────── */
+.wv-card {
+  border: 1px solid var(--wv-hair);
+  border-radius: var(--wv-radius);
+  background: var(--wv-void-2);
+  transition: border-color var(--wv-t) var(--wv-ease), box-shadow var(--wv-t) var(--wv-ease);
+}
+@media (hover: hover) {
+  /* the cursor bloom the owner kept: a card answers the pointer in the accent hue */
+  .wv-card:hover { border-color: rgba(14, 165, 233, .34); box-shadow: 0 10px 30px rgba(14, 165, 233, .10); }
+}
+
+.wv-btn {
+  display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px;
+  padding: 0 16px; border: 1px solid var(--wv-hair); border-radius: var(--wv-radius-sm);
+  background: var(--wv-void-2); color: var(--wv-ink);
+  font: inherit; font-size: var(--wv-text-sm); font-weight: 500; text-decoration: none; cursor: pointer;
+  transition: background-color var(--wv-t) var(--wv-ease), border-color var(--wv-t) var(--wv-ease), box-shadow var(--wv-t) var(--wv-ease);
+}
+@media (hover: hover) { .wv-btn:hover { background: var(--wv-void-4); border-color: rgba(14, 165, 233, .34); } }
+.wv-btn:disabled { opacity: .45; cursor: not-allowed; }
+.wv-btn--primary { border-color: var(--wv-blue); background: var(--wv-blue); color: var(--wv-on-blue); }
+@media (hover: hover) {
+  .wv-btn--primary:hover:not(:disabled) { background: var(--wv-blue-strong); border-color: var(--wv-blue-strong); box-shadow: 0 8px 24px rgba(14, 165, 233, .30); }
+}
+.wv-btn--quiet { border-color: transparent; background: transparent; color: var(--wv-blue-text); padding: 0 12px; }
+@media (hover: hover) { .wv-btn--quiet:hover { background: var(--wv-void-3); color: var(--wv-ink); } }
+.wv-btn--danger { border-color: var(--wv-danger); background: transparent; color: var(--wv-danger-text); }
+@media (hover: hover) { .wv-btn--danger:hover:not(:disabled) { background: rgba(242, 139, 130, .14); } }
+
+/* ── account actions: one cog on your own profile, the four actions inside it ── */
+.wv-cog {
+  display: grid; width: 44px; height: 44px; padding: 0; place-items: center;
+  border: 1px solid var(--wv-hair); border-radius: var(--wv-radius-sm);
+  background: var(--wv-void-2); color: var(--wv-mid); cursor: pointer;
+  transition: color var(--wv-t) var(--wv-ease), border-color var(--wv-t) var(--wv-ease);
+}
+.wv-cog[aria-expanded="true"] { color: var(--wv-blue-text); border-color: var(--wv-blue); }
+@media (hover: hover) { .wv-cog:hover { color: var(--wv-ink); border-color: rgba(14, 165, 233, .34); } }
+.wv-menu {
+  position: absolute; z-index: 30; top: calc(100% + 6px); right: 0; min-width: 218px;
+  display: grid; gap: 2px; padding: 6px;
+  border: 1px solid var(--wv-hair); border-radius: var(--wv-radius);
+  background: var(--wv-void-2); box-shadow: 0 18px 44px rgba(0, 0, 0, .45);
+}
+.wv-menu button {
+  min-height: 44px; padding: 0 12px; border: 0; border-radius: var(--wv-radius-sm);
+  background: none; color: var(--wv-ink); font: inherit; font-size: var(--wv-text-sm); font-weight: 500;
+  text-align: left; cursor: pointer;
+}
+@media (hover: hover) { .wv-menu button:hover { background: var(--wv-void-4); } }
+.wv-menu .wv-menu--danger { color: var(--wv-danger-text); }
+@media (hover: hover) { .wv-menu .wv-menu--danger:hover { background: rgba(242, 139, 130, .14); } }
+
+.wv-input {
+  width: 100%; min-height: 44px; padding: 10px 12px;
+  border: 1px solid var(--wv-hair); border-radius: var(--wv-radius-sm);
+  background: var(--wv-void); color: var(--wv-ink);
+  font: inherit; font-size: var(--wv-text-base); line-height: 1.5;
+  transition: border-color var(--wv-t) var(--wv-ease);
+}
+.wv-input::placeholder { color: var(--wv-low); }
+.wv-input:focus { border-color: var(--wv-blue); }
+.wv-input[aria-invalid="true"] { border-color: var(--wv-danger); }
+textarea.wv-input { min-height: 96px; resize: vertical; }
+
+/* the box a thumb has to land on, not the box the checkmark is drawn in */
+.wv-checkbox { width: 22px; height: 22px; flex: none; }
+
+.wv-field { display: grid; gap: 6px; }
+/* an <input> carries an intrinsic minimum width (~20 characters). Without min-width:0 it refuses
+   to shrink inside the password row, and the whole field ran past the edge of a 320px screen. */
+.wv-field > * { min-width: 0; }
+.wv-field :is(input, textarea) { min-width: 0; }
+.wv-hint { margin: 0; font-size: var(--wv-text-xs); line-height: 1.5; color: var(--wv-low); }
+.wv-error { margin: 0; font-size: var(--wv-text-sm); line-height: 1.5; color: var(--wv-danger-text); }
+.wv-error-box { border: 1px solid var(--wv-danger); border-radius: var(--wv-radius-sm); padding: 12px 14px; }
+
+.wv-tab {
+  min-height: 44px; padding: 0 2px; border: 0; border-bottom: 2px solid transparent;
+  background: none; color: var(--wv-low); font: inherit; font-size: var(--wv-text-sm); font-weight: 500; cursor: pointer;
+  transition: color var(--wv-t) var(--wv-ease), border-color var(--wv-t) var(--wv-ease);
+}
+.wv-tab[aria-selected="true"], .wv-tab[aria-current="page"] { color: var(--wv-blue-text); border-bottom-color: var(--wv-blue); }
+/* the three account flows: 2px padding made them read as one crowded line, with the active
+   underline touching the next label. Phone width keeps natural label widths (equal thirds would
+   wrap "Create account" at 326px of row); 640px and up the row splits into thirds. */
+/* four of these do not fit a 320px screen: they wrap onto a second row instead of pushing the
+   last tab past the edge of the viewport */
+.wv-profile-tabs { flex-wrap: wrap; gap: 4px 24px; }
+.wv-auth-tabs { gap: 12px; flex-wrap: wrap; }
+.wv-auth-tabs .wv-tab { padding: 0 4px; }
+@media (min-width: 640px) {
+  .wv-auth-tabs { gap: 8px; }
+  .wv-auth-tabs .wv-tab { flex: 1 1 0; padding: 0 12px; text-align: center; }
+}
+@media (hover: hover) { .wv-tab:hover { color: var(--wv-ink); } }
+
+/* ── list rows: people, search hits, follower lists, companion column ────────── */
+.wv-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  padding: 16px; border: 1px solid var(--wv-hair); border-radius: var(--wv-radius); background: var(--wv-void-2);
+  transition: border-color var(--wv-t) var(--wv-ease), box-shadow var(--wv-t) var(--wv-ease);
+}
+@media (hover: hover) { .wv-row:hover { border-color: rgba(14, 165, 233, .34); box-shadow: 0 8px 24px rgba(14, 165, 233, .08); } }
+.wv-row--compact { padding: 12px; gap: 10px; }
+
+.wv-aside-card { padding: 16px; }
+
+/* the companion column is one card holding a list, not a stack of boxes inside a box */
+.wv-aside .wv-row { border: 0; border-top: 1px solid var(--wv-hair-soft); border-radius: 0; background: none; padding: 10px 0; }
+.wv-aside .wv-row:first-child { border-top: 0; }
+@media (hover: hover) { .wv-aside .wv-row:hover { box-shadow: none; } }
+/* it rides the page the way the rail does: fixed while the feed scrolls past it */
+@media (min-width: 1280px) {
+  /* a stretched grid item is as tall as the feed column, and a box that tall has nowhere to stick */
+  .wv-aside { position: sticky; top: 20px; align-self: start; max-height: calc(100dvh - 40px); overflow: auto; }
+}
+
+.wv-nav-compose { margin-top: var(--wv-2); }
+.wv-compose-cta { display: inline-flex; }
+@media (min-width: 640px) { .wv-compose-cta { display: none; } }
+
+/* ── loading: every waiting surface pulses at the height of the thing it replaces ─ */
+/* the old fade dipped the block to .42 of a near-background fill: on this palette that reads as an
+   empty gap, not as loading. The fill is the brightest void now, it only dips to .62, and a light
+   band crosses it, so the wait is seen even in a still frame. */
+@keyframes wv-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .62; } }
+@keyframes wv-sweep { to { transform: translateX(100%); } }
+.wv-skel {
+  position: relative; overflow: hidden;
+  background: var(--wv-void-4);
+  border-radius: var(--wv-radius-sm); animation: wv-pulse 1.15s var(--wv-ease) infinite;
+}
+.wv-skel::after {
+  content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(232, 236, 239, .17), transparent);
+  animation: wv-sweep 1.15s var(--wv-ease) infinite;
+}
+.wv-skel-row { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1px solid var(--wv-hair); border-radius: var(--wv-radius); background: var(--wv-void-2); }
+/* same row shape as a real comment, so an arriving comment does not shove the thread down */
+.wv-skel-comment { display: flex; align-items: flex-start; gap: 10px; padding: 14px 0; border-top: 1px solid var(--wv-hair-soft); }
+/* the tail strip that asks for the next batch keeps its height, so a skeleton never jumps the page */
+.wv-feed-tail { min-height: 240px; }
+@media (max-width: 639px) {
+  .wv-feed-tail { min-height: 96px; }
+  /* the reserved gap above the phone tab bar, trimmed to what the bar actually needs */
+  .wv-page:not(.wv-page--bare) { padding-bottom: calc(var(--wv-tabs-h) + 12px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .wv-skel, .wv-skel::after { animation: none; } }
+
+/* ── media picker (components/uploadImage) ──────────────────────────────────── */
+.wv-photo { display: grid; gap: var(--wv-1); }
+.wv-photo-tile {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; aspect-ratio: 16 / 10; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--wv-hair); border-radius: var(--wv-radius);
+  background: var(--wv-void-2); color: var(--wv-mid);
+  transition: border-color var(--wv-t) var(--wv-ease), box-shadow var(--wv-t) var(--wv-ease), transform var(--wv-t) var(--wv-ease), background-color var(--wv-t) var(--wv-ease);
+}
+.wv-photo-tile[data-profile="true"] { aspect-ratio: 1 / 1; }
+.wv-photo-tile[data-empty="true"] { background: linear-gradient(180deg, var(--wv-void-2), var(--wv-void)); }
+/* drag-over: the same hue as a hover, but the whole tile answers */
+.wv-photo-tile[data-drag="true"] { border-color: var(--wv-blue); background: rgba(14, 165, 233, .10); }
+@media (hover: hover) {
+  .wv-photo-tile:hover { border-color: rgba(14, 165, 233, .45); box-shadow: 0 10px 26px rgba(14, 165, 233, .14); transform: translateY(-2px); }
+}
+.wv-photo-plus { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; background: var(--wv-void-3); color: var(--wv-blue-text); }
+.wv-photo-caption { font-size: var(--wv-text-sm); font-weight: 500; color: var(--wv-ink); }
+.wv-photo-hint { font-size: var(--wv-text-xs); color: var(--wv-low); }
+.wv-photo-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wv-photo-scrim {
+  position: absolute; right: 0; bottom: 0; left: 0; display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; background: rgba(11, 13, 15, .72); color: var(--wv-ink);
+  font-size: var(--wv-text-xs);
+}
+.wv-photo-bar { position: absolute; right: 0; bottom: 0; left: 0; height: 4px; background: rgba(11, 13, 15, .6); }
+.wv-photo-bar > span { display: block; height: 4px; background: var(--wv-blue); transition: width 120ms linear; }
+.wv-photo-status { font-size: var(--wv-text-xs); color: var(--wv-low); }
+.wv-photo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ── post card: photo and text get room, one action row, no orphaned control ─── */
+/* one inset for the whole card, tightened from 18/24 so the name and the text do not sit deep
+   inside a card whose photo runs edge to edge; .wv-post-pad is the same inset for the blocks a
+   screen adds inside the card (the composer's picker, a flash line) */
+.wv-post { --wv-post-pad: 14px; display: flex; flex-direction: column; overflow: hidden; }
+@media (min-width: 640px) { .wv-post { --wv-post-pad: 18px; } }
+.wv-post-pad { padding-inline: var(--wv-post-pad); }
+.wv-post-author { display: flex; align-items: center; gap: 12px; padding: var(--wv-post-pad) var(--wv-post-pad) 0; }
+.wv-post-body { margin: 12px 0 0; padding: 0 var(--wv-post-pad); }
+@media (min-width: 640px) { .wv-post-author { gap: 14px; } .wv-post-body { margin-top: 16px; } }
+.wv-post-title { margin: 0; font-size: var(--wv-text-lg); font-weight: 600; line-height: 1.4; letter-spacing: -.008em; color: var(--wv-ink); overflow-wrap: anywhere; }
+.wv-post-text { margin: 8px 0 0; max-width: 65ch; font-size: var(--wv-text-base); line-height: 1.6; color: var(--wv-mid); white-space: pre-line; overflow-wrap: anywhere; }
+.wv-post-image { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; margin-top: var(--wv-post-pad); border-top: 1px solid var(--wv-hair-soft); border-bottom: 1px solid var(--wv-hair-soft); }
+/* -12px: an action button carries 12px of its own padding, so the row insets by the rest and the
+   heart lands on the same edge as the body text above it */
+.wv-post-actions { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 12px var(--wv-post-pad) 16px calc(var(--wv-post-pad) - 12px); border-top: 1px solid var(--wv-hair-soft); }
+.wv-post-action {
+  display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 0 12px;
+  border: 0; border-radius: var(--wv-radius-sm); background: none; color: var(--wv-low);
+  font: inherit; font-size: var(--wv-text-sm); font-weight: 500; cursor: pointer;
+  transition: background-color var(--wv-t) var(--wv-ease), color var(--wv-t) var(--wv-ease);
+}
+.wv-post-action[aria-pressed="true"] { color: var(--wv-blue-text); }
+@media (hover: hover) { .wv-post-action:hover { background: var(--wv-void-3); color: var(--wv-ink); } }
+.wv-post-when { margin-left: auto; font-size: var(--wv-text-xs); color: var(--wv-low); }
+@media (max-width: 639px) {
+  /* the three word labels plus the time do not fit 358px, and the row wrapped the time onto a
+     near-empty line at the foot of every card. Icon plus number says the same thing there, and each
+     button keeps its full accessible name for screen readers and tooltips. */
+  .wv-post-action .wv-cap, .wv-post-action-label { display: none; }
+  /* with the words gone the icon is the whole control, so it takes over the space they used to fill.
+     The size has to be set on the icon itself: Glyph carries its own --od-icon-size class. */
+  .wv-post-action .od-icon { --od-icon-size: 1.45rem; }
+  .wv-post-action { padding: 0 11px; }
+  .wv-post-actions { padding: 8px var(--wv-post-pad) 10px calc(var(--wv-post-pad) - 11px); }
+}
+
+/* comment thread: a continuation of the card, not a box inside a box */
+.wv-thread { padding: 0 var(--wv-post-pad) var(--wv-post-pad); }
+/* one control carries a person's identity: the photo and the name travel together to that profile */
+.wv-person-link { display: flex; min-width: 0; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+.wv-person-line { display: flex; min-width: 0; align-items: center; gap: 6px; }
+.wv-person-name { transition: color var(--wv-t) var(--wv-ease); }
+@media (hover: hover) { .wv-person-link:hover .wv-person-name { color: var(--wv-blue-text); } }
+/* the identity block takes the row's remaining width, so Follow and Verify stay at the right edge */
+.wv-row .wv-person-link, .wv-post-author .wv-person-link { flex: 1 1 0; }
+.wv-row .wv-person-name, .wv-post-author .wv-person-name { font-size: var(--wv-text-base); font-weight: 600; color: var(--wv-ink); }
+
+/* the writer's own photo leads the row, the same 36px circle the who-to-follow list uses */
+.wv-comment { display: grid; gap: 2px; padding: 14px 0; border-top: 1px solid var(--wv-hair-soft); }
+.wv-comment .wv-person-link { gap: 10px; padding: 4px 0; margin: -4px 0; }
+.wv-comment .wv-person-name { font-size: var(--wv-text-xs); color: var(--wv-low); }
+.wv-comment p { max-width: 65ch; font-size: var(--wv-text-sm); line-height: 1.55; color: var(--wv-ink); overflow-wrap: anywhere; }
+/* 46px = the 36px photo plus the 10px gap of the head row, so the text sits under the name */
+.wv-comment > p { margin: 4px 0 0 46px; }
+.wv-comment > .wv-replies { margin-left: 46px; }
+.wv-replies { margin-top: 12px; padding-left: 14px; border-left: 2px solid var(--wv-hair); }
+.wv-replies .wv-comment:first-child { border-top: 0; padding-top: 2px; }
+/* the replies toggles are one line of text, but a thumb still needs a band to land in */
+.wv-replies > button, .wv-replies li > button { display: flex; min-height: 44px; align-items: center; }
+
+/* ── alert / toast: the same surface language as the rail and the cards ─────── */
+.wv-toast {
+  position: fixed; z-index: 35; left: 16px; right: 16px;
+  bottom: calc(var(--wv-tabs-h) + 20px + env(safe-area-inset-bottom));
+  display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  border: 1px solid var(--wv-hair); border-radius: var(--wv-radius);
+  background: rgba(21, 25, 29, .96); box-shadow: var(--wv-elev);
+}
+.wv-toast--error { border-color: var(--wv-danger); }
+@media (min-width: 640px) {
+  .wv-toast { left: auto; right: 20px; top: 20px; bottom: auto; width: min(340px, calc(100vw - 40px)); }
+}
+@media (min-width: 1024px) { .wv-toast { right: 24px; top: 24px; } }
+.wv-toast-dot { flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 999px; background: var(--wv-blue); }
+.wv-toast--error .wv-toast-dot { background: var(--wv-danger); }
+.wv-toast-text { margin: 0; flex: 1 1 0; min-width: 0; font-size: var(--wv-text-sm); line-height: 1.5; color: var(--wv-ink); overflow-wrap: anywhere; }
+
+/* ── profile header ─────────────────────────────────────────────────────────── */
+.wv-profile-head { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--wv-2); align-items: start; }
+@media (min-width: 640px) { .wv-profile-head { grid-template-columns: auto minmax(0, 1fr); gap: var(--wv-3); } }
+.wv-stats { display: flex; flex-wrap: wrap; gap: var(--wv-1) var(--wv-3); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* states still change, they just do not animate: the rail condenses instantly */
+  .wv-nav, .wv-nav-brand, .wv-nav-item, .wv-card, .wv-row, .wv-btn, .wv-input, .wv-tab,
+  .wv-person-name, .wv-photo-tile, .wv-post-action, .wv-cog, .wv-photo-bar > span { transition: none; }
+  .wv-photo-tile:hover { transform: none; }
+}

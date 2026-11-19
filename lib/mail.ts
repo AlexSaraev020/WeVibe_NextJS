@@ -16,29 +16,12 @@ export async function sendMail({
       pass: SMTP_PASSWORD,
     },
   });
-  try {
-    const testResult = await transport.verify();
-    console.log(testResult);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
-    console.log(error);
-    return;
-  }
-
-  try {
-    await transport.sendMail({
-      from: SMTP_EMAIL,
-      to,
-      subject,
-      html: body,
-    });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
-    console.log(error);
-    return;
-  }
+  // errors used to be swallowed here, so /sendEmail answered "Email sent" even when Gmail refused
+  await transport.verify();
+  await transport.sendMail({
+    from: SMTP_EMAIL,
+    to,
+    subject,
+    html: body,
+  });
 }

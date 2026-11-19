@@ -10,6 +10,10 @@ export interface UserType {
   posts: number;
   followers: number;
   following: number;
+  /** only an admin can set it; see /api/user/profile/verify */
+  verified?: boolean;
+  /** the people routes answer this for whoever is signed in */
+  followedBy?: boolean;
 }
 
 export interface AllowTypes {

@@ -1,4 +1,3 @@
-import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { CommentsModel } from "@/models/posts/comments";
@@ -16,21 +15,14 @@ export async function POST(req: Request) {
 
   try {
     await connect();
-    const isGuest = await checkIsGuest();
-    if (isGuest === "false") {
-      const isLoggedIn = await checkUserLoggedIn();
-      if (!isLoggedIn) {
-        return NextResponse.json(
-          { message: "You are not logged in!" },
-          { status: 401 },
-        );
-      }
-      const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).exec();
+    /* a comment thread is public. The old gate here answered 401 for anyone whose session
+       cookie still said "signed in" while the token behind it had expired, which is why
+       the feed loaded and its comments did not. */
+    const isLoggedIn = await checkUserLoggedIn();
+    if (isLoggedIn) {
+      const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn }).select("_id").exec();
       if (!userLoggedIn) {
-        return NextResponse.json(
-          { message: "User not found" },
-          { status: 404 },
-        );
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
       }
     }
     const body = await req.json();
@@ -55,8 +47,10 @@ export async function POST(req: Request) {
       })
       .lean()
       .exec();
+    /* an empty thread is an answer, not an error — a 404 made every comment-free post
+       look like the fetch had failed */
     if (!comments.length) {
-      return NextResponse.json({ message: "No comments" }, { status: 404 });
+      return NextResponse.json({ comments: [], hasMore: false }, { status: 200 });
     }
 
     const formattedComments = comments.map((comment) => ({

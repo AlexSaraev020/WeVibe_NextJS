@@ -15,6 +15,9 @@ const nextConfig = {
   },
   async headers() {
     const url = process.env.NEXT_PUBLIC_API_URL;
+    // no origin configured: send no CORS headers at all, rather than "*" plus credentials,
+    // which browsers reject anyway
+    if (!url) return [];
     return [
       {
         source: "/:path*",

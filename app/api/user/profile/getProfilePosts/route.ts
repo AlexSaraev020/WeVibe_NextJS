@@ -1,7 +1,7 @@
 import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
-import { CommentRepliesModel } from "@/models/posts/commentReplies";
+import { CommentsModel } from "@/models/posts/comments";
 import { PostModel } from "@/models/posts/post";
 import { UserModel } from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
     await connect();
+    const isLoggedIn = await checkUserLoggedIn();
     const userProfileId = req.nextUrl.searchParams.get("user");
     if (!userProfileId) {
       return NextResponse.json(
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
       .populate({
         path: "createdBy",
         model: UserModel,
-        select: "username image",
+        select: "username image verified",
       })
       .select("_id title description image createdAt createdBy comments likes")
       .skip(skip)
@@ -59,16 +60,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     const postsWithCountedLikesAndComments = await Promise.all(
-      userProfilePosts.map(async (post) => {
-        const repliesCount = await CommentRepliesModel.countDocuments({
-          postId: post._id,
-        });
-        return {
-          ...post,
-          likes: post.likes.length,
-          comments: post.comments.length + repliesCount,
-        };
-      }),
+      userProfilePosts.map(async (post) => ({
+        ...post,
+        likes: post.likes.length,
+        comments: await CommentsModel.countDocuments({ post: post._id }),
+        likedByMe: isLoggedIn ? post.likes.some((liked) => String(liked) === isLoggedIn) : false,
+      })),
     );
     const totalProfilePosts = searchedUser.posts.length;
     const hasMore = totalProfilePosts > skip + limit;

@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Mingzat } from "next/font/google";
-import Nav from "@/components/nav/nav";
+import "../components/wevibe/WeVibe.css";
+import { Inter } from "next/font/google";
 import { UserNavDataContextProvider } from "@/contexts/user/userNavContext";
 import { AlertContextProvider } from "@/contexts/alert/alertContext";
 import Alert from "@/components/popups/alert";
 import { PostsNavContextProvider } from "@/contexts/posts/postsNavContext";
 import Head from "next/head";
+
 export const metadata: Metadata = {
   title: "WeVibe",
   description: "Meet new people to vibe with",
@@ -16,16 +17,19 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   maximumScale: 3,
   userScalable: true,
-  viewportFit: 'contain',
-}
+  viewportFit: "contain",
+};
 
-const mingzat = Mingzat({
+/* one family for the whole app — Mingzat (serif) is gone. Swap the import if you license a brand face. */
+const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--wv-font",
 });
 
 export default function RootLayout({
@@ -37,25 +41,20 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning={true}
-      className="overflow-y-scroll bg-black text-white antialiased scrollbar-none"
+      className={`${inter.className} overflow-y-scroll scrollbar-none bg-[var(--wv-void)] text-[var(--wv-ink)] antialiased`}
     >
       <Head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
       </Head>
-      <body
-        suppressHydrationWarning={true}
-        className={`${mingzat.className} relative scrollbar-none`}
-      >
+      <body suppressHydrationWarning={true} className="scrollbar-none">
         <AlertContextProvider>
           <UserNavDataContextProvider>
             <PostsNavContextProvider>
-             <Nav/>
               {children}
               <Alert />
             </PostsNavContextProvider>
           </UserNavDataContextProvider>
         </AlertContextProvider>
-        <div className="fixed top-0 z-[-2] min-h-screen w-screen animate-fadeIn bg-[radial-gradient(ellipse_60%_70%_at_50%_-20%,rgba(14,165,233,0.4),rgba(255,255,255,0))] transition-all duration-500" />
       </body>
     </html>
   );

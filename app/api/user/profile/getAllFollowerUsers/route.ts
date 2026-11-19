@@ -2,6 +2,7 @@ import { checkIsGuest } from "@/actions/guest/checkIsGuest";
 import { checkUserLoggedIn } from "@/actions/user/isLoggedIn/checkUserLoggedIn";
 import { connect } from "@/db/mongo/db";
 import { UserModel } from "@/models/user";
+import { followedIds } from "@/lib/users/followedIds";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       .populate({
         path: "followers",
         model: UserModel,
-        select: "username image",
+        select: "username image verified",
       })
       .exec();
     if (!userProfileFollowers) {
@@ -65,7 +66,12 @@ export async function POST(req: NextRequest) {
     );
     const totalFollowersUser = userProfileFollowers.followers.length;
     const hasMore = totalFollowersUser > skip + limit;
-    return NextResponse.json({ users: userProfileFollowersSliced, hasMore }, { status: 200 });
+    const followingIds = await followedIds();
+    const users = userProfileFollowersSliced.map((person) => ({
+      ...(person as unknown as { toJSON: () => Record<string, unknown> }).toJSON(),
+      followedBy: followingIds.has(String((person as { _id: unknown })._id)),
+    }));
+    return NextResponse.json({ users, hasMore }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json(

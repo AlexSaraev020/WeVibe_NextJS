@@ -4,6 +4,7 @@ import { Document, model, Model, models, Schema, Types } from "mongoose";
 interface User extends Document {
   _id: Types.ObjectId;
   isAdmin: boolean;
+  verified: boolean;
   username: string;
   email: string;
   password: string;
@@ -17,6 +18,7 @@ interface User extends Document {
 
 const UserSchema = new Schema<User>({
   isAdmin: { type: Boolean, default: false },
+  verified: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

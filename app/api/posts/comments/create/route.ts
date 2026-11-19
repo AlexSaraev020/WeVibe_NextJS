@@ -14,8 +14,8 @@ export async function PATCH(req: Request) {
       { status: 400 },
     );
   }
-  await connect();
   try {
+    await connect();
     const isLoggedIn = await checkUserLoggedIn();
     if (!isLoggedIn) {
       return NextResponse.json( 

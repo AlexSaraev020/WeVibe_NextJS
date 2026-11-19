@@ -1,29 +1,27 @@
 import { PostType } from "@/types/post/postType";
 import axios from "axios";
 interface GetPostsProps {
-  skip: number;
-  setHasMore: (hasMore: boolean) => void;
-  setSkip: (updateSkip: (prevSkip: number) => number) => void;
-  setLoading: (loading: boolean) => void;
   limit: number;
+  /** ids the visitor has already been shown, so the server can sample the rest */
+  seen?: string[];
+  setHasMore: (hasMore: boolean) => void;
+  setLoading: (loading: boolean) => void;
+  setNewDeck?: (newDeck: boolean) => void;
 }
 
 export const getPosts = async ({
-  skip,
-  limit = 3,
+  limit,
+  seen = [],
   setHasMore,
-  setSkip,
   setLoading,
+  setNewDeck,
 }: GetPostsProps) => {
   try {
-    const response = await axios.post(`/api/posts/get`, {
-      skip,
-      limit,
-    });
+    const response = await axios.post(`/api/posts/get`, { limit, seen });
     if (response.status < 300 && Array.isArray(response.data.posts)) {
       setLoading(false);
-      setSkip((prevSkip) => prevSkip + limit);
       setHasMore(response.data.hasMore);
+      setNewDeck?.(Boolean(response.data.newDeck));
       return response.data.posts as PostType[];
     }
     setHasMore(false);

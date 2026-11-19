@@ -27,14 +27,20 @@ export async function DELETE(req: Request) {
     if (!body) {
       return NextResponse.json({ message: "Body not found" }, { status: 400 });
     }
-    const { postId, createdBy } = body;
+    const { postId } = body;
     if (!postId) {
       return NextResponse.json(
         { message: "No post id found" },
         { status: 400 },
       );
     }
-    if (createdBy !== isLoggedIn && !loggedUser?.isAdmin) {
+    /* ownership is read off the post, not off the request body: a caller used to be able to
+       claim createdBy as themselves and delete anybody's post */
+    const post = await PostModel.findById(postId).select("createdBy").lean().exec();
+    if (!post) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+    if (String(post.createdBy) !== String(isLoggedIn) && !loggedUser?.isAdmin) {
       return NextResponse.json(
         { message: "You are not allowed to delete this post", allow: false },
         { status: 403 },
@@ -42,7 +48,7 @@ export async function DELETE(req: Request) {
     }
     await PostModel.findByIdAndDelete(postId);
     await UserModel.updateMany(
-      { _id: isLoggedIn  },
+      { _id: post.createdBy },
       { $pull: { posts: postId } },
     );
     await CommentsModel.deleteMany({ post: postId });

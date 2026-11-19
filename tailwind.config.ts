@@ -8,15 +8,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      /* retuned, not removed: components outside this project copy still reference these */
       boxShadow: {
-        glow: "0 0px 20px rgba(255,255, 255, 0.35)",
-        "glow-sm": "0 0px 10px rgba(255,255, 255, 0.35)",
-        bottom: "0 10px 20px rgba(255, 255, 255, 0.35)",
+        glow: "0 1px 2px rgba(0, 0, 0, 0.35)",
+        "glow-sm": "0 1px 2px rgba(0, 0, 0, 0.25)",
+        bottom: "0 1px 2px rgba(0, 0, 0, 0.25)",
       },
+      /* the palette lives in WeVibe.css custom properties; these are aliases, not a second set */
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        postBackground: "#0ea5e9",
+        background: "rgb(var(--wv-void-rgb) / <alpha-value>)",
+        foreground: "rgb(var(--wv-ink-rgb) / <alpha-value>)",
+        postBackground: "rgb(var(--wv-blue-rgb) / <alpha-value>)",
       },
       animation: {
         shimmer: "shimmer 2s linear infinite",

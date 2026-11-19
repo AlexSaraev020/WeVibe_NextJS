@@ -1,18 +1,6 @@
 "use server";
-import { createHash } from "crypto";
-import { jwtDecrypt } from "jose";
+import { verifyAuthToken } from "@/lib/auth/verifyAuthToken";
 
-export const jwtDecode = async (token: string) => {
-  const secret = process.env.JWT_PRIVATE;
-  if (!secret) {
-    throw new Error("JWT_PRIVATE is not defined");
-  }
-
-  const secretKey = createHash("sha256").update(secret).digest();
-
-  const { payload } = await jwtDecrypt(token, secretKey);
-  if (!payload) {
-    throw new Error("Invalid token payload");
-  }
-  return payload.value as string;
-};
+/* kept as a Server Action because the reset-password routes import it; the decoding itself
+   lives in lib/auth/verifyAuthToken so page components can use it too */
+export const jwtDecode = async (token: string) => verifyAuthToken(token);

@@ -10,6 +10,7 @@ export interface PostType {
   createdBy: {
     _id: string;
     username: string;
+    verified?: boolean;
     image: {
       url: string;
       fileId: string;
@@ -17,5 +18,7 @@ export interface PostType {
   };
   likes: number;
   comments: number;
+  /** /api/posts/get and getProfilePosts answer this for the signed-in user */
+  likedByMe?: boolean;
 }
 

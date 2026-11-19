@@ -20,7 +20,7 @@ export async function GET(req: Request) {
     }
     await connect();
     const userLoggedIn = await UserModel.findOne({ _id: isLoggedIn })
-      .select("_id username image")
+      .select("_id username image verified isAdmin")
       .exec();
     if (!userLoggedIn) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });

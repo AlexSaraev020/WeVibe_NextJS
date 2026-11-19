@@ -9,10 +9,11 @@ interface HandleLikeProps{
 
 export const handleLike = async ({ postId , setLike , setLikes, like}: HandleLikeProps) => {
   try {
-    if (like !== undefined) {
-      setLike(!like);
-    }
-    setLikes((prevLikes: number) => (!like ? prevLikes + 1 : prevLikes - 1));
+    /* an unknown state used to be skipped here, so a card that never learned whether it
+       was liked already incremented on every click and never filled the heart */
+    const wasLiked = like ?? false;
+    setLike(!wasLiked);
+    setLikes((prevLikes: number) => (wasLiked ? prevLikes - 1 : prevLikes + 1));
     await axios.patch(`/api/posts/handleLike`, { postId });
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
